@@ -1,0 +1,146 @@
+/**
+ * Design tokens — DevNepal / UX4G
+ * Extracted from Figma file UAvHPypcjCjnptJTWJRGsU, node 2-15573
+ * ("Type=1, Breakpoint=Desktop, Color=Light" — footer component).
+ *
+ * Generated from tokens.json. Edit that file and regenerate rather than
+ * editing here by hand.
+ */
+
+:root {
+  /* ── Brand ─────────────────────────────────────────────── */
+  --color-brand-primary: #0b3b8b;
+  --color-brand-primary-deep: #001b4f;
+  --color-brand-primary-border: #90b9ff;
+  --color-brand-primary-subtle: #cfe3fc;
+  --color-brand-primary-surface: #f2f7ff;
+
+  /* ── Neutrals ──────────────────────────────────────────── */
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #fafafa;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-500: #737373;
+  --color-neutral-700: #404040;
+  --color-neutral-900: #171717;
+
+  /* ── Semantic: text ────────────────────────────────────── */
+  --color-text-primary: var(--color-neutral-900);
+  --color-text-secondary: var(--color-neutral-700);
+  --color-text-muted: var(--color-neutral-500);
+  --color-text-link: var(--color-brand-primary);
+  --color-text-on-dark: #ffffff;
+  --color-text-on-dark-muted: rgba(255, 255, 255, 0.87);
+  --color-text-on-dark-subtle: var(--color-neutral-50);
+
+  /* ── Semantic: surface & border ────────────────────────── */
+  --color-surface-default: #ffffff;
+  --color-surface-raised: var(--color-brand-primary-surface);
+  --color-surface-inverse: var(--color-brand-primary-deep);
+  --color-border-default: var(--color-neutral-200);
+  --color-border-accent: var(--color-brand-primary-border);
+
+  /* ── Typography ────────────────────────────────────────── */
+  --font-family-sans: "Noto Sans", system-ui, sans-serif;
+  --font-family-display: "Raleway", "Noto Sans", sans-serif;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-md: 13px;
+  --font-size-lg: 14px;
+  --font-size-xl: 16px;
+
+  --line-height-tight: 14px;
+  --line-height-snug: 16px;
+  --line-height-normal: 18px;
+  --line-height-relaxed: 20px;
+  --line-height-loose: 22px;
+  --line-height-link: 24px;
+
+  --letter-spacing-none: 0;
+  --letter-spacing-tight: 0.1px;
+  --letter-spacing-wide: 0.5px;
+
+  /* ── Spacing ───────────────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 64px;
+  --space-9: 80px;
+
+  /* ── Radius ────────────────────────────────────────────── */
+  --radius-control: 4px;
+  --radius-card: 12px;
+  --radius-pill: 999px;
+}
+
+/**
+ * Tailwind v4 bridge.
+ *
+ * Exposes the tokens above as utilities (`bg-brand-primary`, `text-muted`,
+ * `border-line`). A theme key must never reference a custom property of the
+ * same name — `@theme inline` would resolve it to itself and the utility
+ * would silently produce nothing. Hence the distinct names here, and why
+ * Tailwind's own `--radius-*` / `--text-*` / `--spacing` scales are left alone.
+ */
+@theme inline {
+  --color-brand-deep: var(--color-brand-primary-deep);
+  --color-brand-border: var(--color-brand-primary-border);
+  --color-brand-subtle: var(--color-brand-primary-subtle);
+  --color-brand-surface: var(--color-brand-primary-surface);
+
+  --color-ink: var(--color-text-primary);
+  --color-body: var(--color-text-secondary);
+  --color-muted: var(--color-text-muted);
+  --color-link: var(--color-text-link);
+  --color-on-dark: var(--color-text-on-dark);
+
+  --color-page: var(--color-surface-default);
+  --color-raised: var(--color-surface-raised);
+  --color-inverse: var(--color-surface-inverse);
+
+  --color-line: var(--color-border-default);
+  --color-line-accent: var(--color-border-accent);
+
+  --font-sans: var(--font-family-sans);
+  --font-display: var(--font-family-display);
+}
+
+/**
+ * Composite type styles — apply with a single class.
+ */
+.type-body {
+  font:
+    var(--font-weight-regular) var(--font-size-sm) / var(--line-height-normal)
+    var(--font-family-sans);
+}
+.type-label {
+  font:
+    var(--font-weight-medium) var(--font-size-sm) / var(--line-height-snug) var(--font-family-sans);
+}
+.type-caption {
+  font:
+    var(--font-weight-medium) var(--font-size-xs) / var(--line-height-tight) var(--font-family-sans);
+}
+.type-link {
+  font:
+    var(--font-weight-regular) var(--font-size-md) / var(--line-height-link)
+    var(--font-family-display);
+  letter-spacing: var(--letter-spacing-wide);
+}
+.type-heading-sm {
+  font:
+    var(--font-weight-bold) var(--font-size-lg) / var(--line-height-normal) var(--font-family-sans);
+}
+.type-heading-md {
+  font:
+    var(--font-weight-bold) var(--font-size-xl) / var(--line-height-loose) var(--font-family-sans);
+}

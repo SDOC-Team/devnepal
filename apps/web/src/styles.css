@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/noto-sans";
+@import "./design/tokens.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -53,152 +54,8 @@
 
 body {
   margin: 0;
-  background: #f6f8fa;
-  color: var(--ink);
-}
-
-.page {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 48px 24px 64px;
-}
-
-.header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: flex-end;
-  justify-content: space-between;
-  border-bottom: 2px solid var(--ink);
-  padding-bottom: 16px;
-}
-
-.eyebrow {
-  margin: 0 0 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 12px;
-  color: var(--muted);
-}
-
-h1 {
-  margin: 0;
-  font-size: 32px;
-}
-
-h2 {
-  margin: 0;
-  font-size: 18px;
-}
-
-button {
-  border: 1px solid var(--ink);
-  background: var(--ink);
-  color: var(--paper);
-  padding: 10px 16px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #333;
-}
-
-.session p {
-  margin: 0;
-}
-
-.status {
-  margin-left: 8px;
-  font-size: 12px;
-  padding: 2px 8px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-}
-
-.status-approved {
-  border-color: var(--ok);
-  color: var(--ok);
-}
-
-.status-pending {
-  border-color: var(--warn);
-  color: var(--warn);
-}
-
-.status-rejected,
-.status-hidden {
-  color: var(--muted);
-}
-
-.grid {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  margin-top: 32px;
-}
-
-.card {
-  display: flex;
-  gap: 16px;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  padding: 16px;
-}
-
-.card p {
-  margin: 4px 0;
-}
-
-.avatar {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.avatar-fallback {
-  display: grid;
-  place-items: center;
-  background: var(--ink);
-  color: var(--paper);
-  font-size: 24px;
-}
-
-.muted {
-  color: var(--muted);
-}
-
-.skills {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding: 0;
-  margin: 8px 0 0;
-}
-
-.skills li {
-  font-size: 12px;
-  border: 1px solid var(--line);
-  padding: 2px 8px;
-  border-radius: 999px;
-}
-
-.error {
-  margin-top: 24px;
-  border: 1px solid #cf222e;
-  background: #ffebe9;
-  padding: 16px;
-}
-
-.footer {
-  margin-top: 48px;
-  padding-top: 16px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 13px;
+  background: var(--color-surface-default);
+  color: var(--color-text-primary);
 }
 
 code {
@@ -208,7 +65,7 @@ code {
 
 @theme inline {
   --font-heading: var(--font-sans);
-  --font-sans: 'Noto Sans Variable', sans-serif;
+  --font-sans: "Noto Sans Variable", sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);

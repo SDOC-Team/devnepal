@@ -1,23 +1,66 @@
 import type { PublicMemberDto, SelfMemberDto } from "@gov-portal/shared";
 import { useEffect, useState } from "react";
 
-import { API_BASE, fetchMembers, fetchOwnProfile } from "./api";
+import { API_BASE, fetchMember, fetchMembers, fetchOwnProfile } from "./api";
 import { signInWithGitHub } from "./auth";
+import { AdminDashboard } from "./modules/admin";
+import { Footer } from "./modules/common/footer";
+import { Header } from "./modules/common/header";
+import { Hero } from "./modules/landing";
+import { MemberDetail, MembersSection } from "./modules/member";
+
+/** Minimal path-based routing; no router dependency yet. */
+type Route = { name: "home" } | { name: "member"; username: string } | { name: "admin" };
+
+function parseRoute(pathname: string): Route {
+  if (pathname === "/admin") {
+    return { name: "admin" };
+  }
+  const match = /^\/members\/([^/]+)$/.exec(pathname);
+  if (match?.[1] !== undefined) {
+    return { name: "member", username: decodeURIComponent(match[1]) };
+  }
+  return { name: "home" };
+}
 
 export function App() {
+  const [route, setRoute] = useState<Route>(() => parseRoute(window.location.pathname));
   const [members, setMembers] = useState<PublicMemberDto[]>([]);
+  const [member, setMember] = useState<PublicMemberDto | null>(null);
   const [profile, setProfile] = useState<SelfMemberDto | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Keep the view in step with browser back/forward.
+  useEffect(() => {
+    function onPopState() {
+      setRoute(parseRoute(window.location.pathname));
+    }
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
     async function load() {
+      setLoading(true);
+      setError(null);
       try {
-        const [directory, own] = await Promise.all([fetchMembers(), fetchOwnProfile()]);
+        const own = await fetchOwnProfile();
         if (!cancelled) {
-          setMembers(directory);
           setProfile(own);
+        }
+
+        if (route.name === "member") {
+          const detail = await fetchMember(route.username);
+          if (!cancelled) {
+            setMember(detail);
+          }
+        } else if (route.name === "home") {
+          const directory = await fetchMembers();
+          if (!cancelled) {
+            setMembers(directory);
+          }
         }
       } catch (loadError) {
         if (!cancelled) {
@@ -33,72 +76,61 @@ export function App() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [route]);
+
+  function navigate(path: string) {
+    window.history.pushState({}, "", path);
+    setRoute(parseRoute(path));
+  }
+
+  const sessionSlot =
+    profile === null ? undefined : (
+      <span className="text-[14px] text-(--color-text-secondary)">
+        {profile.displayName}
+        <span className="ml-2 rounded-full border border-(--color-border-accent) px-2 py-0.5 text-[12px]">
+          {profile.status}
+        </span>
+      </span>
+    );
 
   return (
-    <main className="page">
-      <header className="header">
-        <div>
-          <p className="eyebrow">Gov Portal · placeholder frontend</p>
-          <h1>Member directory</h1>
-        </div>
-        <div className="session">
-          {profile === null ? (
-            <button type="button" onClick={() => void signInWithGitHub("/")}>
-              Sign in with GitHub
-            </button>
-          ) : (
-            <p>
-              Signed in as <strong>{profile.displayName}</strong>{" "}
-              <span className={`status status-${profile.status}`}>{profile.status}</span>
+    <div className="flex min-h-screen flex-col bg-(--color-surface-default)">
+      <Header onSignIn={() => void signInWithGitHub("/")} sessionSlot={sessionSlot} />
+
+      {route.name === "home" ? (
+        <Hero
+          actionLabel={profile === null ? "Sign in with Github" : undefined}
+          onAction={() => void signInWithGitHub("/")}
+        />
+      ) : null}
+
+      <main className="mx-auto flex w-full max-w-[1448px] flex-1 flex-col gap-12 px-8 py-12 max-sm:px-4">
+        {error !== null ? (
+          <section className="rounded-lg border border-[#cf222e] bg-[#ffebe9] p-4 text-[14px]">
+            <p className="m-0">
+              Could not reach the API ({API_BASE}): {error}
             </p>
-          )}
-        </div>
-      </header>
+          </section>
+        ) : null}
 
-      {loading ? <p>Loading members…</p> : null}
+        {route.name === "home" && error === null ? (
+          <>
+            <MembersSection id="members" members={members} loading={loading} />
+            {/* Required: the state must not present these claims as verified. */}
+            <p className="m-0 text-[13px] text-(--color-text-muted) leading-5">
+              Affiliations are self-declared.
+            </p>
+          </>
+        ) : null}
 
-      {error !== null ? (
-        <section className="error">
-          <p>
-            Could not reach the API ({API_BASE}): {error}
-          </p>
-          <p>
-            Start it with <code>bun run dev</code> and seed data with <code>bun run db:seed</code>.
-          </p>
-        </section>
-      ) : null}
+        {route.name === "member" && error === null && member !== null ? (
+          <MemberDetail member={member} onBack={() => navigate("/")} />
+        ) : null}
 
-      {!loading && error === null ? (
-        <section className="grid">
-          {members.map((member) => (
-            <article key={member.githubId} className="card">
-              {member.avatarUrl !== null ? (
-                <img src={`${API_BASE}${member.avatarUrl}`} alt="" className="avatar" />
-              ) : (
-                <div className="avatar avatar-fallback">{member.displayName.slice(0, 1)}</div>
-              )}
-              <div>
-                <h2>{member.displayName}</h2>
-                <p className="muted">@{member.githubUsername}</p>
-                {member.headline !== null ? <p>{member.headline}</p> : null}
-                {member.location !== null ? <p className="muted">{member.location}</p> : null}
-                <ul className="skills">
-                  {member.skills.map((skill) => (
-                    <li key={skill}>{skill}</li>
-                  ))}
-                </ul>
-              </div>
-            </article>
-          ))}
-          {members.length === 0 ? <p>No approved members yet.</p> : null}
-        </section>
-      ) : null}
+        {route.name === "admin" ? <AdminDashboard /> : null}
+      </main>
 
-      <footer className="footer">
-        Placeholder UI — the real interface replaces this app. Data comes from the REST API;
-        contracts live in <code>packages/shared</code>.
-      </footer>
-    </main>
+      <Footer />
+    </div>
   );
 }
