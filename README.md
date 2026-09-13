@@ -64,6 +64,26 @@ One monorepo, two teams, one contract.
   required. Backend changes come with tests that cite the invariant they
   protect; the names in `apps/api/tests` are the specification.
 
+### Branch workflow
+
+`main` is protected: no direct pushes (the owner can bypass for emergencies
+only), the `verify` CI check must pass, and one review is required to merge.
+
+```sh
+git switch main && git pull --ff-only
+git switch -c feat/api-<topic>     # backend team
+git switch -c feat/web-<topic>     # frontend team
+# ... work, then run the local gates before pushing
+bun run lint && bun run typecheck && bun run test && bun run build && bun run build:web
+git push -u origin HEAD
+gh pr create --fill
+```
+
+Keep branches short-lived and rebase on `main` when it moves. A PR that touches
+`packages/shared` needs a reviewer from each side; a PR that breaks the contract
+fails `bun run typecheck` in CI on purpose. Branches are deleted automatically
+after merge.
+
 ## Local development
 
 Prerequisites: [Bun](https://bun.sh) and Docker (colima works).

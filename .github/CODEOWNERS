@@ -1,0 +1,14 @@
+# Default owner for the repository.
+*                       @voidash
+
+# Frontend team: replace @voidash with the frontend handles once repository
+# access is granted, for example:
+# /apps/web/            @frontend-handle-1 @frontend-handle-2
+/apps/web/              @voidash
+
+# Backend and the API contract.
+/apps/api/              @voidash
+/packages/shared/       @voidash
+
+# Repository plumbing.
+/.github/               @voidash
