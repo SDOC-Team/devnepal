@@ -38,3 +38,12 @@ export class ValidationError extends AppError {
     super(400, "validation_error", message, details);
   }
 }
+
+export class RateLimitedError extends AppError {
+  readonly retryAfterSeconds: number;
+
+  constructor(retryAfterSeconds: number) {
+    super(429, "rate_limited", "Too many requests");
+    this.retryAfterSeconds = retryAfterSeconds;
+  }
+}

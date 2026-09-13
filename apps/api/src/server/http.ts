@@ -2,7 +2,13 @@ import { ZodError, type z } from "zod";
 
 import { getEnv } from "@/config";
 
-import { AppError, ForbiddenError, ValidationError, type ValidationIssue } from "./errors";
+import {
+  AppError,
+  ForbiddenError,
+  RateLimitedError,
+  ValidationError,
+  type ValidationIssue,
+} from "./errors";
 
 function applyCors(headers: Headers): void {
   headers.set("access-control-allow-origin", getEnv().WEB_ORIGIN);
@@ -68,6 +74,12 @@ function zodIssues(error: ZodError): ValidationIssue[] {
 }
 
 export function errorResponse(error: unknown): Response {
+  if (error instanceof RateLimitedError) {
+    return json(
+      { error: { code: error.code, message: error.message } },
+      { status: error.status, headers: { "retry-after": String(error.retryAfterSeconds) } },
+    );
+  }
   if (error instanceof AppError) {
     return json(
       {

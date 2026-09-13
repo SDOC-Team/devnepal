@@ -311,6 +311,10 @@ in `apps/api/src/lib/i18n.ts`.
 - **CSRF** — Auth.js protects its own routes; cookie-authenticated mutations
   additionally reject any request whose `Origin` is neither the app's own origin
   (same-origin UI, proxied or not) nor `WEB_ORIGIN`.
+- **Rate limits** — auth routes, the webhook endpoint, and write endpoints are
+  limited per client IP (`429` with `Retry-After`). The counters are in-memory,
+  which is correct for the single-instance deployment; a shared store would be
+  needed before scaling out.
 - **Secrets** — only placeholders are committed; `.env*` is gitignored.
 
 ## Tests

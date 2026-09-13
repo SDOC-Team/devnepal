@@ -5,8 +5,10 @@ import { eq } from "drizzle-orm";
 import { getEnv } from "@/config";
 import { db } from "@/db/client";
 import { githubEvents } from "@/db/schema";
+import { errorResponse } from "@/server/http";
 import * as repo from "@/server/projects/repository";
 import { type GithubApiIssue, mapGitHubIssue } from "@/server/projects/sync";
+import { enforceRateLimit } from "@/server/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -84,6 +86,12 @@ export async function POST(request: Request): Promise<Response> {
   const secret = getEnv().GITHUB_WEBHOOK_SECRET;
   if (secret.length === 0) {
     return Response.json({ error: "webhook_not_configured" }, { status: 503 });
+  }
+
+  try {
+    enforceRateLimit(request, "webhooks");
+  } catch (error) {
+    return errorResponse(error);
   }
 
   const rawBody = await request.text();

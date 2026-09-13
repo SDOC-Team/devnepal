@@ -6,6 +6,7 @@ import { NotFoundError } from "@/server/errors";
 import { assertSameOrigin, errorResponse, json, parseJsonBody, preflight } from "@/server/http";
 import { toAdminMemberDto } from "@/server/members/dto";
 import { adminUpdateMember } from "@/server/members/service";
+import { enforceRateLimit } from "@/server/rate-limit";
 
 export const runtime = "nodejs";
 export const OPTIONS = preflight;
@@ -15,6 +16,7 @@ export async function PATCH(
   context: { params: Promise<{ id: string }> },
 ): Promise<Response> {
   try {
+    enforceRateLimit(request, "adminWrite");
     assertSameOrigin(request);
     const actor = await requireActor();
     const { id } = await context.params;
