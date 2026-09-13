@@ -11,7 +11,9 @@
     "test:watch": "vitest",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:seed": "bun run src/scripts/seed.ts"
+    "db:seed": "bun run src/scripts/seed.ts",
+    "sync:github": "bun run src/scripts/sync-github.ts",
+    "dev:session": "bun run src/scripts/dev-session.ts"
   },
   "dependencies": {
     "@gov-portal/shared": "workspace:*",
@@ -20,12 +22,18 @@
     "next": "16.3.5",
     "next-auth": "^5.0.0-beta.32",
     "pg": "^8.23.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-markdown": "^10.1.0",
+    "rehype-sanitize": "^6.0.0",
+    "remark-gfm": "^4.0.1",
     "zod": "^4.6.4"
   },
   "devDependencies": {
     "@types/node": "24",
     "@types/pg": "^8.23.1",
     "@types/react": "^19",
+    "@types/react-dom": "19",
     "drizzle-kit": "^0.31.10",
     "typescript": "^5",
     "vitest": "^5.0.0"

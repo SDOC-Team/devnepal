@@ -8,7 +8,7 @@ import { db } from "@/db/client";
 import { members } from "@/db/schema";
 
 import { resetDatabase } from "../helpers/db";
-import { createMember } from "../helpers/factories";
+import { ADMIN_GITHUB_ID, createMember } from "../helpers/factories";
 import { jsonRequest, mockSessionAs } from "../helpers/session";
 
 const PROFILE_URL = "http://localhost:3000/profile";
@@ -160,11 +160,27 @@ describe("GET /profile/", () => {
     expect(response.status).toBe(200);
     const payload = (await response.json()) as {
       member: { id: string; status: string; githubUsername: string; displayName: string };
+      isAdmin: boolean;
     };
     expect(payload.member.id).toBe(alice.id);
     expect(payload.member.status).toBe("pending");
     expect(payload.member.githubUsername).toBe("alice");
     expect(payload.member.displayName).toBe("Alice");
+    expect(payload.isAdmin).toBe(false);
+  });
+
+  it("flags admins in the profile payload", async () => {
+    const admin = await createMember({
+      githubId: ADMIN_GITHUB_ID,
+      githubUsername: "admin-user",
+      displayName: "Admin",
+    });
+    mockSessionAs(admin);
+
+    const response = await GET();
+    expect(response.status).toBe(200);
+    const payload = (await response.json()) as { isAdmin: boolean };
+    expect(payload.isAdmin).toBe(true);
   });
 
   it("returns 401 without a session", async () => {

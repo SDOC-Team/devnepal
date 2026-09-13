@@ -8,6 +8,7 @@ const envSchema = z.object({
   ADMIN_GITHUB_IDS: z.string().default(""),
   WEB_ORIGIN: z.url().default("http://localhost:5173"),
   STORAGE_DIR: z.string().min(1).default("./storage"),
+  GITHUB_WEBHOOK_SECRET: z.string().default(""),
 });
 
 export type AppEnv = z.infer<typeof envSchema>;
