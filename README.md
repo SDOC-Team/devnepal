@@ -31,6 +31,7 @@ apps/api/
   tests/                   unit + integration tests, test DB bootstrap
 apps/web/                  placeholder frontend (Vite + React) consuming the REST API
 packages/shared/src/       Zod validation + API DTO contracts
+scripts/setup.ts           one-command local bootstrap for new developers
 compose.yaml               PostgreSQL for development (and a full api profile)
 .github/workflows/ci.yml   Lint, typecheck, tests, builds on every PR
 ```
@@ -53,9 +54,9 @@ One monorepo, two teams, one contract.
   never collide with API paths like `/members`. In production the web app and
   API live on the same registrable domain (`app.x` + `api.x`) so cookie auth is
   same-site; the API CORS allows exactly `WEB_ORIGIN` with credentials.
-- **Dev data without GitHub.** `bun run db:seed` inserts six sample members in
-  every moderation state so the frontend can build against a populated
-  directory before real sign-ins exist.
+- **Dev data without GitHub.** `bun run setup` (or `bun run db:seed` alone)
+  inserts six sample members in every moderation state so the frontend can build
+  against a populated directory before real sign-ins exist.
 - **Contract discipline.** Additive changes only by default. A breaking change
   needs both teams in the PR, a migration note, and — once a mobile client
   exists — an API version bump. Every endpoint's shape is documented below and
@@ -86,33 +87,73 @@ after merge.
 
 ## Local development
 
-Prerequisites: [Bun](https://bun.sh) and Docker (colima works).
+Prerequisites: [Bun](https://bun.sh), Docker (colima works), and Git.
 
 ```sh
-bun install
-docker compose up -d db
-cp apps/api/.env.example apps/api/.env.local   # then fill in the values
-openssl rand -base64 48                        # use the output as AUTH_SECRET
-bun run db:migrate
-bun run db:seed      # optional: sample members for frontend work
-bun run dev          # API at http://localhost:3000/health
-
-bun run dev:web      # placeholder frontend at http://localhost:5173 (second terminal)
+git clone git@github.com:voidash/gov-portal.git
+cd gov-portal
+bun run setup
 ```
 
-### GitHub OAuth App
+`bun run setup` is safe to rerun and bootstraps everything:
 
-Create one at <https://github.com/settings/developers> → **New OAuth App**:
+1. creates `apps/api/.env.local` with a freshly generated `AUTH_SECRET` (never overwrites existing files)
+2. creates `apps/web/.env.local`
+3. starts PostgreSQL with Docker Compose and waits until it is healthy
+4. installs dependencies, applies migrations, seeds six sample members
 
-- Homepage URL: `http://localhost:5173` (the frontend origin; any value in dev)
-- Authorization callback URL: `http://localhost:3000/api/auth/callback/github`
+Then start both apps, each in its own terminal:
 
-Copy the client ID and secret into `AUTH_GITHUB_ID` / `AUTH_GITHUB_SECRET`.
-The provider requests **`read:user` only** — email is never requested or stored.
+```sh
+bun run dev          # API  → http://localhost:3000
+bun run dev:web      # Web  → http://localhost:5173
+```
 
-The single-admin role comes from `ADMIN_GITHUB_IDS` (comma-separated numeric
-GitHub IDs, e.g. from `https://api.github.com/users/<login>`), checked on every
-admin request — never from the database.
+The directory is populated from the seed, so frontend work needs no GitHub
+credentials. Without credentials the app still runs fully; only
+"Sign in with GitHub" is unavailable.
+
+### GitHub sign-in (only needed to test auth, profiles, and admin)
+
+1. Create an OAuth App at <https://github.com/settings/developers> → **New OAuth App**
+   - Homepage URL: `http://localhost:5173`
+   - Authorization callback URL: `http://localhost:3000/api/auth/callback/github`
+2. Put the credentials in `apps/api/.env.local`:
+   - `AUTH_GITHUB_ID` — the client ID
+   - `AUTH_GITHUB_SECRET` — generate a client secret and paste it
+3. To get the admin queue, add your numeric GitHub ID to `ADMIN_GITHUB_IDS`
+   (`https://api.github.com/users/<login>` → `id`); comma-separate several admins.
+4. Restart the API.
+
+Never commit these values; share team development credentials out-of-band. The
+provider requests **`read:user` only** — email is never requested or stored.
+
+### For the frontend team
+
+- Work in `apps/web`; the placeholder already signs in, fetches the directory,
+  and compiles against the shared contract. Replace it page by page.
+- Import request/response types and validation from `@gov-portal/shared` — never
+  duplicate them. If the contract is missing something, change it in
+  `packages/shared` and ask for a reviewer from each side.
+- The API base URL comes from `VITE_API_URL` (defaults to `http://localhost:3000`).
+- Seeded members cover every moderation state:
+  `aashish-khanal`, `priya-sharma`, `bikash-gurung` (approved),
+  `nisha-tamang` (pending), `rejected-sample`, `hidden-sample`.
+  Endpoint shapes and visibility rules are in the API section below.
+
+### Ports
+
+| Service | URL |
+|---|---|
+| API | http://localhost:3000 |
+| Web | http://localhost:5173 |
+| PostgreSQL | localhost:5432 — user `refined`, password `refined`, databases `refined` / `refined_test` |
+
+### Troubleshooting
+
+- `docker compose` fails → Docker isn't running: `colima start` (or start Docker Desktop).
+- Port already in use → `lsof -ti :3000 -ti :5173 | xargs kill`
+- Reset all local data → `docker compose down -v && bun run setup`
 
 ### Environment variables
 
@@ -132,6 +173,7 @@ admin request — never from the database.
 ## Commands
 
 ```sh
+bun run setup          # one-command local bootstrap (safe to rerun)
 bun run dev            # dev server
 bun run dev:web        # placeholder frontend (Vite, port 5173)
 bun run build          # production build (standalone output)

@@ -7,6 +7,7 @@
     "packages/*"
   ],
   "scripts": {
+    "setup": "bun run scripts/setup.ts",
     "dev": "bun run --cwd apps/api dev",
     "dev:web": "bun run --cwd apps/web dev",
     "build": "bun run --cwd apps/api build",
