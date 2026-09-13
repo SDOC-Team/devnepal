@@ -1,0 +1,51 @@
+name: Task
+description: A well-scoped piece of work ready for a contributor
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Two to four sentences. Why does this exist, who does it serve? Assume no prior knowledge of this project.
+    validations: { required: true }
+  - type: textarea
+    id: in-scope
+    attributes:
+      label: In scope
+    validations: { required: true }
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Out of scope
+      description: Be explicit. This field prevents most oversized pull requests and protects your time.
+    validations: { required: true }
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      value: |
+        - [ ]
+        - [ ]
+    validations: { required: true }
+  - type: textarea
+    id: where
+    attributes:
+      label: Where to look
+      description: Files and modules involved, and an existing example to copy the pattern from.
+    validations: { required: true }
+  - type: textarea
+    id: tests
+    attributes:
+      label: Tests expected
+  - type: dropdown
+    id: size
+    attributes:
+      label: Size
+      options: ["S — under 4 hours", "M — 4 to 16 hours", "L — 16 to 40 hours"]
+    validations: { required: true }
+  - type: input
+    id: mentor
+    attributes:
+      label: Mentor
+      description: Who will answer questions on this issue
+      placeholder: "@username"
+    validations: { required: true }
