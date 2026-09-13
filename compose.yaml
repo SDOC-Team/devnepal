@@ -21,6 +21,7 @@ services:
       context: .
       dockerfile: apps/api/Dockerfile
     container_name: gov-portal-api
+    restart: unless-stopped
     env_file:
       - apps/api/.env.local
     environment:
@@ -30,6 +31,22 @@ services:
       - "3000:3000"
     volumes:
       - gov-portal-avatars:/app/storage
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # One-off migration runner: `docker compose run --rm migrate`.
+  # Kept behind a profile so it never starts with the stack.
+  migrate:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: migrate
+    profiles: ["tools"]
+    env_file:
+      - apps/api/.env.local
+    environment:
+      DATABASE_URL: postgres://refined:refined@db:5432/refined
     depends_on:
       db:
         condition: service_healthy

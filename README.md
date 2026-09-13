@@ -333,6 +333,9 @@ with mocked HTTP, and Auth.js CORS handling. Override the database with
 
 ## Deployment
 
+See [`docs/deployment.md`](docs/deployment.md) for the full checklist, known
+problems and fixes, k2 options, backups, and the cutover plan.
+
 ```sh
 docker build -f apps/api/Dockerfile -t gov-portal .
 ```

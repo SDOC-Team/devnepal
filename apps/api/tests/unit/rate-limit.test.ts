@@ -47,6 +47,16 @@ describe("rateLimit", () => {
 });
 
 describe("clientIp", () => {
+  it("prefers the Cloudflare client IP header", () => {
+    const request = new Request("http://localhost/profile", {
+      headers: {
+        "cf-connecting-ip": "203.0.113.9",
+        "x-forwarded-for": "10.0.0.1, 10.0.0.2",
+      },
+    });
+    expect(clientIp(request)).toBe("203.0.113.9");
+  });
+
   it("uses the first x-forwarded-for hop", () => {
     const request = new Request("http://localhost/profile", {
       headers: { "x-forwarded-for": "203.0.113.9, 10.0.0.1" },

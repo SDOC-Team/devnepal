@@ -65,6 +65,12 @@ export function rateLimit(bucketName: string, key: string, rule: RateLimitRule):
 }
 
 export function clientIp(request: Request): string {
+  // Cloudflare (and cloudflared tunnels) sets CF-Connecting-IP to the real
+  // client; X-Forwarded-For is the fallback for other proxies.
+  const cloudflare = request.headers.get("cf-connecting-ip");
+  if (cloudflare !== null && cloudflare.trim().length > 0) {
+    return cloudflare.trim();
+  }
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded !== null) {
     const first = forwarded.split(",")[0]?.trim();

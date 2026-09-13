@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { IssueRow } from "@/components/ui/issue-row";
 import { useLocale, useProject, useProjectIssues } from "@/hooks";
+import { formatDateTime } from "@/lib/format";
 import { localePath } from "@/lib/i18n";
 
 export default function ProjectPage() {
@@ -53,7 +54,7 @@ export default function ProjectPage() {
   const [owner, name] = project.fullName.split("/");
   const synced =
     project.lastSyncedAt !== null
-      ? new Date(project.lastSyncedAt).toLocaleString(locale === "ne" ? "ne-NP" : "en-GB")
+      ? formatDateTime(project.lastSyncedAt, locale)
       : dict.project.never;
 
   return (
