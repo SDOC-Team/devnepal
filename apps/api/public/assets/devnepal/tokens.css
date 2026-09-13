@@ -1,0 +1,161 @@
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/inter-latin.woff2") format("woff2");
+}
+
+:root {
+  /* Ground and paper. The page is a cool grey desk; every card, sheet and queue
+     is a white sheet laid on it. Shadows are banned by the design gate, so this
+     pair carries the whole depth model — a surface reads as raised because it is
+     lighter than the ground and edged with a hairline. */
+  --color-bg: #f2f5f7;
+  --color-paper: #ffffff;
+  --color-surface: #e5e9ee;
+  --color-text: #181c20;
+
+  /* The state band, drawn from the platform blue rather than a second hue. It
+     takes the -800 step because white on it measures 8.0:1 and because that is
+     deeper than the -700 the primary button uses, so the band reads as the
+     authority above the product instead of competing with its call to action.
+     #5395fc itself can never go here: it is 2.97:1 against white. */
+  --color-state: var(--color-accent-800);
+  --color-state-deep: var(--color-accent-900);
+
+  /* Primary. #5395fc is the brand blue and sits at the middle of the ramp. It
+     carries 2.97:1 against white, so it may never hold white text — it is a
+     signal colour for borders, focus rings, fills and dots. The -700 step is the
+     one that carries text: 5.7:1 on white, 5.2:1 on the ground. */
+  --color-accent: #5395fc;
+  --color-accent-100: #e4eefe;
+  --color-accent-200: #c7dcfd;
+  --color-accent-300: #91bbfd;
+  --color-accent-600: #2f7aee;
+  --color-accent-700: #2163ca;
+  --color-accent-800: #204f97;
+  --color-accent-900: #1c3c6e;
+
+  /* Neutrals share the ground's hue so nothing reads warm against it. -600 is
+     the lightest step allowed to carry body text (4.6:1 on the ground). */
+  /* The primary action's fill. Because #5395fc cannot hold white text, the
+     button takes the -700 step and the brand blue does the signal work below.
+     To put #5395fc on the button instead, set --color-action to
+     var(--color-accent) and --color-action-fg to var(--color-text): that
+     pairing measures 5.8:1 and is the only accessible way to use it there. */
+  --color-action: var(--color-accent-700);
+  --color-action-fg: var(--color-paper);
+  --color-action-hover: var(--color-accent-800);
+
+  --color-neutral-100: #eaeef2;
+  --color-neutral-200: #dde3e9;
+  --color-neutral-300: #c6cfd8;
+  --color-neutral-400: #a8b3be;
+  --color-neutral-500: #8b97a3;
+  --color-neutral-600: #65707b;
+  --color-neutral-700: #4c565f;
+  --color-neutral-800: #333c44;
+
+  --color-divider: color-mix(in srgb, #181c20 13%, transparent);
+  --color-divider-strong: color-mix(in srgb, #181c20 24%, transparent);
+  --color-fg: var(--color-text);
+  --color-bg-muted: var(--color-surface);
+  --color-bg-subtle: var(--color-neutral-100);
+  --color-text-secondary: var(--color-neutral-700);
+  --color-border: var(--color-divider);
+  --color-rule: var(--color-divider);
+
+  --color-error: #9a3c3c;
+  --color-error-subtle: #fbe9e9;
+  --color-attention: #7a5a10;
+  --color-attention-subtle: #fbf2d9;
+  --color-success: #2c6b4c;
+  --color-success-subtle: #e0f1e8;
+  --color-accent-subtle-1: var(--color-accent-100);
+  --color-accent-subtle-2: var(--color-accent-300);
+
+  --font-body: "Inter", "Noto Sans Devanagari", system-ui, sans-serif;
+  --font-heading: "Inter", "Noto Sans Devanagari", system-ui, sans-serif;
+  --font-latin: var(--font-body);
+  --font-nepali: "Noto Sans Devanagari", system-ui, sans-serif;
+  --font-heading-weight: 600;
+
+  /* One type scale. Every font-size in the platform is one of these steps; a
+     raw px size is a bug. Body sits at 16px because 15px read small for a
+     public service page. */
+  --fs-2xs: 11px;
+  --fs-xs: 12px;
+  --fs-sm: 14px;
+  --fs-base: 16px;
+  --fs-md: 18px;
+  --fs-lg: 21px;
+  --fs-xl: 26px;
+  --fs-2xl: 32px;
+  --fs-3xl: 40px;
+  --fs-4xl: 52px;
+
+  --lh-tight: 1.2;
+  --lh-snug: 1.35;
+  --lh-normal: 1.55;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  --border-1: 1px solid var(--color-divider);
+  --border-2: 1px solid var(--color-divider);
+  --border-4: 1px solid var(--color-divider);
+
+  /* One corner. Every bordered surface in the platform rounds to the same 8px;
+     sm and lg are aliases kept so older call sites land on that same corner
+     rather than inventing a second one. Pills and avatars are the only
+     exceptions, because they are shapes rather than panels. */
+  --radius: 8px;
+  --radius-none: 0;
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius);
+  --radius-pill: 999px;
+  --radius-circle: 50%;
+
+  /* Wide, but not edge-to-edge: a 2000px screen kept a card's facts crowded
+     while a 1248px cap left a third of it empty. 1440px holds four catalogue
+     columns and still keeps prose under 80 characters. */
+  --container-max: 1440px;
+  --container-narrow: 900px;
+  --page-gutter: 40px;
+  --target-min: 44px;
+  /* What actually stays pinned: the product bar, which is one control tall plus
+     its padding. Derived rather than written down, because the last hard-coded
+     value drifted from the bar by 20px and anchors landed under it. The state
+     band above is not counted; it scrolls away. */
+  --header-h: calc(var(--control-lg) + var(--space-3) * 2);
+  /* The state identity band above the product bar. The header sticks at a
+     negative offset of exactly this height, so the band scrolls away and
+     --header-h stays the height of what is actually pinned. */
+  --gov-strip-h: 38px;
+
+  /* Three control heights, each with one job, so a row of mixed controls sits
+     on a single line. Everything interactive is one of these. */
+  --control-sm: 32px;
+  --control-md: 40px;
+  --control-lg: var(--target-min);
+  --badge-h: 24px;
+  /* The dropdown chevron. It lives here because this is the one file allowed to
+     name a colour literally; every select references it as a token. */
+  --icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%2365707b' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'><path d='M4 6.5 L8 10.5 L12 6.5'/></svg>");
+  --icon-chevron-accent: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%232163ca' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'><path d='M4 6.5 L8 10.5 L12 6.5'/></svg>");
+
+  --focus-outline: 2px solid var(--color-accent-700);
+  --focus-offset: 2px;
+}

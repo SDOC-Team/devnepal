@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
-import { copyFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 const root = path.resolve(import.meta.dir, "..");
@@ -35,14 +35,6 @@ function bootstrapEnvFiles(): void {
     console.log("✔ created apps/api/.env.local with a generated AUTH_SECRET");
   } else {
     console.log("• apps/api/.env.local already exists — left untouched");
-  }
-
-  const webEnvPath = path.join(root, "apps/web/.env.local");
-  if (!existsSync(webEnvPath)) {
-    copyFileSync(path.join(root, "apps/web/.env.example"), webEnvPath);
-    console.log("✔ created apps/web/.env.local");
-  } else {
-    console.log("• apps/web/.env.local already exists — left untouched");
   }
 }
 
@@ -101,9 +93,8 @@ async function main(): Promise<void> {
   console.log("\n▸ seeding sample members");
   run(["bun", "run", "--cwd", "apps/api", "db:seed"]);
 
-  console.log("\nDone. Start the apps in two terminals:");
-  console.log("  bun run dev       # API  → http://localhost:3000");
-  console.log("  bun run dev:web   # Web  → http://localhost:5173");
+  console.log("\nDone. Start the app:");
+  console.log("  bun run dev       # UI + API → http://localhost:3000/en");
   if (!githubCredentialsConfigured()) {
     console.log(
       "\nNote: GitHub sign-in is not configured yet. The seeded directory works without it.",

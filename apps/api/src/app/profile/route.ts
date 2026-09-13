@@ -1,5 +1,6 @@
 import { profileUpdateSchema } from "@gov-portal/shared";
 
+import { isAdminGithubId } from "@/config";
 import { requireActor } from "@/server/actor";
 import { assertSameOrigin, errorResponse, json, parseJsonBody, preflight } from "@/server/http";
 import { toSelfMemberDto } from "@/server/members/dto";
@@ -11,7 +12,10 @@ export const OPTIONS = preflight;
 export async function GET(): Promise<Response> {
   try {
     const actor = await requireActor();
-    return json({ member: toSelfMemberDto(actor) });
+    return json({
+      member: toSelfMemberDto(actor),
+      isAdmin: isAdminGithubId(actor.githubId),
+    });
   } catch (error) {
     return errorResponse(error);
   }

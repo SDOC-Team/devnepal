@@ -6,6 +6,18 @@ export {
   type SelfMemberDto,
   selfMemberDtoSchema,
 } from "./dto";
+export {
+  type IssueDto,
+  type IssueLabelDto,
+  type IssueListDto,
+  type IssueListParams,
+  issueDtoSchema,
+  issueLabelDtoSchema,
+  issueListDtoSchema,
+  issueListParamsSchema,
+  type ProjectDto,
+  projectDtoSchema,
+} from "./project";
 export { SKILLS, type Skill, skillSchema } from "./skills";
 export {
   type AdminMemberUpdate,

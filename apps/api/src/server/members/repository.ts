@@ -30,6 +30,14 @@ export async function listDirectory(): Promise<Member[]> {
     .orderBy(desc(members.priority), sql`${members.approvedAt} desc nulls last`);
 }
 
+export async function countApproved(): Promise<number> {
+  const rows = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(members)
+    .where(eq(members.status, "approved"));
+  return rows[0]?.count ?? 0;
+}
+
 export async function listByStatus(status: Member["status"]): Promise<Member[]> {
   return db
     .select()
