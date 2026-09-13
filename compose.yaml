@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: gov-portal-db
+    environment:
+      POSTGRES_USER: refined
+      POSTGRES_PASSWORD: refined
+      POSTGRES_DB: refined
+    ports:
+      - "5432:5432"
+    volumes:
+      - gov-portal-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U refined -d refined"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: gov-portal-api
+    env_file:
+      - apps/api/.env.local
+    environment:
+      DATABASE_URL: postgres://refined:refined@db:5432/refined
+      STORAGE_DIR: /app/storage
+    ports:
+      - "3000:3000"
+    volumes:
+      - gov-portal-avatars:/app/storage
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  gov-portal-pgdata:
+  gov-portal-avatars:

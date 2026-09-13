@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Environment — never commit real credentials
+.env
+.env.*
+!.env.example
+
+# Runtime storage (avatars)
+storage/
+.test-storage/
+
+# Test / coverage
+coverage/
+.vitest/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Logs
+*.log

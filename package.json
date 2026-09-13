@@ -1,0 +1,26 @@
+{
+  "name": "gov-portal",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun run --cwd apps/api dev",
+    "build": "bun run --cwd apps/api build",
+    "start": "bun run --cwd apps/api start",
+    "test": "bun run --cwd apps/api test",
+    "typecheck": "bun run --cwd apps/api typecheck",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "db:generate": "bun run --cwd apps/api db:generate",
+    "db:migrate": "bun run --cwd apps/api db:migrate",
+    "db:seed": "bun run --cwd apps/api db:seed",
+    "lint": "biome check .",
+    "format": "biome format --write ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.13"
+  }
+}
