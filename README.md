@@ -29,9 +29,10 @@ apps/api/
   src/db/                  Drizzle schema + client
   drizzle/                 generated SQL migrations (committed)
   tests/                   unit + integration tests, test DB bootstrap
+apps/web/                  placeholder frontend (Vite + React) consuming the REST API
 packages/shared/src/       Zod validation + API DTO contracts
 compose.yaml               PostgreSQL for development (and a full api profile)
-.github/workflows/ci.yml   Lint, typecheck, tests, build on every PR
+.github/workflows/ci.yml   Lint, typecheck, tests, builds on every PR
 ```
 
 ## Working together (frontend + backend)
@@ -43,8 +44,9 @@ One monorepo, two teams, one contract.
   (`@gov-portal/shared`) — no publishing, no codegen, and a contract change that
   breaks either side fails `bun run typecheck` in the same CI run.
 - **Ownership.** Backend team owns `apps/api` and `packages/shared`; frontend
-  team owns `apps/web` (to be added). Contract changes are reviewed by both
-  sides — treat `packages/shared` as shared code, not backend code.
+  team owns `apps/web` (a working placeholder is already in place). Contract
+  changes are reviewed by both sides — treat `packages/shared` as shared code,
+  not backend code.
 - **Integration topology.** The frontend talks to the API over HTTP using an
   API base URL environment variable (dev: `http://localhost:3000`, prod:
   `https://api.<domain>`). Nothing is path-proxied, so frontend page routes can
@@ -73,14 +75,16 @@ cp apps/api/.env.example apps/api/.env.local   # then fill in the values
 openssl rand -base64 48                        # use the output as AUTH_SECRET
 bun run db:migrate
 bun run db:seed      # optional: sample members for frontend work
-bun run dev          # http://localhost:3000/health
+bun run dev          # API at http://localhost:3000/health
+
+bun run dev:web      # placeholder frontend at http://localhost:5173 (second terminal)
 ```
 
 ### GitHub OAuth App
 
 Create one at <https://github.com/settings/developers> → **New OAuth App**:
 
-- Homepage URL: `http://localhost:3001` (the frontend origin; any value in dev)
+- Homepage URL: `http://localhost:5173` (the frontend origin; any value in dev)
 - Authorization callback URL: `http://localhost:3000/api/auth/callback/github`
 
 Copy the client ID and secret into `AUTH_GITHUB_ID` / `AUTH_GITHUB_SECRET`.
@@ -109,7 +113,9 @@ admin request — never from the database.
 
 ```sh
 bun run dev            # dev server
+bun run dev:web        # placeholder frontend (Vite, port 5173)
 bun run build          # production build (standalone output)
+bun run build:web      # frontend production build
 bun run start          # production server
 bun run test           # Vitest (+ creates and migrates the test database)
 bun run typecheck      # tsc --noEmit

@@ -1,8 +1,10 @@
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 
+import { getEnv } from "./config";
 import { findByGithubId } from "./server/members/repository";
 import { ensureMemberFromGithubLogin } from "./server/members/service";
+import { resolveRedirectTarget } from "./server/redirect";
 
 type GithubIdentity = {
   id: number;
@@ -43,6 +45,9 @@ export const { handlers, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    redirect({ url, baseUrl }) {
+      return resolveRedirectTarget({ url, baseUrl, webOrigin: getEnv().WEB_ORIGIN });
+    },
     async signIn({ account, profile }) {
       if (account?.provider !== "github") {
         return false;

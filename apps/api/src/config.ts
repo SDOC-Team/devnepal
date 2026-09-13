@@ -6,7 +6,7 @@ const envSchema = z.object({
   AUTH_GITHUB_ID: z.string().min(1, "AUTH_GITHUB_ID is required"),
   AUTH_GITHUB_SECRET: z.string().min(1, "AUTH_GITHUB_SECRET is required"),
   ADMIN_GITHUB_IDS: z.string().default(""),
-  WEB_ORIGIN: z.url().default("http://localhost:3001"),
+  WEB_ORIGIN: z.url().default("http://localhost:5173"),
   STORAGE_DIR: z.string().min(1).default("./storage"),
 });
 

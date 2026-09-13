@@ -34,7 +34,7 @@ export default defineConfig({
       AUTH_GITHUB_ID: "test-github-client-id",
       AUTH_GITHUB_SECRET: "test-github-client-secret",
       ADMIN_GITHUB_IDS: "424242",
-      WEB_ORIGIN: "http://localhost:3001",
+      WEB_ORIGIN: "http://localhost:5173",
       STORAGE_DIR: "./.test-storage",
     },
     fileParallelism: false,

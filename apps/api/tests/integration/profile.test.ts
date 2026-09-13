@@ -126,7 +126,7 @@ describe("PATCH /profile/", () => {
     const response = await PATCH(
       jsonRequest(PROFILE_URL, "PATCH", {
         body: { displayName: "Alice Same Origin" },
-        origin: "http://localhost:3001",
+        origin: "http://localhost:5173",
       }),
     );
 

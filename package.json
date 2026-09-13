@@ -8,10 +8,12 @@
   ],
   "scripts": {
     "dev": "bun run --cwd apps/api dev",
+    "dev:web": "bun run --cwd apps/web dev",
     "build": "bun run --cwd apps/api build",
+    "build:web": "bun run --cwd apps/web build",
     "start": "bun run --cwd apps/api start",
     "test": "bun run --cwd apps/api test",
-    "typecheck": "bun run --cwd apps/api typecheck",
+    "typecheck": "bun run --cwd apps/api typecheck && bun run --cwd apps/web typecheck",
     "db:up": "docker compose up -d db",
     "db:down": "docker compose down",
     "db:generate": "bun run --cwd apps/api db:generate",
