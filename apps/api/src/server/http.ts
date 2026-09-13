@@ -4,12 +4,30 @@ import { getEnv } from "@/config";
 
 import { AppError, ForbiddenError, ValidationError, type ValidationIssue } from "./errors";
 
-function corsHeaders(): Headers {
-  const headers = new Headers();
+function applyCors(headers: Headers): void {
   headers.set("access-control-allow-origin", getEnv().WEB_ORIGIN);
   headers.set("access-control-allow-credentials", "true");
-  headers.set("vary", "Origin");
+  const vary = headers.get("vary");
+  if (vary === null) {
+    headers.set("vary", "Origin");
+  } else if (!vary.toLowerCase().includes("origin")) {
+    headers.set("vary", `${vary}, Origin`);
+  }
+}
+
+function corsHeaders(): Headers {
+  const headers = new Headers();
+  applyCors(headers);
   return headers;
+}
+
+/**
+ * Adds the API CORS policy to a response produced elsewhere (e.g. the Auth.js
+ * handlers). Mutates in place so Set-Cookie headers and redirects survive.
+ */
+export function withCors(response: Response): Response {
+  applyCors(response.headers);
+  return response;
 }
 
 export function json(body: unknown, init: ResponseInit = {}): Response {
