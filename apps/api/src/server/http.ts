@@ -109,14 +109,36 @@ export async function parseJsonBody<T>(request: Request, schema: z.ZodType<T>): 
   return parsed.data;
 }
 
+function requestOrigin(request: Request): string | null {
+  try {
+    const forwardedHost = request.headers.get("x-forwarded-host");
+    const forwardedProto = request.headers.get("x-forwarded-proto");
+    if (forwardedHost !== null && forwardedProto !== null) {
+      return `${forwardedProto}://${forwardedHost}`;
+    }
+    return new URL(request.url).origin;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * CSRF defense for cookie-authenticated mutations: a browser always sends the
- * Origin header on cross-site requests; if it is present and not the configured
+ * Origin header on cross-site requests; if it is present and is neither the
+ * app's own origin (same-origin UI, proxied or not) nor the configured external
  * web origin, reject. Non-browser clients (no Origin) pass through.
  */
 export function assertSameOrigin(request: Request): void {
   const origin = request.headers.get("origin");
-  if (origin !== null && origin !== getEnv().WEB_ORIGIN) {
+  if (origin === null) {
+    return;
+  }
+  const allowed = new Set<string>([getEnv().WEB_ORIGIN]);
+  const own = requestOrigin(request);
+  if (own !== null) {
+    allowed.add(own);
+  }
+  if (!allowed.has(origin)) {
     throw new ForbiddenError("Request origin is not allowed");
   }
 }

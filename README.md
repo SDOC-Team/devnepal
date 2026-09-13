@@ -308,8 +308,9 @@ in `apps/api/src/lib/i18n.ts`.
   avatar self-heals on the next login.
 - **Issue content** — bodies are stored as-is and rendered through
   `react-markdown` + `rehype-sanitize`; raw HTML is never injected.
-- **CSRF** — Auth.js protects its own routes; mutations additionally reject
-  requests whose `Origin` header is not `WEB_ORIGIN` when called cross-origin.
+- **CSRF** — Auth.js protects its own routes; cookie-authenticated mutations
+  additionally reject any request whose `Origin` is neither the app's own origin
+  (same-origin UI, proxied or not) nor `WEB_ORIGIN`.
 - **Secrets** — only placeholders are committed; `.env*` is gitignored.
 
 ## Tests
