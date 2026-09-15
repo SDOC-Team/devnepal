@@ -11,11 +11,11 @@ export function LanguageSwitch({ locale, label }: { locale: Locale; label: strin
   const rest = pathname.split("/").filter(Boolean).slice(1).join("/");
 
   return (
-    <span className="lang-switch" title={label}>
+    <span className="inline-flex items-center gap-3" title={label}>
       {LOCALES.map((entry, index) => (
         <Fragment key={entry}>
           {index > 0 ? (
-            <span className="lang-switch__divider" aria-hidden="true">
+            <span className="hidden" aria-hidden="true">
               |
             </span>
           ) : null}
@@ -24,6 +24,7 @@ export function LanguageSwitch({ locale, label }: { locale: Locale; label: strin
             lang={entry}
             aria-current={entry === locale ? "true" : undefined}
             onClick={() => router.push(`/${entry}${rest.length > 0 ? `/${rest}` : ""}`)}
+            className="min-h-0 min-w-0 border-0 bg-transparent p-0 text-xs font-semibold text-paper opacity-72 hover:underline hover:opacity-100 hover:[text-underline-offset:3px] aria-[current=true]:underline aria-[current=true]:opacity-100 aria-[current=true]:decoration-2 aria-[current=true]:[text-underline-offset:4px]"
           >
             {entry === "en" ? "EN" : "ने"}
           </button>

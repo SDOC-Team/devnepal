@@ -1,30 +1,41 @@
-import { notFound } from "next/navigation";
+"use client";
 
-import { isAdminGithubId } from "@/config";
-import { getDictionary, isLocale } from "@/lib/i18n";
-import { getActor } from "@/server/actor";
+import { ErrorPanel, LoadingPanel, SignInPanel } from "@/components/modules/common";
+import { useActor, useLocale } from "@/hooks";
 
-import { SignInPanel } from "../sign-in-panel";
 import { AdminQueue } from "./admin-queue";
 
-export const dynamic = "force-dynamic";
+export default function AdminPage() {
+  const { locale, dict } = useLocale();
+  const { actor, isLoading, isSignedOut, error } = useActor();
 
-export default async function AdminPage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  if (!isLocale(locale)) {
-    notFound();
+  if (isLoading) {
+    return <LoadingPanel label={dict.common.loading} />;
   }
-  const dict = getDictionary(locale);
-  const actor = await getActor();
 
-  if (actor === null) {
+  if (error !== undefined) {
     return (
-      <section className="section" aria-labelledby="admin-heading">
-        <div className="container dn-container--narrow">
-          <header className="dn-profile-edit__head">
-            <p className="dn-section-kicker">{dict.admin.kicker}</p>
-            <h1 id="admin-heading">{dict.admin.title}</h1>
-            <p className="dn-lede">{dict.admin.signInBody}</p>
+      <ErrorPanel
+        message={error.message}
+        retryLabel={dict.common.retry}
+        title={dict.common.errorTitle}
+        onRetry={() => window.location.reload()}
+      />
+    );
+  }
+
+  if (isSignedOut || actor === null) {
+    return (
+      <section className="py-12" aria-labelledby="admin-heading">
+        <div className="container-narrow">
+          <header className="mb-8 max-w-[70ch]">
+            <p className="mb-2 block text-sm font-semibold text-accent-700">{dict.admin.kicker}</p>
+            <h1 id="admin-heading" className="mt-0 mb-3 leading-[1.08] tracking-[-0.01em]">
+              {dict.admin.title}
+            </h1>
+            <p className="m-0 max-w-[68ch] text-md leading-[1.55] text-neutral-700">
+              {dict.admin.signInBody}
+            </p>
           </header>
           <SignInPanel label={dict.session.signIn} locale={locale} />
         </div>
@@ -32,14 +43,18 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
     );
   }
 
-  if (!isAdminGithubId(actor.githubId)) {
+  if (!actor.isAdmin) {
     return (
-      <section className="section" aria-labelledby="admin-heading">
-        <div className="container dn-container--narrow">
-          <header className="dn-profile-edit__head">
-            <p className="dn-section-kicker">{dict.admin.kicker}</p>
-            <h1 id="admin-heading">{dict.admin.notAuthorizedTitle}</h1>
-            <p className="dn-lede">{dict.admin.notAuthorizedBody}</p>
+      <section className="py-12" aria-labelledby="admin-heading">
+        <div className="container-narrow">
+          <header className="mb-8 max-w-[70ch]">
+            <p className="mb-2 block text-sm font-semibold text-accent-700">{dict.admin.kicker}</p>
+            <h1 id="admin-heading" className="mt-0 mb-3 leading-[1.08] tracking-[-0.01em]">
+              {dict.admin.notAuthorizedTitle}
+            </h1>
+            <p className="m-0 max-w-[68ch] text-md leading-[1.55] text-neutral-700">
+              {dict.admin.notAuthorizedBody}
+            </p>
           </header>
         </div>
       </section>
@@ -47,13 +62,15 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
   }
 
   return (
-    <section className="section" aria-labelledby="admin-heading">
+    <section className="py-12" aria-labelledby="admin-heading">
       <div className="container">
-        <header className="dn-catalog-heading">
-          <div>
-            <p className="dn-section-kicker">{dict.admin.kicker}</p>
-            <h1 id="admin-heading">{dict.admin.title}</h1>
-            <p>{dict.admin.lede}</p>
+        <header className="mb-6 flex items-end justify-between gap-6">
+          <div className="max-w-[72ch]">
+            <p className="mb-2 block text-sm font-semibold text-accent-700">{dict.admin.kicker}</p>
+            <h1 id="admin-heading" className="mb-2 text-3xl">
+              {dict.admin.title}
+            </h1>
+            <p className="max-w-[72ch]">{dict.admin.lede}</p>
           </div>
         </header>
         <AdminQueue dict={dict} />

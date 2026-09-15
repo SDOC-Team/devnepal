@@ -1,71 +1,93 @@
-import Link from "next/link";
-import { notFound } from "next/navigation";
+"use client";
 
-import { getDictionary, isLocale, type Locale, localePath } from "@/lib/i18n";
-import { getActor } from "@/server/actor";
-import { toSelfMemberDto } from "@/server/members/dto";
+import {
+  ArrowLink,
+  ErrorPanel,
+  LoadingPanel,
+  SignInPanel,
+  StateBanner,
+} from "@/components/modules/common";
+import { useActor, useLocale } from "@/hooks";
+import { localePath } from "@/lib/i18n";
 
-import { SignInPanel } from "../sign-in-panel";
 import { ProfileForm } from "./profile-form";
 
-export const dynamic = "force-dynamic";
+export default function ProfilePage() {
+  const { locale, dict } = useLocale();
+  const { actor, isLoading, isSignedOut, error, refresh } = useActor();
 
-export default async function ProfilePagePage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  if (!isLocale(locale)) {
-    notFound();
+  if (isLoading) {
+    return <LoadingPanel label={dict.common.loading} />;
   }
-  const activeLocale: Locale = locale;
-  const dict = getDictionary(activeLocale);
-  const actor = await getActor();
 
-  if (actor === null) {
+  if (error !== undefined) {
     return (
-      <section className="section" aria-labelledby="profile-heading">
-        <div className="container dn-container--narrow">
-          <header className="dn-profile-edit__head">
-            <p className="dn-section-kicker">{dict.profile.kicker}</p>
-            <h1 id="profile-heading">{dict.profile.title}</h1>
-            <p className="dn-lede">{dict.profile.signInBody}</p>
+      <ErrorPanel
+        message={error.message}
+        retryLabel={dict.common.retry}
+        title={dict.common.errorTitle}
+        onRetry={() => window.location.reload()}
+      />
+    );
+  }
+
+  if (isSignedOut || actor === null) {
+    return (
+      <section className="py-12" aria-labelledby="profile-heading">
+        <div className="container-narrow">
+          <header className="mb-8 max-w-[70ch]">
+            <p className="mb-2 block text-sm font-semibold text-accent-700">
+              {dict.profile.kicker}
+            </p>
+            <h1 id="profile-heading" className="mt-0 mb-3 leading-[1.08] tracking-[-0.01em]">
+              {dict.profile.title}
+            </h1>
+            <p className="m-0 max-w-[68ch] text-md leading-[1.55] text-neutral-700">
+              {dict.profile.signInBody}
+            </p>
           </header>
-          <SignInPanel label={dict.session.signIn} locale={activeLocale} />
+          <SignInPanel label={dict.session.signIn} locale={locale} />
         </div>
       </section>
     );
   }
 
+  const { member } = actor;
+
   return (
-    <section className="section dn-profile-edit" aria-labelledby="profile-heading">
+    <section className="py-12" aria-labelledby="profile-heading">
       <div className="container">
-        <div className="dn-profile-edit__layout">
+        <div className="grid grid-cols-1 items-start gap-10 min-[901px]:grid-cols-[minmax(0,1fr)_340px]">
           <div>
-            <header className="dn-profile-edit__head">
-              <p className="dn-section-kicker">{dict.profile.kicker}</p>
-              <h1 id="profile-heading">{dict.profile.title}</h1>
-              <p className="dn-lede">{dict.profile.lede}</p>
-              <div
-                className={`dn-state-banner ${actor.status === "approved" ? "is-success" : "is-attention"}`}
-                role="status"
-              >
-                {dict.profile.status[actor.status]}
-              </div>
-            </header>
-            <ProfileForm member={toSelfMemberDto(actor)} dict={dict} />
-          </div>
-          <aside className="dn-profile-aside">
-            <div className="dn-sidebar-section">
-              <strong>{dict.profile.asideTitle}</strong>
-              <p className="dn-field-help" style={{ marginTop: "0.5rem" }}>
-                {dict.profile.asideBody}
+            <header className="mb-8 max-w-[70ch]">
+              <p className="mb-2 block text-sm font-semibold text-accent-700">
+                {dict.profile.kicker}
               </p>
-            </div>
-            <div className="dn-sidebar-section">
-              <Link
-                className="dn-arrow-link"
-                href={localePath(activeLocale, `/members/${actor.githubUsername}`)}
+              <h1 id="profile-heading" className="mt-0 mb-3 leading-[1.08] tracking-[-0.01em]">
+                {dict.profile.title}
+              </h1>
+              <p className="m-0 max-w-[68ch] text-md leading-[1.55] text-neutral-700">
+                {dict.profile.lede}
+              </p>
+              <StateBanner
+                tone={member.status === "approved" ? "success" : "attention"}
+                role="status"
+                className="mt-4"
               >
+                {dict.profile.status[member.status]}
+              </StateBanner>
+            </header>
+            <ProfileForm member={member} dict={dict} onSaved={() => void refresh()} />
+          </div>
+          <aside className="sticky top-24 grid gap-4">
+            <div className="rounded-md border border-divider bg-paper p-5">
+              <strong>{dict.profile.asideTitle}</strong>
+              <p className="mt-2 mb-0 text-sm text-neutral-700">{dict.profile.asideBody}</p>
+            </div>
+            <div className="rounded-md border border-divider bg-paper p-5">
+              <ArrowLink href={localePath(locale, `/members/${member.githubUsername}`)}>
                 {dict.profile.viewPublic} →
-              </Link>
+              </ArrowLink>
             </div>
           </aside>
         </div>

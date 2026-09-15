@@ -143,10 +143,25 @@ body {
   border: 0;
   outline: 0;
 }
+.dn-brand__mark {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  margin-right: var(--space-3);
+  color: var(--color-accent-700);
+}
+
 .dn-brand-copy {
   display: flex;
-  align-items: center;
-  line-height: 1;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.2;
+}
+
+.dn-brand__tagline {
+  color: var(--color-neutral-600);
+  font-size: var(--fs-xs);
+  font-weight: 400;
 }
 .dn-brand-copy strong {
   font-family: var(--font-heading);
@@ -1344,10 +1359,8 @@ body:has(> .dn-footer--auth) #main-content {
   color: var(--color-accent-800);
 }
 
-/* The footer reads as three blocks on one baseline: who this is, where to go,
-   and who publishes it. The identity column is wider than the link columns so
-   the wordmark and its one sentence are not squeezed to the same measure as a
-   list of links. */
+/* The footer reads as four blocks: who this is, platform links, governance,
+   and contact. */
 .dn-footer-identity {
   display: grid;
   gap: var(--space-3);
@@ -1361,7 +1374,7 @@ body:has(> .dn-footer--auth) #main-content {
   line-height: 1;
 }
 .dn-footer-identity p {
-  max-width: 34ch;
+  max-width: 38ch;
   margin: 0;
   line-height: 1.5;
 }
@@ -1389,14 +1402,14 @@ body:has(> .dn-footer--auth) #main-content {
   font-size: var(--fs-xs);
 }
 
-/* The legal bar closes the page in the state colour, so the shell opens and
-   closes on the same surface. */
+/* Legal bar at the very bottom */
 .dn-footer-legal {
   margin-top: var(--space-10);
   padding: var(--space-4) 0;
   background: var(--color-state);
   color: var(--color-paper);
   font-size: var(--fs-xs);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 .dn-footer-legal__inner {
   display: flex;
@@ -1434,7 +1447,7 @@ body:has(> .dn-footer--auth) #main-content {
 }
 @media (min-width: 1024px) {
   .dn-footer-grid {
-    grid-template-columns: 1.4fr repeat(3, minmax(0, 1fr)) 1.1fr;
+    grid-template-columns: 1.6fr repeat(3, minmax(0, 1fr));
   }
 }
 @media (min-width: 1180px) {
@@ -5029,4 +5042,934 @@ body:has(> .dn-footer--auth) #main-content {
   .dn-catalog-results {
     grid-template-columns: 1fr;
   }
+}
+
+/* ==========================================================================
+   Landing: "Open for contribution" — project + issues 2-column layout
+   ========================================================================== */
+
+.dn-open-contrib {
+  display: grid;
+  grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.dn-open-contrib__project {
+  display: grid;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 0;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+  background: var(--color-paper);
+  overflow: hidden;
+}
+
+.dn-open-contrib__image {
+  min-height: 100%;
+  background-image: url("images/devnepal-project-card.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-right: 1px solid var(--color-divider);
+}
+
+.dn-open-contrib__detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6);
+}
+
+.dn-open-contrib__detail h3 {
+  margin: 0;
+  font-size: var(--fs-xl);
+  line-height: var(--lh-tight);
+}
+
+.dn-open-contrib__detail h3 a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.dn-open-contrib__detail h3 a:hover {
+  color: var(--color-accent-700);
+  text-decoration: underline;
+}
+
+.dn-open-contrib__owner {
+  margin: 0;
+  color: var(--color-neutral-600);
+  font-size: var(--fs-sm);
+}
+
+.dn-open-contrib__desc {
+  margin: 0;
+  color: var(--color-neutral-700);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+}
+
+.dn-open-contrib__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+/* Issues sidebar panel */
+.dn-open-contrib__issues {
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+  background: var(--color-paper);
+  overflow: hidden;
+}
+
+.dn-open-contrib__issues-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.dn-open-contrib__issues-header h3 {
+  margin: 0;
+  font-size: var(--fs-md);
+  font-weight: 600;
+}
+
+.dn-open-contrib__issues-header a {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.dn-issue-sidebar-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-divider);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background 120ms ease;
+}
+
+.dn-issue-sidebar-item:last-child {
+  border-bottom: 0;
+}
+
+.dn-issue-sidebar-item:hover {
+  background: var(--color-bg);
+}
+
+.dn-issue-sidebar-item__text {
+  min-width: 0;
+}
+
+.dn-issue-sidebar-item__text strong {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: var(--lh-snug);
+}
+
+.dn-issue-sidebar-item__text span {
+  display: block;
+  margin-top: 2px;
+  color: var(--color-neutral-600);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-normal);
+}
+
+.dn-issue-sidebar-item__arrow {
+  flex: none;
+  color: var(--color-neutral-400);
+  font-size: var(--fs-lg);
+}
+
+@media (max-width: 820px) {
+  .dn-open-contrib {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Landing: "How does it work?" — 3-card icon grid
+   ========================================================================== */
+
+.dn-how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+
+.dn-how-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+  background: var(--color-paper);
+}
+
+.dn-how-card__icon {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: var(--radius);
+  background: var(--color-accent-100);
+  color: var(--color-accent-700);
+}
+
+.dn-how-card h3 {
+  margin: 0;
+  font-size: var(--fs-base);
+  font-weight: 600;
+}
+
+.dn-how-card p {
+  margin: 0;
+  color: var(--color-neutral-700);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+}
+
+@media (max-width: 640px) {
+  .dn-how-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Landing: CTA band — "Need Support?"
+   ========================================================================== */
+
+.dn-cta-band {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-8) var(--space-10);
+  border-radius: var(--radius-md);
+  background: var(--color-accent-700);
+  color: var(--color-paper);
+}
+
+.dn-cta-band__copy h2 {
+  margin: 0;
+  font-size: var(--fs-lg);
+  color: var(--color-paper);
+}
+
+.dn-cta-band__copy p {
+  margin: var(--space-2) 0 0;
+  color: color-mix(in srgb, var(--color-paper) 80%, transparent);
+  font-size: var(--fs-sm);
+}
+
+.dn-cta-band .btn {
+  border-color: var(--color-paper);
+  background: var(--color-paper);
+  color: var(--color-accent-700);
+}
+
+.dn-cta-band .btn:hover {
+  background: var(--color-accent-100);
+}
+
+/* ==========================================================================
+   Landing: 4-column member grid override
+   ========================================================================== */
+
+.dn-member-grid--four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 1080px) {
+  .dn-member-grid--four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .dn-member-grid--four {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Member verified badge
+   ========================================================================== */
+
+.dn-verified-badge {
+  display: inline-flex;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+/* ==========================================================================
+   Hero with a photographic background.
+
+   The photo is unpredictable, so a scrim carries the contrast rather than the
+   image: white text sits on the scrim, not on the mountain. The gradient is
+   darkest on the left where the copy sits and clears toward the right.
+   ========================================================================== */
+
+.hero--photo {
+  position: relative;
+  background-image: url("images/hero-background.jpg");
+  background-position: center;
+  background-size: cover;
+  isolation: isolate;
+}
+
+.hero--photo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    100deg,
+    rgb(0 0 0 / 78%) 0%,
+    rgb(0 0 0 / 62%) 42%,
+    rgb(0 0 0 / 28%) 100%
+  );
+}
+
+.hero--photo > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.hero--photo .hero__panel {
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero--photo h1,
+.hero--photo .hero__lead {
+  color: var(--color-paper);
+}
+
+/* The secondary action needs a solid ground of its own; a transparent button
+   over a photograph fails contrast wherever the image happens to be light. */
+.hero--photo .hero__actions .btn:not(.btn--primary) {
+  border-color: var(--color-paper);
+  background: var(--color-paper);
+  color: var(--color-text);
+}
+
+@media (max-width: 640px) {
+  .hero--photo .hero__panel {
+    min-height: 360px;
+  }
+}
+
+/* GitHub mark sits inline with the hero call-to-action label. */
+.dn-hero-signin {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* "Stack" caption above the technology pills in the featured project card. */
+.dn-open-contrib__stack-label {
+  margin: 0;
+  color: var(--color-neutral-600);
+  font-size: var(--fs-xs);
+}
+
+/* Footer brand lockup: wave mark beside the wordmark. */
+.dn-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.dn-footer-brand__mark {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  color: currentColor;
+}
+
+/* ==========================================================================
+   Footer on the brand band.
+
+   The band is --color-state (the -800 accent step, 8.0:1 against white), so
+   white text and white links clear AA comfortably. Every colour that the
+   light-ground rules set above has to be restated here, or it inherits a
+   dark value and disappears into the blue.
+   ========================================================================== */
+
+.dn-footer {
+  border-top: 0;
+  background: var(--color-state);
+  color: var(--color-paper);
+}
+
+.dn-footer .dn-footer-mark,
+.dn-footer .dn-footer-platform h2 {
+  color: var(--color-paper);
+}
+
+.dn-footer .dn-footer-identity p {
+  color: var(--color-paper);
+  opacity: 0.86;
+}
+
+.dn-footer a,
+.dn-footer a:link,
+.dn-footer a:visited {
+  color: var(--color-paper);
+  opacity: 0.86;
+}
+
+.dn-footer a:hover,
+.dn-footer a:focus-visible {
+  color: var(--color-paper);
+  opacity: 1;
+}
+
+.dn-footer .dn-footer-repo:hover {
+  color: var(--color-paper);
+}
+
+/* Focus has to stay visible against the band, not just against white. */
+.dn-footer a:focus-visible {
+  outline: 2px solid var(--color-paper);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Shared page shell — carries the landing page's rhythm to every other route.
+   Masthead opens the page, prose cards hold the body, the CTA band closes it.
+   --------------------------------------------------------------------------- */
+.dn-page-masthead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-8);
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: var(--space-8);
+}
+.dn-page-masthead__copy {
+  min-width: 0;
+}
+.dn-page-masthead h1 {
+  margin: 0;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+.dn-page-masthead__lede {
+  max-width: 68ch;
+  margin: var(--space-3) 0 0;
+  color: var(--color-neutral-700);
+  font-size: var(--fs-base);
+  line-height: 1.55;
+}
+.dn-page-masthead__aside {
+  flex: none;
+  color: var(--color-neutral-700);
+  font-size: var(--fs-sm);
+}
+
+/* Body copy in the same bordered card the landing sections use. */
+.dn-prose-card {
+  padding: var(--space-8);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+  background: var(--color-paper);
+}
+.dn-prose-card + .dn-prose-card {
+  margin-top: var(--space-6);
+}
+.dn-prose-card > :first-child {
+  margin-top: 0;
+}
+.dn-prose-card > :last-child {
+  margin-bottom: 0;
+}
+.dn-prose-card h2 {
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-lg);
+  line-height: 1.2;
+}
+.dn-prose-card p {
+  margin: 0;
+  color: var(--color-neutral-700);
+  line-height: 1.6;
+}
+
+/* Numbered steps reuse the "How does it work?" card grid. */
+.dn-step-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+.dn-step-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+  background: var(--color-paper);
+}
+.dn-step-card__index {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: var(--radius);
+  background: var(--color-accent-100);
+  color: var(--color-accent-700);
+  font-size: var(--fs-base);
+  font-weight: 600;
+}
+.dn-step-card h2 {
+  margin: 0;
+  font-size: var(--fs-base);
+  font-weight: 600;
+}
+.dn-step-card p {
+  margin: 0;
+  color: var(--color-neutral-700);
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .dn-step-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dn-page-masthead__aside {
+    width: 100%;
+  }
+}
+
+/* About: the closing caveat card and its actions. */
+.dn-about-limits {
+  margin-top: var(--space-6);
+}
+.dn-about-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+/* Task pages (profile, admin, welcome) keep their own layout but share the
+   masthead's typography, so headings read the same across every route. */
+.dn-profile-edit__head h1 {
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+.dn-profile-edit__head .dn-lede {
+  max-width: 68ch;
+  color: var(--color-neutral-700);
+  font-size: var(--fs-base);
+  line-height: 1.55;
+}
+
+/* ---------------------------------------------------------------------------
+   Status pages (404 Not Found, Runtime Error, etc.)
+   --------------------------------------------------------------------------- */
+.dn-status-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: var(--space-10) var(--space-4);
+}
+
+.dn-status-page__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 520px;
+  width: 100%;
+  padding: var(--space-8) var(--space-6);
+  background: var(--color-paper);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.dn-status-page__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  margin-bottom: var(--space-4);
+}
+
+.dn-status-page__icon--warn {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.dn-status-page__icon--error {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.dn-status-page__code {
+  font-size: var(--fs-xs, 0.75rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-neutral-600);
+  margin: 0 0 var(--space-1);
+}
+
+.dn-status-page h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-neutral-900, #111827);
+  margin: 0 0 var(--space-3);
+  line-height: 1.2;
+}
+
+.dn-status-page__body {
+  color: var(--color-neutral-700);
+  font-size: var(--fs-base, 1rem);
+  line-height: 1.6;
+  margin: 0 0 var(--space-6);
+}
+
+.dn-status-page__digest {
+  display: block;
+  margin-top: var(--space-2);
+  font-family: var(--font-mono, monospace);
+  font-size: var(--fs-xs, 0.75rem);
+  color: var(--color-neutral-600);
+}
+
+.dn-status-page__actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+/* ---------------------------------------------------------------------------
+   Loading states & skeletons
+   --------------------------------------------------------------------------- */
+.dn-loading {
+  width: 100%;
+  padding: var(--space-10) var(--space-4);
+}
+
+.dn-loading__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.dn-loading__spinner {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-8);
+}
+
+@keyframes dn-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.dn-skel {
+  background: #e2e8f0;
+  border-radius: var(--radius-sm, 6px);
+  animation: dn-pulse 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.dn-skel--title {
+  height: 38px;
+  width: 45%;
+  margin-bottom: var(--space-3);
+}
+
+.dn-skel--text {
+  height: 16px;
+  width: 75%;
+  margin-bottom: var(--space-2);
+}
+
+.dn-skel--short {
+  width: 45%;
+}
+
+.dn-loading__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-5);
+  margin-top: var(--space-8);
+}
+
+.dn-skel--card {
+  height: 220px;
+  border-radius: var(--radius-md, 8px);
+}
+
+/* ==========================================================================
+   Proper Redesigned Footer (Matching Target Design Mockup)
+   ========================================================================== */
+.dn-footer-proper {
+  background-color: #0756d6;
+  color: #ffffff;
+  padding: 40px 0 0;
+  margin-top: 0;
+  width: 100%;
+}
+
+/* Top Support Card ("Need Support?") */
+.dn-footer-support {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 24px 32px;
+  background-color: #173fae;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.dn-footer-support__text h2 {
+  margin: 0 0 4px;
+  color: #ffffff !important;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.dn-footer-support__text p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.dn-footer-support__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 22px;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  text-decoration: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.dn-footer-support__btn:hover {
+  background-color: #f8fafc !important;
+  transform: translateY(-1px);
+}
+
+.dn-footer-support__btn svg {
+  color: #0f172a;
+  flex-shrink: 0;
+}
+
+/* 4-column navigation grid with 3:1:1:1 ratio */
+.dn-footer-nav-grid {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr;
+  gap: 48px;
+  padding: 44px 0 52px;
+}
+
+/* Brand Column */
+.dn-footer-brand-col {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.dn-footer-logo-img {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.dn-footer-brand-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.dn-footer-brand-name {
+  margin: 0 0 8px;
+  color: #ffffff !important;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.dn-footer-brand-desc {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-size: 0.825rem;
+  line-height: 1.55;
+  max-width: 48ch;
+}
+
+/* Navigation link columns */
+.dn-footer-links-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.dn-footer-heading {
+  margin: 0 0 16px;
+  color: #ffffff !important;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.dn-footer-list {
+  display: flex !important;
+  flex-direction: column !important;
+  grid-template-columns: none !important;
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dn-footer-list li {
+  margin: 0;
+  padding: 0;
+}
+
+.dn-footer-list a {
+  display: inline-block !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-decoration: none !important;
+  min-height: auto !important;
+  transition: color 0.15s ease;
+  white-space: nowrap;
+}
+
+.dn-footer-list a:hover {
+  color: #ffffff !important;
+  text-decoration: underline !important;
+}
+
+/* Bottom Legal Bar */
+.dn-footer-legal-bar {
+  background-color: #091c3d;
+  padding: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.dn-footer-legal-bar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.dn-footer-legal-bar__copy {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.dn-footer-legal-bar__links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.dn-footer-legal-bar__links a {
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-size: 0.825rem;
+  text-decoration: none !important;
+  transition: color 0.15s ease;
+  white-space: nowrap;
+}
+
+.dn-footer-legal-bar__links a:hover {
+  color: #ffffff !important;
+  text-decoration: underline !important;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .dn-footer-nav-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+  }
+}
+
+@media (max-width: 640px) {
+  .dn-footer-support {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .dn-footer-nav-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .dn-footer-legal-bar__inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
+
+/* Inline loading state for client-fetched (SWR) content within a page,
+   as opposed to the full route-level .dn-loading skeleton. */
+.dn-loading--inline {
+  padding: var(--space-8) var(--space-4);
+}
+.dn-loading--inline .dn-loading__spinner {
+  margin-bottom: 0;
+}
+
+/* error-summary already carries most banner styling; add spacing for the
+   heading/body/retry-button layout QueryState's ErrorPanel introduces. */
+.error-summary strong {
+  display: block;
+  margin-bottom: var(--space-1);
+}
+.error-summary p {
+  margin: 0 0 var(--space-3);
+}
+.error-summary:has(button) {
+  padding-bottom: var(--space-4);
 }

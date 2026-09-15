@@ -15,6 +15,8 @@ export {
   issueLabelDtoSchema,
   issueListDtoSchema,
   issueListParamsSchema,
+  type LabelFacetDto,
+  labelFacetDtoSchema,
   type ProjectDto,
   projectDtoSchema,
 } from "./project";

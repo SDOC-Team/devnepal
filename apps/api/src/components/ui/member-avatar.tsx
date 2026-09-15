@@ -8,7 +8,7 @@ export function MemberAvatar({
   if (member.avatarUrl === null) {
     return (
       <span
-        className="public-discovery__monogram"
+        className="grid flex-none place-items-center rounded-circle border border-divider bg-accent-100 font-heading text-accent-800"
         aria-hidden="true"
         style={{ width: size, height: size, fontSize: Math.round(size / 2.6) }}
       >
@@ -25,7 +25,8 @@ export function MemberAvatar({
       height={size}
       loading="lazy"
       decoding="async"
-      style={{ width: size, height: size, borderRadius: "50%", objectFit: "cover" }}
+      className="rounded-circle object-cover"
+      style={{ width: size, height: size }}
     />
   );
 }

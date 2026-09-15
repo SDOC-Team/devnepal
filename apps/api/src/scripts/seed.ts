@@ -215,7 +215,7 @@ async function main(): Promise<void> {
     .values({
       githubRepoId: 1368200551,
       fullName: "voidash/gov-portal",
-      title: "Gov Portal",
+      title: "Dev Nepal",
       description:
         "The Government of Nepal public collaboration portal: member directory and contribution index.",
       htmlUrl: "https://github.com/voidash/gov-portal",
@@ -225,7 +225,7 @@ async function main(): Promise<void> {
       target: projects.githubRepoId,
       set: {
         fullName: "voidash/gov-portal",
-        title: "Gov Portal",
+        title: "Dev Nepal",
         htmlUrl: "https://github.com/voidash/gov-portal",
         isActive: true,
       },

@@ -9,7 +9,8 @@ export function isLocale(value: string): value is Locale {
 }
 
 const en = {
-  brand: "Gov Portal",
+  brand: "Dev Nepal",
+  brandTagline: "Description",
   govStrip: {
     government: "नेपाल सरकार · Government of Nepal",
     tagline: "Public collaboration portal",
@@ -18,6 +19,8 @@ const en = {
     language: "Language",
   },
   nav: {
+    projects: "Projects",
+    aboutPlatform: "About",
     project: "The project",
     issues: "Open issues",
     members: "Members",
@@ -90,6 +93,31 @@ const en = {
     openWorkBody: "One project, its repository, and the work waiting for a contribution.",
     seeProject: "Open the project",
     statsKicker: "Today on the portal",
+    openForContribTitle: "Featured project",
+    stackLabel: "Stack",
+    contributorsTitle: "Contributors",
+    viewAllContributors: "View all contributors",
+    openForContribOwner: "Office of the Prime Minister and Council of Ministers",
+    openForContribDesc:
+      "The platform you are reading: the member directory, project listings and the contribution flow. Its own code is the first repository open for public contribution.",
+    openForContribTopics: ["Django", "Python", "Outline", "Outline", "Outline"],
+    seeTheIssues: "See the Issues",
+    issuesPanelTitle: "Open Issues",
+    browseAllIssues: "Browse all issues",
+    viewAllMembers: "View all members",
+    howItWorksTitle: "How does it work ?",
+    howStep1Title: "Find work that fits",
+    howStep1Body:
+      "Every issue states its context, what is in scope, what is explicitly out of scope, and roughly how long it should take.",
+    howStep2Title: "Contribute on GitHub",
+    howStep2Body:
+      "No DevNepal account is needed to open a pull request. The mentor named on the issue answers questions in the open.",
+    howStep3Title: "Collect it in one place",
+    howStep3Body:
+      "A profile is optional. If you make one, your accepted contributions gather on a public page you control.",
+    ctaTitle: "Need Support?",
+    ctaBody: "Reach out to us and we will get back to you.",
+    ctaAction: "Start contributing",
   },
   stats: {
     openIssues: "Open issues",
@@ -174,6 +202,7 @@ const en = {
     search: "Search",
     countMatches: "members match the current directory",
     discoverable: "Approved member",
+    featured: "Featured",
     viewProfile: "View profile",
     emptyTitle: "No members match these filters.",
     emptyBody: "Try another name, headline, or skill.",
@@ -267,13 +296,13 @@ const en = {
     title: "How to contribute",
     lede: "A practical path from finding public-interest work to leaving a visible record of what changed.",
     sections: {
-      findTitle: "1. Find open work",
+      findTitle: "Find open work",
       findBody:
         "Browse the project's open issues. Each one is a task maintained in the repository, with labels such as good first issue.",
-      workTitle: "2. Work on GitHub",
+      workTitle: "Work on GitHub",
       workBody:
         "Comment on the issue to signal intent, fork the repository, and open a pull request. Discussion and review stay in the repository.",
-      recordTitle: "3. Leave a public record",
+      recordTitle: "Leave a public record",
       recordBody:
         "Sign in with GitHub and keep your profile current. Approved members are listed in the public directory.",
       limitsTitle: "What this portal is — and is not",
@@ -286,10 +315,29 @@ const en = {
     },
   },
   footer: {
-    note: "The public register of technology work that is open to contribution.",
+    note: "A Digital Collaboration Initiative of the Office of the Prime Minister and Council of Ministers, Government of Nepal. The platform's own code is open source.",
     repository: "Source on GitHub",
     platform: "Platform",
+    aboutPlatform: "About platform",
+    departments: "Departments",
+    whosWho: "Who's who",
+    directorates: "Directorates/Commissionerates",
+    governance: "Governance",
+    codeOfConduct: "Code of conduct",
+    security: "Security",
+    privacyNotice: "Privacy notice",
+    licence: "Licence",
+    contact: "Contact",
+    emailSecurity: "security@devnepal.com",
+    emailConduct: "conduct@devnepal.com",
+    ministrySignIn: "Ministry sign in",
+    scheme4: "Scheme 4",
     account: "Account",
+    legalCopyright:
+      "© 2026 Government of Nepal. Content available under the terms stated in the repository.",
+    termsConditions: "Terms & Conditions",
+    privacyPolicy: "Privacy policy",
+    contactUs: "Contact Us",
   },
   common: {
     loading: "Loading…",
@@ -298,13 +346,16 @@ const en = {
     notFoundBody: "That address does not exist on this portal.",
     issue: "issue",
     issues: "issues",
+    errorTitle: "Something went wrong",
+    retry: "Try again",
   },
 };
 
 export type Dictionary = typeof en;
 
 const ne: Dictionary = {
-  brand: "Gov Portal",
+  brand: "Dev Nepal",
+  brandTagline: "विवरण",
   govStrip: {
     government: "नेपाल सरकार · Government of Nepal",
     tagline: "सार्वजनिक सहयोग मञ्च",
@@ -313,6 +364,8 @@ const ne: Dictionary = {
     language: "भाषा",
   },
   nav: {
+    projects: "परियोजनाहरू",
+    aboutPlatform: "बारेमा",
     project: "परियोजना",
     issues: "खुला इशुहरू",
     members: "सदस्यहरू",
@@ -384,6 +437,30 @@ const ne: Dictionary = {
     openWorkBody: "एउटा परियोजना, त्यसको रिपोजिटरी, र योगदान पर्खिरहेको काम।",
     seeProject: "परियोजना खोल्नुहोस्",
     statsKicker: "आज पोर्टलमा",
+    openForContribTitle: "विशेष परियोजना",
+    stackLabel: "स्ट्याक",
+    contributorsTitle: "योगदानकर्ताहरू",
+    viewAllContributors: "सबै योगदानकर्ता हेर्नुहोस्",
+    openForContribOwner: "प्रधानमन्त्री तथा मन्त्रिपरिषद्को कार्यालय",
+    openForContribDesc:
+      "तपाईंले पढिरहनु भएको यो प्लेटफर्म: सदस्य निर्देशिका, परियोजना सूची र योगदान प्रवाह। यसको कोड सार्वजनिक योगदानका लागि खुला पहिलो रिपोजिटरी हो।",
+    openForContribTopics: ["Django", "Python", "Outline", "Outline", "Outline"],
+    seeTheIssues: "इशुहरू हेर्नुहोस्",
+    issuesPanelTitle: "खुला इशुहरू",
+    browseAllIssues: "सबै इशुहरू हेर्नुहोस्",
+    viewAllMembers: "सबै सदस्य हेर्नुहोस्",
+    howItWorksTitle: "यो कसरी काम गर्छ ?",
+    howStep1Title: "उपयुक्त काम भेट्नुहोस्",
+    howStep1Body: "हरेक इशुले सन्दर्भ, दायरा, दायरा बाहिरका कुरा र अनुमानित समय बताउँछ।",
+    howStep2Title: "GitHub मा योगदान गर्नुहोस्",
+    howStep2Body:
+      "पुल रिक्वेस्ट खोल्न DevNepal खाता आवश्यक छैन। इशुमा नामित मेन्टरले खुला रूपमा प्रश्नको जवाफ दिन्छ।",
+    howStep3Title: "एकै ठाउँमा जम्मा गर्नुहोस्",
+    howStep3Body:
+      "प्रोफाइल वैकल्पिक हो। बनाउनुभयो भने, स्वीकृत योगदानहरू तपाईंको नियन्त्रणमा रहेको सार्वजनिक पृष्ठमा जम्मा हुन्छन्।",
+    ctaTitle: "सहयोग चाहिन्छ?",
+    ctaBody: "हामीलाई सम्पर्क गर्नुहोस्, हामी जवाफ दिनेछौं।",
+    ctaAction: "योगदान सुरु गर्नुहोस्",
   },
   stats: {
     openIssues: "खुला इशु",
@@ -466,6 +543,7 @@ const ne: Dictionary = {
     search: "खोज्नुहोस्",
     countMatches: "सदस्यहरू वर्तमान निर्देशिकासँग मिल्छन्",
     discoverable: "स्वीकृत सदस्य",
+    featured: "विशेष",
     viewProfile: "प्रोफाइल हेर्नुहोस्",
     emptyTitle: "यी फिल्टरसँग मिल्ने सदस्य छैनन्।",
     emptyBody: "अर्को नाम, शीर्षक वा सीप प्रयास गर्नुहोस्।",
@@ -558,13 +636,13 @@ const ne: Dictionary = {
     title: "योगदान कसरी गर्ने",
     lede: "सार्वजनिक हितको काम भेट्नेदेखि गरेको कामको दृश्य अभिलेख छोड्नेसम्मको व्यावहारिक बाटो।",
     sections: {
-      findTitle: "१. खुला काम भेट्नुहोस्",
+      findTitle: "खुला काम भेट्नुहोस्",
       findBody:
         "परियोजनाका खुला इशुहरू हेर्नुहोस्। हरेक इशु रिपोजिटरीमा राखिएको काम हो, good first issue जस्ता लेबलसहित।",
-      workTitle: "२. GitHub मा काम गर्नुहोस्",
+      workTitle: "GitHub मा काम गर्नुहोस्",
       workBody:
         "इशुमा टिप्पणी गरी इच्छा जनाउनुहोस्, रिपोजिटरी फोर्क गर्नुहोस्, र पुल रिक्वेस्ट खोल्नुहोस्। छलफल र समीक्षा रिपोजिटरीमै हुन्छ।",
-      recordTitle: "३. सार्वजनिक अभिलेख राख्नुहोस्",
+      recordTitle: "सार्वजनिक अभिलेख राख्नुहोस्",
       recordBody:
         "GitHub बाट साइन इन गरी प्रोफाइल अद्यावधिक राख्नुहोस्। स्वीकृत सदस्यहरू सार्वजनिक निर्देशिकामा सूचीबद्ध हुन्छन्।",
       limitsTitle: "यो पोर्टल के हो — र के होइन",
@@ -577,10 +655,28 @@ const ne: Dictionary = {
     },
   },
   footer: {
-    note: "योगदानका लागि खुला प्रविधि कामको सार्वजनिक अभिलेख।",
+    note: "प्रधानमन्त्री तथा मन्त्रिपरिषद्को कार्यालय, नेपाल सरकारको डिजिटल सहयोग पहल। प्लेटफर्मको कोड खुला स्रोत हो।",
     repository: "GitHub मा स्रोत",
     platform: "प्लेटफर्म",
+    aboutPlatform: "प्लेटफर्मको बारेमा",
+    departments: "विभागहरू",
+    whosWho: "को को हुन्",
+    directorates: "निर्देशनालय/आयोग",
+    governance: "शासन",
+    codeOfConduct: "आचार संहिता",
+    security: "सुरक्षा",
+    privacyNotice: "गोपनीयता सूचना",
+    licence: "इजाजतपत्र",
+    contact: "सम्पर्क",
+    emailSecurity: "security@devnepal.com",
+    emailConduct: "conduct@devnepal.com",
+    ministrySignIn: "मन्त्रालय साइन इन",
+    scheme4: "योजना ४",
     account: "खाता",
+    legalCopyright: "© २०२६ नेपाल सरकार। सामग्री रिपोजिटरीमा उल्लेखित सर्तहरू अन्तर्गत उपलब्ध।",
+    termsConditions: "नियम र सर्तहरू",
+    privacyPolicy: "गोपनीयता नीति",
+    contactUs: "सम्पर्क गर्नुहोस्",
   },
   common: {
     loading: "लोड हुँदै…",
@@ -589,6 +685,8 @@ const ne: Dictionary = {
     notFoundBody: "यो ठेगाना यो पोर्टलमा छैन।",
     issue: "इशु",
     issues: "इशु",
+    errorTitle: "केही गडबड भयो",
+    retry: "फेरि प्रयास गर्नुहोस्",
   },
 };
 

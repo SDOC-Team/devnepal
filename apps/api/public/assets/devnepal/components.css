@@ -884,3 +884,213 @@ a.dn-issue-title:hover {
     padding: var(--space-4);
   }
 }
+
+/* ==========================================================================
+   Card grids — landing project row and the member directory.
+
+   Both use auto-fit so the same rule serves four cards at desktop, two at
+   tablet and one on a phone without breakpoint-specific column counts.
+   ========================================================================== */
+
+.dn-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-6);
+}
+
+.dn-member-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-6);
+}
+
+/* ==========================================================================
+   Project card
+   ========================================================================== */
+
+.dn-project-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  justify-content: space-between;
+  padding: var(--space-5);
+}
+
+.dn-project-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.dn-project-card__title {
+  margin: 0;
+  font-size: var(--fs-md);
+}
+
+.dn-project-card__owner {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--fs-sm);
+}
+
+.dn-project-card__summary {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+}
+
+.dn-project-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* ==========================================================================
+   Member card
+
+   Avatar with a verified badge in the top-right corner, name and headline,
+   icon meta row for affiliation/location, bio (3-line clamp), skill pills,
+   and View profile + GitHub actions.
+   ========================================================================== */
+
+.dn-member-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-lg);
+  background: var(--color-paper);
+}
+
+.dn-member-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.dn-member-card__avatar {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+}
+
+.dn-member-card__avatar .public-discovery__monogram {
+  border-radius: var(--radius-circle);
+}
+
+/* Verified badge in top-right corner of the card */
+.dn-member-card__verified-corner {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  flex: none;
+}
+
+.dn-member-card__identity {
+  min-width: 0;
+  flex: 1;
+}
+
+.dn-member-card__identity h3 {
+  margin: 0;
+  font-size: var(--fs-md);
+  font-weight: 600;
+  line-height: 1.3;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.dn-member-card__identity h3 a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.dn-member-card__identity h3 a:hover {
+  color: var(--color-accent-700);
+  text-decoration: underline;
+}
+
+.dn-member-card__identity p {
+  margin: 2px 0 0;
+  color: var(--color-neutral-600);
+  font-size: var(--fs-sm);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Meta row: affiliation + separator + location */
+.dn-member-card__meta {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+  color: var(--color-neutral-600);
+  font-size: var(--fs-sm);
+}
+
+.dn-member-card__meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.dn-member-card__meta svg {
+  flex: none;
+  color: var(--color-neutral-500);
+}
+
+.dn-member-card__meta-sep {
+  width: 1px;
+  height: 16px;
+  background: var(--color-divider-strong);
+  flex: none;
+}
+
+/* Bio: 3-line clamp */
+.dn-member-card__bio {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
+  margin: 0;
+  color: var(--color-neutral-700);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+}
+
+/* Skill pills */
+.dn-member-card__skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.dn-member-card__skill {
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--color-neutral-100, #f1f4f8);
+  color: var(--color-neutral-800, #333c44);
+  font-size: var(--fs-xs, 12px);
+  font-weight: 500;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+/* Two action buttons */
+.dn-member-card__actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: auto;
+}
+
