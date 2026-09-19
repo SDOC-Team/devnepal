@@ -36,6 +36,8 @@ body:
     id: tests
     attributes:
       label: Tests expected
+      description: Describe automated tests or manual verification. If none apply, explain why.
+    validations: { required: true }
   - type: dropdown
     id: size
     attributes:

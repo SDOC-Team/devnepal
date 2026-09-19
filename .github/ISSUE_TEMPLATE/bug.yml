@@ -4,7 +4,7 @@ labels: [bug]
 body:
   - type: markdown
     attributes:
-      value: "**Security problem?** Do not use this form — see SECURITY.md and email us privately."
+      value: "**Security problem?** Do not use this form — follow the private reporting instructions in [SECURITY.md](https://github.com/SDOC-Team/devnepal/blob/main/SECURITY.md)."
   - type: textarea
     id: what-happens
     attributes: { label: What happens }

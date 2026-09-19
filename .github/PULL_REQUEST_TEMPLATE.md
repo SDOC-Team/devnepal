@@ -18,6 +18,8 @@ Closes #
 - [ ] Tests added or updated for behaviour changes
 - [ ] No new dependency (or agreed in the issue first)
 - [ ] **No secrets, no real personal data anywhere in the diff**
+- [ ] Relevant items in [docs/READINESS.md](../docs/READINESS.md) updated, if applicable
+- [ ] Documentation updated; English and Nepali versions agree where both exist
 
 ## Screenshots
 

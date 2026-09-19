@@ -1,23 +1,13 @@
 # Maintainers
 
-Every area has a named person. If you are not sure who to ask, open an issue and we will route it.
+Individual area contacts have not yet been published. For non-confidential questions, open an issue. For sensitive reports, follow [SECURITY.md](./SECURITY.md) or [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
 
 | Area | Maintainer | Responds on |
 |---|---|---|
-| Portal — views, models, routing | @<HANDLE> | Issues labelled `area/portal` |
-| Members and profiles | @<HANDLE> | `area/members` |
-| Design system and UI | @<HANDLE> | `area/ui`, `design` |
-| Nepali content and translation | @<HANDLE> | `area/content`, `i18n`, `nepali-language` |
-| Tooling and CI | @<HANDLE> | `area/tooling`, `infra` |
-| Accessibility | @<HANDLE> | `a11y` |
-| Security | @<HANDLE> | See SECURITY.md — private reporting, never a public issue |
-
-**Code of conduct contact:** @<CONDUCT-CONTACT-HANDLE> — a named person who is not the technical lead. A dedicated address is being provisioned.
-
----
-
-## Becoming a maintainer
-
-See the ladder in [GOVERNANCE.md](./GOVERNANCE.md). In short: contribute consistently in one area, get nominated by a maintainer, and be confirmed by the core team. Maintainers may be from outside government.
-
-We would rather promote you than keep reviewing everything ourselves. Promotion is the strongest recognition this project offers.
+| Portal — views, models, routing | Not yet published | Issues labelled `area/portal` |
+| Members and profiles | Not yet published | `area/members` |
+| Design system and UI | Not yet published | `area/ui`, `design` |
+| Nepali content and translation | Not yet published | `area/content`, `i18n`, `nepali-language` |
+| Tooling and CI | Not yet published | `area/tooling`, `infra` |
+| Accessibility | Not yet published | `a11y` |
+| Security | Not yet published | See SECURITY.md — private reporting, never a public issue |

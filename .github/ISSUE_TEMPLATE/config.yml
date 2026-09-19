@@ -2,7 +2,7 @@ blank_issues_enabled: true
 contact_links:
   - name: Report a security vulnerability
     url: https://github.com/SDOC-Team/devnepal/blob/main/SECURITY.md
-    about: Never report security issues publicly. Use GitHub private vulnerability reporting
+    about: Never report security issues publicly. Check the policy for private reporting availability
   - name: Code of conduct concern
     url: https://github.com/SDOC-Team/devnepal/blob/main/CODE_OF_CONDUCT.md
-    about: Reported privately to a named contact who is not the technical lead
+    about: Check the policy for private contact availability. Do not post confidential reports in public issues

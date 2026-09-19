@@ -29,11 +29,7 @@ devNepal is a public space serving the people of Nepal. Everyone participating i
 
 ## Reporting
 
-Report privately to **@<CONDUCT-CONTACT-HANDLE>** by GitHub direct message.
-
-*(A dedicated `conduct@pmdevcore.gov.np` address is being provisioned and will be published here once it is live. Until then, please use the named contact above.)*
-
-The contact is **not** the technical lead, so that reporting a maintainer is never awkward.
+**Private reporting contact:** not yet published. Do not put confidential reports in public issues.
 
 We will:
 
@@ -54,7 +50,7 @@ In proportion, and always with a recorded reason:
 3. **Temporary suspension** from participation
 4. **Permanent ban**
 
-Decisions may be appealed to the same address and will be reviewed by someone not involved in the original decision.
+Decisions may be appealed privately and must be reviewed by someone not involved in the original decision. An appeal contact has not yet been published.
 
 ---
 
