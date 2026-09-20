@@ -27,13 +27,13 @@ export default async function SiteLayout({
     <SwrProvider>
       <LocaleLang locale={locale} />
       <a
-        className="absolute -top-full left-2 z-[100] inline-flex min-h-[var(--control-lg)] items-center rounded-md border border-divider-strong bg-paper px-4 py-3 text-sm font-bold text-text focus-visible:top-2"
-        href="#main"
+        className="sr-only focus:not-sr-only focus:block focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground"
+        href="#main-content"
       >
         {dict.common.skipToContent}
       </a>
       <SiteHeader locale={locale} />
-      <main id="main">{children}</main>
+      <main id="main-content">{children}</main>
       <SiteFooter locale={locale} />
     </SwrProvider>
   );

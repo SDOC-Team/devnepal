@@ -1,184 +1,13 @@
-/**
- * Tailwind utilities, mapped onto this app's existing design tokens rather
- * than Tailwind's own default palette/scale. Every --color-*, --space-*,
- * --fs-*, --radius-* etc. referenced below already exists in
- * public/assets/devnepal/tokens.css (loaded as a <link> in layout.tsx).
- *
- * `@theme inline` variables must use Tailwind's own theme namespace
- * (--color-*, --spacing-*, --text-*, --radius-*, --font-*) — for the color
- * and radius groups that namespace is spelled identically to tokens.css's
- * own names, so each line below must reference tokens.css's differently
- * named source alias (e.g. --dn-color-neutral-100), never repeat the same
- * name as both sides — `--color-x: var(--color-x)` is a self-reference and
- * silently resolves to nothing, breaking every utility built on it.
- * tokens.css defines the --dn-* aliases immediately below its real tokens
- * for this file to read.
- *
- * Do not add raw hex, px, or any other literal value here or in a component
- * className — every value must resolve to one of these token references, or
- * to one of Tailwind's own structural utilities (flex, grid, etc.) that
- * carry no color/size opinion of their own. That rule is what keeps one
- * design system instead of two.
- */
-/*
- * Explicit layer order, declared before anything else generates a layer.
- *
- * `legacy` (the hand-written public/assets/devnepal/*.css, imported below)
- * sits between Tailwind's `base` and `components`/`utilities` layers:
- *   - ABOVE `base` — Tailwind's Preflight resets button/input/select/
- *     textarea appearance and padding to nothing; if `legacy` sat below
- *     `base` (as it first did here), that reset silently beat every
- *     hand-authored class (.btn, .card, ...) despite correct selectors
- *     and correct source order, because a later layer always wins over an
- *     earlier one regardless of specificity.
- *   - BELOW `utilities` — so an explicit Tailwind utility class on an
- *     element (e.g. Button's own bg-primary) still overrides a legacy
- *     class it's paired with, rather than legacy winning outright.
- * Getting this wrong is silent: nothing errors, styles just don't apply,
- * which is exactly what happened before this ordering was corrected. Any
- * future change to this list needs the same reasoning re-applied, not a
- * guess — verify with a real computed-style check, not just a screenshot.
- *
- * Separately: without ANY @layer statement here, cascade layers work
- * differently again — unlayered CSS (a plain <link>, which is what these
- * files were before being routed through @import layer(...) below) beats
- * EVERY layered style unconditionally, which is its own silent trap (see
- * the git history of this file for that failure mode with primer.css's
- * `details{display:block}` beating a layered `.hidden{display:none}`).
- */
-@layer theme, base, legacy, components, utilities;
-@import "../../public/assets/devnepal/tokens.css" layer(legacy);
-@import "../../public/assets/devnepal/vendor/primer.css" layer(legacy);
-@import "../../public/assets/devnepal/base.css" layer(legacy);
-@import "../../public/assets/devnepal/components.css" layer(legacy);
-@import "../../public/assets/devnepal/devnepal.css" layer(legacy);
-@import "../../public/assets/devnepal/public-discovery.css" layer(legacy);
-
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-/*---break---
- */
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  /* Color */
-  --color-bg: var(--dn-color-bg);
-  --color-paper: var(--dn-color-paper);
-  --color-surface: var(--dn-color-surface);
-  --color-text: var(--dn-color-text);
-
-  --color-state: var(--dn-color-state);
-  --color-state-deep: var(--dn-color-state-deep);
-
-  --color-accent: var(--dn-color-accent);
-  --color-accent-100: var(--dn-color-accent-100);
-  --color-accent-200: var(--dn-color-accent-200);
-  --color-accent-300: var(--dn-color-accent-300);
-  --color-accent-600: var(--dn-color-accent-600);
-  --color-accent-700: var(--dn-color-accent-700);
-  --color-accent-800: var(--dn-color-accent-800);
-  --color-accent-900: var(--dn-color-accent-900);
-
-  --color-action: var(--dn-color-action);
-  --color-action-fg: var(--dn-color-action-fg);
-  --color-action-hover: var(--dn-color-action-hover);
-
-  --color-neutral-100: var(--dn-color-neutral-100);
-  --color-neutral-200: var(--dn-color-neutral-200);
-  --color-neutral-300: var(--dn-color-neutral-300);
-  --color-neutral-400: var(--dn-color-neutral-400);
-  --color-neutral-500: var(--dn-color-neutral-500);
-  --color-neutral-600: var(--dn-color-neutral-600);
-  --color-neutral-700: var(--dn-color-neutral-700);
-  --color-neutral-800: var(--dn-color-neutral-800);
-
-  --color-divider: var(--dn-color-divider);
-  --color-divider-strong: var(--dn-color-divider-strong);
-  --color-fg: var(--dn-color-fg);
-  --color-bg-muted: var(--dn-color-bg-muted);
-  --color-bg-subtle: var(--dn-color-bg-subtle);
-  --color-text-secondary: var(--dn-color-text-secondary);
-  --color-border: var(--dn-color-border);
-  --color-rule: var(--dn-color-rule);
-
-  --color-error: var(--dn-color-error);
-  --color-error-subtle: var(--dn-color-error-subtle);
-  --color-attention: var(--dn-color-attention);
-  --color-attention-subtle: var(--dn-color-attention-subtle);
-  --color-success: var(--dn-color-success);
-  --color-success-subtle: var(--dn-color-success-subtle);
-  --color-accent-subtle-1: var(--dn-color-accent-subtle-1);
-  --color-accent-subtle-2: var(--dn-color-accent-subtle-2);
-
-  --color-footer: var(--dn-color-footer);
-  --color-footer-card: var(--dn-color-footer-card);
-  --color-footer-deep: var(--dn-color-footer-deep);
-  --color-footer-fg: var(--dn-color-footer-fg);
-  --color-footer-ink: var(--dn-color-footer-ink);
-
-  /* Typography — these names don't collide with tokens.css's font/fs/lh
-     prefixes, so they can reference tokens.css directly. */
-  --font-sans: var(--dn-font-body);
-  --font-heading: var(--dn-font-heading);
-  --font-latin: var(--dn-font-latin);
-  --font-nepali: var(--dn-font-nepali);
-
-  --text-2xs: var(--fs-2xs);
-  --text-xs: var(--fs-xs);
-  --text-sm: var(--fs-sm);
-  --text-base: var(--fs-base);
-  --text-md: var(--fs-md);
-  --text-lg: var(--fs-lg);
-  --text-xl: var(--fs-xl);
-  --text-2xl: var(--fs-2xl);
-  --text-3xl: var(--fs-3xl);
-  --text-4xl: var(--fs-4xl);
-
-  /* Viewport-scaled heading steps, separate from the fixed --fs-* ramp.
-     `text-hero` is the landing display size only. */
-  --text-h1: var(--fs-h1);
-  --text-h2: var(--fs-h2);
-  --text-h3: var(--fs-h3);
-  --text-hero: var(--fs-hero);
-  --text-repo: var(--fs-repo);
-  --text-repo-owner: var(--fs-repo-owner);
-
-  --leading-tight: var(--lh-tight);
-  --leading-snug: var(--lh-snug);
-  --leading-normal: var(--lh-normal);
-
-  /* Spacing — reusing the token step names directly (space-1, space-2, ...)
-     rather than Tailwind's own 1/2/3 numeric scale, so a className like
-     `p-4` continues to mean exactly --space-4 (16px), never Tailwind's
-     default 4 (1rem coincides here, but the later steps diverge). No
-     collision: tokens.css spells these --space-*, this block --spacing-*. */
-  --spacing-1: var(--space-1);
-  --spacing-2: var(--space-2);
-  --spacing-3: var(--space-3);
-  --spacing-4: var(--space-4);
-  --spacing-5: var(--space-5);
-  --spacing-6: var(--space-6);
-  --spacing-8: var(--space-8);
-  --spacing-10: var(--space-10);
-  --spacing-12: var(--space-12);
-  --spacing-16: var(--space-16);
-  --spacing-24: var(--space-24);
-  --spacing-32: var(--space-32);
-
-  /* Radius — sm/md/lg intentionally alias to the single 8px corner per
-     tokens.css; pill and circle are the only real shape exceptions. Same
-     name collision as color, so these read the --dn-radius-* aliases too. */
-  --radius-none: var(--dn-radius-none);
-  --radius-sm: var(--dn-radius-sm);
-  --radius-md: var(--dn-radius-md);
-  --radius-lg: var(--dn-radius-lg);
-  --radius-pill: var(--dn-radius-pill);
-  --radius-circle: var(--dn-radius-circle);
-
-  /* Layout — no collision with Tailwind's own theme keys. */
-  --container-max: var(--container-max);
-  --container-narrow: var(--container-narrow);
+  --font-heading: var(--font-sans);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -194,8 +23,10 @@
   --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
   --color-input: var(--input);
+  --color-border: var(--border);
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -208,399 +39,131 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) * 1.4);
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 }
-/*
- * shadcn's own components (Button, Dialog, Select...) read these semantic
- * names — --background, --primary, --border, --ring etc. — via the
- * @theme inline block above. They are mapped to this app's existing tokens,
- * not shadcn's default oklch palette, so a shadcn primitive renders in the
- * same DevNepal colors as every hand-built component. This app has no dark
- * mode (a fixed, contrast-checked palette is a deliberate accessibility
- * decision — see tokens.css), so .dark below intentionally repeats the same
- * light values rather than defining a second palette: if a shadcn component
- * ever toggles a `dark` class, nothing regresses to an unreviewed theme.
- */
+
+/* Primitives — owner's Figma collection (brand neutrals; Tailwind v4 supplies the rest). */
 :root {
-  --background: var(--dn-color-paper);
-  --foreground: var(--dn-color-text);
-  --card: var(--dn-color-paper);
-  --card-foreground: var(--dn-color-text);
-  --popover: var(--dn-color-paper);
-  --popover-foreground: var(--dn-color-text);
-  --primary: var(--dn-color-action);
-  --primary-foreground: var(--dn-color-action-fg);
-  --secondary: var(--dn-color-neutral-100);
-  --secondary-foreground: var(--dn-color-text);
-  --muted: var(--dn-color-bg-subtle);
-  --muted-foreground: var(--dn-color-text-secondary);
-  --accent: var(--dn-color-accent-100);
-  --accent-foreground: var(--dn-color-accent-700);
-  --destructive: var(--dn-color-error);
-  --border: var(--dn-color-divider);
-  --input: var(--dn-color-divider);
-  --ring: var(--dn-color-accent-700);
-  --chart-1: var(--dn-color-accent-300);
-  --chart-2: var(--dn-color-accent-600);
-  --chart-3: var(--dn-color-accent-700);
-  --chart-4: var(--dn-color-accent-800);
-  --chart-5: var(--dn-color-accent-900);
-  --radius: 8px;
-  --sidebar: var(--dn-color-paper);
-  --sidebar-foreground: var(--dn-color-text);
-  --sidebar-primary: var(--dn-color-accent-700);
-  --sidebar-primary-foreground: var(--dn-color-action-fg);
-  --sidebar-accent: var(--dn-color-accent-100);
-  --sidebar-accent-foreground: var(--dn-color-accent-700);
-  --sidebar-border: var(--dn-color-divider);
-  --sidebar-ring: var(--dn-color-accent-700);
+  --white: #ffffff;
+  --black: #000000;
+  --neutral-50: #fafafa;
+  --neutral-100: #fcfcfc;
+  --neutral-200: #eeeeef;
+  --neutral-300: #e5e5e6;
+  --neutral-400: #d5d6d8;
+  --neutral-500: #b7b9bd;
+  --neutral-600: #4d5056;
+  --neutral-700: #25272a;
+  --neutral-800: #202225;
+  --neutral-900: #1b1d20;
+  --neutral-950: #17191c;
 }
+
+/* Semantics — light. Replaced from Figma on 2026-09-20 (design.md Drift Log). */
+:root {
+  --background: var(--neutral-50);
+  --foreground: var(--neutral-950);
+  --card: var(--neutral-100);
+  --card-foreground: var(--neutral-900);
+  --popover: var(--neutral-200);
+  --popover-foreground: var(--neutral-700);
+  --primary: #0052d6;
+  --primary-foreground: #eff6ff;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717b;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+  --destructive: #e7000b;
+  --border: var(--neutral-300);
+  /* Figma maps --input to neutral-50 (= page background). That is an input
+     fill, not a border; shadcn uses --input for borders, so it follows --border. */
+  --input: var(--neutral-300);
+  --ring: #a1a1a1;
+  --chart-1: #8ec5ff;
+  --chart-2: #2b7fff;
+  --chart-3: #155dfc;
+  --chart-4: #1447e6;
+  --chart-5: #193cb8;
+  --radius: 0.625rem;
+  --sidebar: #fafafa;
+  --sidebar-foreground: #09090b;
+  --sidebar-primary: #155dfc;
+  --sidebar-primary-foreground: #eff6ff;
+  --sidebar-accent: #f4f4f5;
+  --sidebar-accent-foreground: #18181b;
+  --sidebar-border: #e4e4e7;
+  --sidebar-ring: #a1a1a1;
+}
+
+/* Semantics — dark. */
 .dark {
-  --background: var(--dn-color-paper);
-  --foreground: var(--dn-color-text);
-  --card: var(--dn-color-paper);
-  --card-foreground: var(--dn-color-text);
-  --popover: var(--dn-color-paper);
-  --popover-foreground: var(--dn-color-text);
-  --primary: var(--dn-color-action);
-  --primary-foreground: var(--dn-color-action-fg);
-  --secondary: var(--dn-color-neutral-100);
-  --secondary-foreground: var(--dn-color-text);
-  --muted: var(--dn-color-bg-subtle);
-  --muted-foreground: var(--dn-color-text-secondary);
-  --accent: var(--dn-color-accent-100);
-  --accent-foreground: var(--dn-color-accent-700);
-  --destructive: var(--dn-color-error);
-  --border: var(--dn-color-divider);
-  --input: var(--dn-color-divider);
-  --ring: var(--dn-color-accent-700);
-  --chart-1: var(--dn-color-accent-300);
-  --chart-2: var(--dn-color-accent-600);
-  --chart-3: var(--dn-color-accent-700);
-  --chart-4: var(--dn-color-accent-800);
-  --chart-5: var(--dn-color-accent-900);
-  --sidebar: var(--dn-color-paper);
-  --sidebar-foreground: var(--dn-color-text);
-  --sidebar-primary: var(--dn-color-accent-700);
-  --sidebar-primary-foreground: var(--dn-color-action-fg);
-  --sidebar-accent: var(--dn-color-accent-100);
-  --sidebar-accent-foreground: var(--dn-color-accent-700);
-  --sidebar-border: var(--dn-color-divider);
-  --sidebar-ring: var(--dn-color-accent-700);
+  --background: var(--neutral-950);
+  --foreground: var(--neutral-50);
+  --card: var(--neutral-900);
+  --card-foreground: var(--neutral-100);
+  --popover: var(--neutral-800);
+  --popover-foreground: var(--neutral-300);
+  --primary: #0052d6;
+  --primary-foreground: var(--neutral-50);
+  --secondary: var(--neutral-800);
+  --secondary-foreground: var(--neutral-50);
+  --muted: var(--neutral-800);
+  --muted-foreground: var(--neutral-400);
+  --accent: var(--neutral-700);
+  --accent-foreground: var(--neutral-50);
+  --destructive: #ff7f6e;
+  --border: var(--neutral-700);
+  /* Figma: neutral-950 (= page background). Follows --border for the same reason as light. */
+  --input: var(--neutral-700);
+  --ring: var(--neutral-500);
+  /* Figma aliases these to --blue-8…12, which are not in the primitive set;
+     the ramp is the same five blues as light. */
+  --chart-1: #8ec5ff;
+  --chart-2: #2b7fff;
+  --chart-3: #155dfc;
+  --chart-4: #1447e6;
+  --chart-5: #193cb8;
+  --sidebar: var(--neutral-900);
+  --sidebar-foreground: var(--neutral-50);
+  --sidebar-primary: #155dfc;
+  --sidebar-primary-foreground: var(--neutral-50);
+  --sidebar-accent: var(--neutral-800);
+  --sidebar-accent-foreground: var(--neutral-50);
+  --sidebar-border: var(--neutral-700);
+  --sidebar-ring: var(--neutral-500);
 }
 
-/*
- * shadcn's init scaffolds a global `* { border-border } body { bg-background
- * text-foreground }` reset here. Deliberately dropped: base.css already owns
- * body background/text and every border color platform-wide, and applying
- * this on top would fight it (and set a border color on every element that
- * doesn't currently have one). shadcn components still get correct colors
- * through the CSS variables above — they just don't need this global layer.
- */
-/* ---------------------------------------------------------------------------
-   Base layer — ported from the former public/assets/devnepal/base.css.
-   Global element resets, bilingual (Devanagari) typography rules, and focus
-   handling that every page needs; not component-level styling, so it stays
-   here rather than becoming a repeated Tailwind class on every heading.
-   --------------------------------------------------------------------------- */
 @layer base {
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
+  * {
+    @apply border-border outline-ring/50;
   }
-
-  html {
-    font-size: 100%;
-    font-family: var(--font-body);
-    scroll-padding-top: var(--header-h);
-    background: var(--color-bg);
-    color-scheme: light;
-  }
-
-  @view-transition {
-    navigation: auto;
-  }
-
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
-    mix-blend-mode: normal;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    ::view-transition-group(*),
-    ::view-transition-old(*),
-    ::view-transition-new(*) {
-      /* biome-ignore lint/complexity/noImportantStyles: an accessibility
-         opt-out has to beat every animation declaration, whatever its
-         specificity — that is the point of the rule. */
-      animation: none !important;
-    }
-  }
-
-  [lang="ne"] {
-    font-family: var(--font-nepali);
-  }
-
-  /* Devanagari carries matras above the line and a reph that sits higher
-     still. The Latin headline leading of 0.94 clipped them into the line
-     above, so Nepali headings get their own leading. */
-  html[lang="ne"] :is(h1, h2, h3, h4, h5, h6),
-  :is(h1, h2, h3, h4, h5, h6) [lang="ne"],
-  [lang="ne"]:is(h1, h2, h3, h4, h5, h6) {
-    line-height: var(--lh-snug);
-  }
-
   body {
-    margin: 0;
-    background: var(--color-bg);
-    color: var(--color-text);
-    font-family: inherit;
-    font-size: var(--fs-base);
-    line-height: 1.6;
-    -webkit-text-size-adjust: 100%;
+    @apply bg-background text-foreground;
   }
-
-  img,
-  video {
-    max-width: 100%;
-    height: auto;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin: 0 0 var(--space-3);
-    font-family: var(--font-heading);
-    font-weight: var(--font-heading-weight);
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-    text-transform: none;
-    text-wrap: balance;
-  }
-
-  h1 {
-    font-size: var(--fs-h1);
-  }
-
-  h2 {
-    font-size: var(--fs-h2);
-  }
-
-  h3 {
-    font-size: var(--fs-h3);
-  }
-
-  h4 {
-    font-size: var(--fs-lg);
-  }
-
-  p,
-  dl,
-  ol,
-  ul {
-    margin: 0 0 var(--space-4);
-  }
-
-  p {
-    max-width: 78ch;
-  }
-
-  a {
-    color: var(--color-accent-700);
-    text-underline-offset: 3px;
-  }
-  a:hover {
-    color: var(--color-accent-800);
-  }
-
-  main :where(p, li, dd) a:not(.btn) {
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-  }
-
-  button,
-  input,
-  select,
-  textarea {
-    font: inherit;
-    color: inherit;
-  }
-
-  [lang="ne"] p,
-  [lang="ne"] li,
-  [lang="ne"] dd,
-  [lang="ne"] dt {
-    line-height: 1.8;
-  }
-
-  [lang="ne"] h1,
-  [lang="ne"] h2,
-  [lang="ne"] h3 {
-    line-height: 1.4;
-  }
-
-  [lang="ne"] * {
-    /* biome-ignore lint/complexity/noImportantStyles: Devanagari must never
-       be letter-spaced — tracking breaks conjuncts and matra placement — so
-       this has to override any tracking utility applied further down. */
-    letter-spacing: 0 !important;
-  }
-
-  :focus-visible {
-    outline: var(--focus-outline);
-    outline-offset: 2px;
-  }
-
-  .dn-product-header :focus-visible,
-  .site-footer :focus-visible {
-    outline-color: var(--color-accent);
-  }
-
-  .visually-hidden,
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  .skip-link,
-  .dn-skip-link {
-    position: absolute;
-    top: -100%;
-    left: var(--space-2);
-    z-index: 100;
-    background: var(--color-paper);
-    color: var(--color-text);
-    border: 1px solid var(--color-divider-strong);
-    border-radius: var(--radius-md);
-    font-weight: 700;
-    font-size: var(--fs-sm);
-    text-transform: none;
-    letter-spacing: 0;
-    padding: var(--space-3) var(--space-4);
-    min-height: var(--target-min);
-    display: inline-flex;
-    align-items: center;
-  }
-
-  .skip-link:focus-visible {
-    top: var(--space-2);
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    a,
-    button,
-    .btn,
-    summary,
-    input,
-    select,
-    textarea,
-    .card,
-    .Label,
-    .tag {
-      transition:
-        background-color 120ms ease,
-        border-color 120ms ease,
-        color 120ms ease,
-        outline-color 120ms ease;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    /* biome-ignore-start lint/complexity/noImportantStyles: the global
-       reduced-motion kill switch has to win over every animation and
-       transition on the page, including utility classes — overriding the
-       cascade is the entire mechanism. */
-    *,
-    *::before,
-    *::after {
-      transition-duration: 0.01ms !important;
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transform: none !important;
-      scroll-behavior: auto !important;
-    }
-    /* biome-ignore-end lint/complexity/noImportantStyles: end of switch */
-  }
-
-  @media (prefers-contrast: more) {
-    .dn-product-header {
-      background: var(--color-bg);
-      color: var(--color-fg);
-    }
+  html {
+    @apply font-sans;
   }
 }
 
-/*
- * Override Tailwind's built-in `container` utility. This app's .container
- * (legacy layer) already means "centered, capped at --container-max, with
- * --page-gutter side padding" — Tailwind's own container utility (100% width
- * + breakpoint max-width steps) is a different, unconfigured system that
- * would otherwise win once legacy is correctly demoted below @layer
- * utilities. Redefining it here via @utility fully replaces Tailwind's
- * generated version for this class name, so every existing
- * className="container" keeps its original, reviewed behavior.
- */
+/* Utilities used across the application */
 @utility container {
-  width: min(var(--container-max), calc(100% - var(--page-gutter) * 2));
+  width: min(1200px, calc(100% - 2rem));
   margin-inline: auto;
 }
 
-/* The reading-width container: profile, admin and welcome keep their single
-   column under --container-narrow so form labels stay near their fields. */
 @utility container-narrow {
-  width: min(var(--container-narrow), calc(100% - var(--page-gutter) * 2));
+  width: min(720px, calc(100% - 2rem));
   margin-inline: auto;
 }
 
-/*
- * The landing hero's photographic treatment. The scrim is a three-stop
- * gradient — darkest on the left where the copy sits, clearing toward the
- * right so the mountain stays legible — which no combination of Tailwind
- * gradient utilities expresses, so it stays a named utility rather than an
- * arbitrary-value soup on the element. White copy over the dark end is what
- * carries AA here; changing the stops needs a contrast re-check.
- */
-@utility hero-photo {
-  position: relative;
-  isolation: isolate;
-  background-image: url("/assets/devnepal/images/hero-background.jpg");
-  background-position: center;
-  background-size: cover;
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background: linear-gradient(
-      100deg,
-      rgb(0 0 0 / 78%) 0%,
-      rgb(0 0 0 / 62%) 42%,
-      rgb(0 0 0 / 28%) 100%
-    );
-  }
-}
-
-/*
- * Loading skeleton. The pulse is one shared animation so every skeleton on
- * the page breathes in step; `skel` carries the ground and the animation,
- * and callers size it with ordinary width/height utilities.
- */
 @keyframes dn-pulse {
   0%,
   100% {
@@ -612,48 +175,41 @@
 }
 
 @utility skel {
-  background: var(--color-neutral-200);
+  background: var(--neutral-200);
   border-radius: var(--radius-sm);
   animation: dn-pulse 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/*
- * Rendered-markdown body (issue descriptions). These style elements produced
- * by the markdown renderer, which can't carry className, so they stay a
- * descendant-selector utility rather than inline classes.
- */
 @utility prose-issue {
   min-height: 160px;
-  font-size: var(--fs-md);
+  font-size: 1rem;
   line-height: 1.7;
 
   & > :first-child {
     margin-top: 0;
   }
 
-  /* biome-ignore lint/style/noDescendingSpecificity: prose markdown descendant overrides */
   & h2 {
-    margin: var(--space-6) 0 var(--space-2);
-    font-size: var(--fs-lg);
+    margin: 1.5rem 0 0.5rem;
+    font-size: 1.25rem;
   }
 
   & :is(ul, ol) {
-    padding-inline-start: var(--space-6);
+    padding-inline-start: 1.5rem;
   }
 
   & :is(ul, ol) :is(ul, ol) {
-    padding-inline-start: var(--space-5);
+    padding-inline-start: 1.25rem;
   }
 
-  /* biome-ignore lint/style/noDescendingSpecificity: prose list item spacing */
   & li + li {
-    margin-block-start: var(--space-1);
+    margin-block-start: 0.25rem;
   }
 
   & code {
-    padding: 1px var(--space-1);
+    padding: 1px 0.25rem;
     border-radius: var(--radius-md);
-    background: var(--color-neutral-100);
+    background: var(--neutral-100);
     font-size: 0.92em;
   }
 }

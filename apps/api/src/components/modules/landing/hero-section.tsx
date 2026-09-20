@@ -1,27 +1,38 @@
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
 import type { Dictionary, Locale } from "@/lib/i18n";
+import { localePath } from "@/lib/i18n";
+import { HeroDataViz } from "./hero-data-viz";
 import { HeroSignIn } from "./hero-sign-in";
 
-/** Landing hero: two-line title, lead paragraph and the GitHub sign-in action. */
 export function HeroSection({ dict, locale }: { dict: Dictionary; locale: Locale }) {
   return (
-    <section className="hero-photo m-0 border-0" aria-labelledby="hero-heading">
-      <div className="container relative z-[1]">
-        <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-12 pt-12 pb-16">
-          <div className="flex min-h-[360px] flex-col justify-center sm:min-h-[480px]">
-            <h1
-              id="hero-heading"
-              className="max-w-[11em] text-hero leading-[0.94] tracking-[-0.015em] text-paper"
-            >
-              <span className="block">{dict.home.titleLine1}</span>
-              <span className="block">{dict.home.titleLine2}</span>
-            </h1>
-            <p className="mt-6 max-w-[52ch] text-md leading-[1.55] text-paper">{dict.home.lead}</p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <HeroSignIn label={dict.session.signIn} locale={locale} />
-            </div>
-          </div>
+    <section
+      data-slot="home-hero"
+      className="flex flex-col gap-12 px-4 py-16 sm:px-8 lg:flex-row lg:items-stretch lg:justify-between lg:px-16"
+    >
+      <div className="flex max-w-xl flex-col justify-center gap-6">
+        <div className="flex flex-col gap-5">
+          <h1 className="text-5xl font-bold tracking-[-0.02em] text-foreground lg:text-6xl">
+            <span className="block">{dict.home.titleLine1}</span>
+            <span className="block">{dict.home.titleLine2}</span>
+          </h1>
+          <p className="text-base text-pretty text-secondary-foreground">{dict.home.lead}</p>
+        </div>
+        <div className="flex flex-wrap items-center gap-4">
+          <HeroSignIn label={dict.session.signIn} locale={locale} />
+          <Button
+            size="lg"
+            variant="outline"
+            nativeButton={false}
+            render={<Link href={localePath(locale, "/issues")} />}
+          >
+            {dict.home.browseIssues}
+          </Button>
         </div>
       </div>
+      <HeroDataViz className="w-full lg:max-w-3xl" />
     </section>
   );
 }

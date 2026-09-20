@@ -1,6 +1,7 @@
 "use client";
 
 import type { Profile } from "@gov-portal/api-client";
+import { GithubLogoIcon } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -36,12 +37,8 @@ export function SessionMenu({
 
   if (actor === null) {
     return (
-      <Button
-        variant="outline"
-        size="sm"
-        className="max-[520px]:hidden"
-        onClick={() => void signInWithGitHub(`/${locale}/welcome`)}
-      >
+      <Button size="default" onClick={() => void signInWithGitHub(`/${locale}/welcome`)}>
+        <GithubLogoIcon data-icon="inline-start" />
         {signInLabel}
       </Button>
     );

@@ -1,161 +1,163 @@
+"use client";
+
 import type { PublicMemberDto } from "@gov-portal/shared";
+import { BuildingsIcon, MapPinIcon, SealCheckIcon } from "@phosphor-icons/react";
 import Link from "next/link";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
+import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MemberAvatar } from "@/components/ui/member-avatar";
+import { Card } from "@/components/ui/card";
 import { type Dictionary, type Locale, localePath } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
-/**
- * Member summary card:
- * - Avatar + name/headline in left, verified badge top-right
- * - Meta row with building + location icons
- * - Bio text (clamped)
- * - Skill labels
- * - "View profile" + "Github" actions
- */
+function initials(name: string) {
+  return name
+    .split(" ")
+    .map((part) => part.charAt(0))
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+const useIsomorphicLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
+
+function SkillsRow({ skills }: { skills: string[] }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const counterRef = useRef<HTMLSpanElement>(null);
+  const [visible, setVisible] = useState(skills.length);
+  const overflow = skills.length - visible;
+
+  useIsomorphicLayoutEffect(() => {
+    const el = containerRef.current;
+    const counter = counterRef.current;
+    if (!el || !counter) return;
+
+    const compute = () => {
+      const badges = Array.from(el.querySelectorAll<HTMLElement>("[data-skill]"));
+      if (badges.length === 0) return;
+      const width = el.clientWidth;
+      const gap = Number.parseFloat(getComputedStyle(el).columnGap) || 0;
+      const counterWidth = counter.offsetWidth + gap;
+      let used = 0;
+      let fit = 0;
+      for (let i = 0; i < badges.length; i++) {
+        const badgeWidth = badges[i].offsetWidth + (fit > 0 ? gap : 0);
+        const reserve = i < badges.length - 1 ? counterWidth : 0;
+        if (used + badgeWidth + reserve > width) break;
+        used += badgeWidth;
+        fit++;
+      }
+      setVisible(fit);
+    };
+
+    compute();
+    const observer = new ResizeObserver(compute);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [skills]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="mt-2.5 flex max-h-5 flex-wrap items-center gap-2 overflow-hidden px-4"
+    >
+      {skills.map((skill, i) => (
+        <Badge
+          key={skill}
+          data-skill
+          variant="secondary"
+          className={cn(i < visible ? "" : "invisible absolute")}
+        >
+          {skill}
+        </Badge>
+      ))}
+      <Badge
+        ref={counterRef}
+        variant="secondary"
+        className={cn(overflow > 0 ? "" : "invisible absolute")}
+      >
+        +{overflow > 0 ? overflow : skills.length} more
+      </Badge>
+    </div>
+  );
+}
+
 export function MemberCard({
   member,
   dict,
   locale,
-  maxSkills = 2,
+  className,
 }: {
   member: PublicMemberDto;
   dict: Dictionary;
   locale: Locale;
-  /** Skills shown before the rest collapse into a "+n more" label. */
-  maxSkills?: number;
+  className?: string;
 }) {
   const profileHref = localePath(locale, `/members/${member.githubUsername}`);
-  const visibleSkills = member.skills.slice(0, maxSkills);
-  const hiddenCount = member.skills.length - visibleSkills.length;
+  const avatarSrc = member.avatarUrl ?? `https://github.com/${member.githubUsername}.png`;
 
   return (
-    <article
-      className="relative flex flex-col gap-4 rounded-lg border border-divider bg-paper p-6"
-      aria-labelledby={`member-${member.githubId}`}
+    <Card
+      data-slot="profile-card"
+      className={cn(
+        "w-full gap-0 py-0 transition-colors duration-200 hover:bg-muted hover:ring-foreground/20",
+        className,
+      )}
     >
-      {/* Head: avatar + identity left, verified badge right */}
-      <div className="flex items-start gap-3">
-        <span className="relative inline-flex flex-none">
-          <MemberAvatar member={member} size={56} />
-        </span>
-
-        <div className="min-w-0 flex-1">
-          <h3
-            id={`member-${member.githubId}`}
-            className="m-0 overflow-hidden text-md leading-[1.3] font-semibold text-ellipsis whitespace-nowrap"
-          >
-            <Link
-              href={profileHref}
-              className="text-text no-underline hover:text-accent-700 hover:underline"
-            >
+      <div className="flex items-center gap-3 px-4 pt-4">
+        <Avatar className="size-12">
+          <AvatarImage src={avatarSrc} alt={member.displayName} />
+          <AvatarFallback>{initials(member.displayName)}</AvatarFallback>
+          <AvatarBadge className="size-5 [&>svg]:size-3.5">
+            <SealCheckIcon weight="fill" aria-hidden />
+          </AvatarBadge>
+        </Avatar>
+        <div className="flex min-w-0 flex-1 flex-col">
+          <p className="truncate text-lg font-semibold text-card-foreground">
+            <Link href={profileHref} className="no-underline hover:text-primary">
               {member.displayName}
             </Link>
-          </h3>
-          {member.headline !== null ? (
-            <p className="mt-0.5 mb-0 overflow-hidden text-sm text-ellipsis whitespace-nowrap text-neutral-600">
-              {member.headline}
-            </p>
-          ) : null}
+          </p>
+          <p className="truncate text-sm font-medium text-muted-foreground">
+            {member.headline ?? `@${member.githubUsername}`}
+          </p>
         </div>
-
-        {/* biome-ignore lint/performance/noImgElement: static badge asset */}
-        <img
-          className="absolute top-4 right-4 flex-none"
-          src="/assets/devnepal/images/verified.svg"
-          width={24}
-          height={24}
-          alt={dict.members.discoverable}
-          decoding="async"
-        />
       </div>
 
-      {/* Meta: affiliation + location with icons */}
-      {member.affiliation !== null || member.location !== null ? (
-        <p className="m-0 flex flex-nowrap items-center gap-3 text-sm text-neutral-600">
-          {member.affiliation !== null ? (
-            <span className="inline-flex min-w-0 items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap">
-              <svg
-                viewBox="0 0 16 16"
-                width={14}
-                height={14}
-                aria-hidden="true"
-                focusable="false"
-                className="flex-none text-neutral-500"
-              >
-                <path
-                  fill="currentColor"
-                  d="M2 14V2.5A1.5 1.5 0 0 1 3.5 1h5A1.5 1.5 0 0 1 10 2.5V6h2.5A1.5 1.5 0 0 1 14 7.5V14h-4v-2.5h-2V14H2Zm2-9h2V3.5H4V5Zm0 3h2V6.5H4V8Zm0 3h2V9.5H4V11Zm4-6h.5V3.5H8V5Zm0 3h.5V6.5H8V8Zm3.5 3H12V9.5h-.5V11Zm0-3H12V6.5h-.5V8Z"
-                />
-              </svg>
+      {member.affiliation || member.location ? (
+        <div className="mt-3 flex items-center gap-3 px-4">
+          {member.affiliation ? (
+            <span className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
+              <BuildingsIcon className="size-4" aria-hidden />
               {member.affiliation}
             </span>
           ) : null}
-
-          {member.affiliation !== null && member.location !== null ? (
-            <span className="h-4 w-px flex-none bg-divider-strong" aria-hidden="true" />
+          {member.affiliation && member.location ? (
+            <span aria-hidden className="h-2 w-px bg-border" />
           ) : null}
-
-          {member.location !== null ? (
-            <span className="inline-flex min-w-0 items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap">
-              <svg
-                viewBox="0 0 16 16"
-                width={14}
-                height={14}
-                aria-hidden="true"
-                focusable="false"
-                className="flex-none text-neutral-500"
-              >
-                <path
-                  fill="currentColor"
-                  d="M8 1a5 5 0 0 0-5 5c0 3.6 4.4 8.5 4.6 8.7a.5.5 0 0 0 .8 0C8.6 14.5 13 9.6 13 6a5 5 0 0 0-5-5Zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"
-                />
-              </svg>
+          {member.location ? (
+            <span className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
+              <MapPinIcon className="size-4" aria-hidden />
               {member.location}
-            </span>
-          ) : null}
-        </p>
-      ) : null}
-
-      {member.bio !== null ? (
-        <p className="m-0 line-clamp-4 text-sm leading-normal text-neutral-700">{member.bio}</p>
-      ) : null}
-
-      {member.skills.length > 0 ? (
-        <div className="flex flex-wrap gap-2">
-          {visibleSkills.map((skill) => (
-            <span
-              key={skill}
-              className="rounded-pill bg-neutral-100 px-3 py-1 text-xs leading-[1.35] font-medium whitespace-nowrap text-neutral-800"
-            >
-              {skill}
-            </span>
-          ))}
-          {hiddenCount > 0 ? (
-            <span className="rounded-pill bg-neutral-100 px-3 py-1 text-xs leading-[1.35] font-medium whitespace-nowrap text-neutral-800">
-              +{hiddenCount} more
             </span>
           ) : null}
         </div>
       ) : null}
 
-      <div className="mt-auto flex gap-2">
-        <Button variant="outline" render={<Link href={profileHref} />}>
-          {dict.members.viewProfile}
-        </Button>
+      {member.skills.length > 0 ? <SkillsRow skills={member.skills as string[]} /> : null}
+
+      <div className="p-4">
         <Button
           variant="outline"
-          render={
-            <a
-              href={`https://github.com/${member.githubUsername}`}
-              rel="noreferrer"
-              target="_blank"
-            />
-          }
+          size="sm"
+          nativeButton={false}
+          render={<Link href={profileHref} />}
         >
-          Github
+          {dict.members.viewProfile}
         </Button>
       </div>
-    </article>
+    </Card>
   );
 }

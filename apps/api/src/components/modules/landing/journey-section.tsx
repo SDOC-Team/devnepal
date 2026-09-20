@@ -1,91 +1,62 @@
+"use client";
+
+import {
+  GitPullRequestIcon,
+  IdentificationCardIcon,
+  MagnifyingGlassIcon,
+} from "@phosphor-icons/react";
 import type { Dictionary } from "@/lib/i18n";
 
-/** "How does it work?" — three icon cards. */
 export function JourneySection({ dict }: { dict: Dictionary }) {
   const steps = [
     {
+      icon: MagnifyingGlassIcon,
       title: dict.home.howStep1Title,
-      body: dict.home.howStep1Body,
-      icon: (
-        <svg
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.3-4.3" />
-        </svg>
-      ),
+      description: dict.home.howStep1Body,
     },
     {
+      icon: GitPullRequestIcon,
       title: dict.home.howStep2Title,
-      body: dict.home.howStep2Body,
-      icon: (
-        <svg
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4" />
-          <path d="M9 18c-4.51 2-5-2-7-2" />
-        </svg>
-      ),
+      description: dict.home.howStep2Body,
     },
     {
+      icon: IdentificationCardIcon,
       title: dict.home.howStep3Title,
-      body: dict.home.howStep3Body,
-      icon: (
-        <svg
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-          <polyline points="7 10 12 15 17 10" />
-          <line x1="12" x2="12" y1="15" y2="3" />
-        </svg>
-      ),
+      description: dict.home.howStep3Body,
     },
   ];
 
   return (
-    <section className="py-12" aria-labelledby="how-heading">
-      <div className="container">
-        <h2 id="how-heading" className="mb-8 leading-[1.08] tracking-[-0.01em]">
-          {dict.home.howItWorksTitle}
-        </h2>
-        <div className="grid grid-cols-[repeat(3,minmax(0,1fr))] gap-6">
-          {steps.map((step) => (
-            <article
+    <section
+      id="contribute"
+      data-slot="how-it-works"
+      className="flex scroll-mt-4 flex-col gap-5 bg-popover px-4 py-7 sm:px-8 lg:px-16"
+    >
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-semibold text-foreground">{dict.home.howItWorksTitle}</h2>
+      </div>
+      <div className="grid gap-x-6 gap-y-5 md:grid-cols-3">
+        {steps.map((step) => {
+          const Icon = step.icon;
+          return (
+            <div
               key={step.title}
-              className="flex flex-col gap-4 rounded-md border border-divider bg-paper p-6"
+              className="group flex flex-col gap-3 rounded-xl bg-background px-5 py-4 transition-colors duration-200 hover:bg-card hover:ring-1 hover:ring-foreground/10"
             >
-              <div className="grid size-[var(--target-min)] place-items-center rounded-md bg-accent-100 text-accent-700">
-                {step.icon}
+              <div className="flex size-9 items-center justify-center rounded-3xl bg-card ring-1 ring-foreground/10">
+                <Icon
+                  className="size-6 text-foreground transition-colors duration-200 group-hover:text-primary"
+                  weight="duotone"
+                  aria-hidden
+                />
               </div>
-              <h3 className="m-0 text-base font-semibold">{step.title}</h3>
-              <p className="m-0 text-sm leading-normal text-neutral-700">{step.body}</p>
-            </article>
-          ))}
-        </div>
+              <div className="flex flex-col">
+                <h3 className="text-lg font-semibold text-foreground">{step.title}</h3>
+                <p className="text-base text-muted-foreground">{step.description}</p>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

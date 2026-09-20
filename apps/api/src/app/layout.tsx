@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 
 import "./tailwind.css";
-import { Noto_Sans } from "next/font/google";
+import { Geist_Mono, Noto_Sans } from "next/font/google";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import { cn } from "@/lib/utils";
 
 const notoSans = Noto_Sans({ subsets: ["latin"], variable: "--font-sans" });
+const fontMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
   title: {
@@ -29,11 +31,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      data-color-mode="light"
-      data-light-theme="light"
-      className={cn("font-sans", notoSans.variable)}
+      suppressHydrationWarning
+      className={cn("antialiased font-sans", notoSans.variable, fontMono.variable)}
     >
-      <body>{children}</body>
+      <body className="selection:bg-primary/15">
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }
