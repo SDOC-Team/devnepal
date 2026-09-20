@@ -1,6 +1,7 @@
-import type { ProfileUpdate, SelfMemberDto } from "@gov-portal/shared";
+import type { Profile, ProfileUpdate } from "@gov-portal/api-client";
 import { useState } from "react";
-import { apiMutate } from "@/lib/api-client";
+
+import { apiClient } from "@/lib/api-client";
 import { ApiError } from "@/lib/api-error";
 
 export type SaveProfileState =
@@ -16,24 +17,26 @@ function fieldErrorsFrom(error: ApiError): Record<string, string> {
   return errors;
 }
 
-/** PATCH /profile, then revalidate the caller's SWR profile cache via `onSaved`. */
-export function useSaveProfile(onSaved: (member: SelfMemberDto) => void) {
+/** PATCH /v1/profile, then revalidate the caller's SWR profile cache via `onSaved`. */
+export function useSaveProfile(onSaved: (member: Profile) => void) {
   const [state, setState] = useState<SaveProfileState>({ status: "idle" });
 
   async function save(update: ProfileUpdate): Promise<boolean> {
     setState({ status: "saving" });
     try {
-      const { member } = await apiMutate<{ member: SelfMemberDto }>("/profile", "PATCH", update);
+      const member = await apiClient.updateProfile(update);
       setState({ status: "idle" });
       onSaved(member);
       return true;
     } catch (error) {
-      const apiError =
-        error instanceof ApiError ? error : new ApiError(500, "unknown_error", "Unexpected error");
+      const apiError = error instanceof ApiError ? error : null;
+      if (apiError === null) {
+        console.error("Failed to save profile", error);
+      }
       setState({
         status: "error",
-        message: apiError.message,
-        fieldErrors: fieldErrorsFrom(apiError),
+        message: apiError?.message ?? "Unexpected error",
+        fieldErrors: apiError === null ? {} : fieldErrorsFrom(apiError),
       });
       return false;
     }

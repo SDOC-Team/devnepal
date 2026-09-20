@@ -2,18 +2,14 @@
 
 import { SWRConfig } from "swr";
 
-import { apiFetch } from "@/lib/api-client";
-
 /**
- * App-wide SWR defaults. `fetcher` resolves a request key string through the
- * shared apiFetch client; individual hooks override `shouldRetryOnError`
- * where a 401/403 is an expected, non-retryable outcome (e.g. signed out).
+ * App-wide SWR defaults. Product hooks supply typed OpenAPI client functions
+ * as their fetchers; individual hooks handle expected 401/403/404 states.
  */
 export function SwrProvider({ children }: { children: React.ReactNode }) {
   return (
     <SWRConfig
       value={{
-        fetcher: (key: string) => apiFetch(key),
         revalidateOnFocus: false,
         shouldRetryOnError: false,
       }}

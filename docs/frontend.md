@@ -1,7 +1,14 @@
 # Frontend development
 
-The UI lives in the same Next.js app as the REST API: pages under
-`apps/api/src/app/(site)/`, API routes at the app root (`/members`, `/project`, …).
+The UI and backend live in one Next.js application and one deployment, with
+separate code boundaries. Pages are under `apps/api/src/app/(site)/`; the
+canonical HTTP API is under `apps/api/src/app/v1/` and described by
+`packages/api-contract/openapi.yaml`.
+
+Server Components and Server Actions call `apps/api/src/server` services
+directly. Client Components that need HTTP use `@gov-portal/api-client` with
+`baseUrl: "/v1"`. Presentation code must not import the database, repositories,
+Auth.js internals, or environment configuration; the linter enforces this.
 
 ## Design
 
@@ -77,9 +84,10 @@ README).
 | `/en/admin` | member moderation (requires `ADMIN_GITHUB_IDS`) |
 | `/en/about` | how to contribute |
 
-Default language is English; `/` redirects to `/en`. The API and contract must
-not change for UI work — if something is missing, change `packages/shared` and
-the REST route, then ask for a reviewer from each side.
+Default language is English; `/` redirects to `/en`. If the UI needs a new HTTP
+shape, change OpenAPI first, run `bun run api:generate`, implement the `/v1`
+handler, and request frontend and backend review. Runtime validation remains in
+`packages/shared` and must agree with the OpenAPI constraint.
 
 ## Verification matrix
 
@@ -87,7 +95,7 @@ the REST route, then ask for a reviewer from each side.
 |---|---|
 | Directory lists approved members only | `/en/members` shows 3 seeded members; `nisha-tamang` absent |
 | Non-public profile hidden | `/en/members/nisha-tamang` → "Profile not available"; with her session cookie → visible with a status banner |
-| Username + GitHub id parity | `curl /members/bikash-gurung` and `curl /members/id/900103` return the same member |
+| Username + GitHub id parity | `curl /v1/members/bikash-gurung` and `curl /v1/members/id/900103` return the same member |
 | Issue filters | `/en/issues` → filter by `good first issue` (only matching rows), search `nepali` (matches title and body) |
 | Issue detail | `/en/issues/101` renders labels, author, sanitized Markdown, GitHub link |
 | Profile validation | `/en/profile`: empty display name, 6 links, `http://` link, unknown skill → inline errors; save persists |

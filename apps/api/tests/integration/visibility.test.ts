@@ -2,20 +2,20 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/auth", () => ({ auth: vi.fn() }));
 
-import { GET as getByUsername } from "@/app/members/[username]/route";
-import { GET as getByGithubId } from "@/app/members/id/[githubId]/route";
-import { GET as getDirectory } from "@/app/members/route";
+import { GET as getByUsername } from "@/app/v1/members/[username]/route";
+import { GET as getByGithubId } from "@/app/v1/members/id/[githubId]/route";
+import { GET as getDirectory } from "@/app/v1/members/route";
 
 import { resetDatabase } from "../helpers/db";
 import { createMember } from "../helpers/factories";
 import { mockSessionAs } from "../helpers/session";
 
 function usernameRequest(username: string): Request {
-  return new Request(`http://localhost:3000/members/${username}`, { method: "GET" });
+  return new Request(`http://localhost:3000/v1/members/${username}`, { method: "GET" });
 }
 
 function githubIdRequest(githubId: number): Request {
-  return new Request(`http://localhost:3000/members/id/${githubId}`, { method: "GET" });
+  return new Request(`http://localhost:3000/v1/members/id/${githubId}`, { method: "GET" });
 }
 
 function usernameContext(username: string): { params: Promise<{ username: string }> } {
@@ -157,7 +157,7 @@ describe("member visibility", () => {
   });
 });
 
-describe("GET /members/", () => {
+describe("GET /v1/members", () => {
   beforeEach(async () => {
     await resetDatabase();
   });

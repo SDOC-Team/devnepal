@@ -1,11 +1,13 @@
-import type { PublicMemberDto } from "@gov-portal/shared";
+import type { Member } from "@gov-portal/api-client";
 import useSWR from "swr";
+
+import { apiClient } from "@/lib/api-client";
 
 /** Full public member directory (no filters — filtering happens client-side). */
 export function useMembers() {
-  const { data, error, isLoading } = useSWR<{ members: PublicMemberDto[] }>("/members");
+  const { data, error, isLoading } = useSWR<Member[]>("/v1/members", () => apiClient.listMembers());
   return {
-    members: data?.members ?? [],
+    members: data ?? [],
     isLoading,
     error: error as Error | undefined,
   };
@@ -13,11 +15,13 @@ export function useMembers() {
 
 /** A single public member profile by GitHub username. */
 export function useMember(username: string | undefined) {
-  const { data, error, isLoading } = useSWR<{ member: PublicMemberDto }>(
-    username !== undefined ? `/members/${encodeURIComponent(username)}` : null,
+  const fetchMember = username === undefined ? null : () => apiClient.getMember(username);
+  const { data, error, isLoading } = useSWR<Member>(
+    username !== undefined ? `/v1/members/${encodeURIComponent(username)}` : null,
+    fetchMember,
   );
   return {
-    member: data?.member,
+    member: data,
     isLoading,
     error: error as Error | undefined,
   };

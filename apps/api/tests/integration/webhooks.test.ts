@@ -2,7 +2,7 @@ import { createHmac } from "node:crypto";
 
 import { desc, eq } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
-import { GET as listIssues } from "@/app/project/issues/route";
+import { GET as listIssues } from "@/app/v1/project/issues/route";
 import { POST } from "@/app/webhooks/github/route";
 import { db } from "@/db/client";
 import { githubEvents, githubIssues } from "@/db/schema";
@@ -136,7 +136,7 @@ describe("POST /webhooks/github", () => {
     expect(issues[0]?.title).toBe("Renamed issue");
     expect(issues[0]?.state).toBe("closed");
 
-    const listing = await listIssues(new Request("http://localhost:3000/project/issues"));
+    const listing = await listIssues(new Request("http://localhost:3000/v1/project/issues"));
     expect(listing.status).toBe(200);
     const listed = (await listing.json()) as { total: number };
     expect(listed.total).toBe(0);

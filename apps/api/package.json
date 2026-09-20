@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
+    "@gov-portal/api-client": "workspace:*",
     "@gov-portal/shared": "workspace:*",
     "@phosphor-icons/react": "^2.1.10",
     "@tailwindcss/postcss": "^4.3.3",

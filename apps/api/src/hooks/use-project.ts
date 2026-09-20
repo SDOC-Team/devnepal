@@ -1,6 +1,7 @@
-import type { ProjectDto } from "@gov-portal/shared";
+import type { Project } from "@gov-portal/api-client";
 import useSWR from "swr";
 
+import { apiClient } from "@/lib/api-client";
 import { ApiError } from "@/lib/api-error";
 
 /**
@@ -9,12 +10,14 @@ import { ApiError } from "@/lib/api-error";
  * server-rendered page treated as an empty state, not a failure.
  */
 export function useProject() {
-  const { data, error, isLoading } = useSWR<{ project: ProjectDto }, ApiError>("/project", {
-    shouldRetryOnError: (err) => err.status !== 404,
-  });
+  const { data, error, isLoading } = useSWR<Project, ApiError>(
+    "/v1/project",
+    () => apiClient.getProject(),
+    { shouldRetryOnError: (err) => err.status !== 404 },
+  );
   const notFound = error instanceof ApiError && error.status === 404;
   return {
-    project: data?.project ?? null,
+    project: data ?? null,
     isLoading,
     error: notFound ? undefined : (error as Error | undefined),
   };

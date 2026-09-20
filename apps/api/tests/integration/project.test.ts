@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { GET as getIssue } from "@/app/project/issues/[number]/route";
-import { GET as listIssues } from "@/app/project/issues/route";
-import { GET as getProject } from "@/app/project/route";
+import { GET as getIssue } from "@/app/v1/project/issues/[number]/route";
+import { GET as listIssueLabels } from "@/app/v1/project/issues/labels/route";
+import { GET as listIssues } from "@/app/v1/project/issues/route";
+import { GET as getProject } from "@/app/v1/project/route";
 
 import { resetDatabase } from "../helpers/db";
 import { createIssue, createMember, createProject } from "../helpers/factories";
@@ -11,7 +12,7 @@ function issueContext(number: string): { params: Promise<{ number: string }> } {
   return { params: Promise.resolve({ number }) };
 }
 
-describe("GET /project", () => {
+describe("GET /v1/project", () => {
   beforeEach(async () => {
     await resetDatabase();
   });
@@ -38,13 +39,13 @@ describe("GET /project", () => {
   });
 });
 
-describe("GET /project/issues", () => {
+describe("GET /v1/project/issues", () => {
   beforeEach(async () => {
     await resetDatabase();
   });
 
   async function request(query = ""): Promise<Response> {
-    return listIssues(new Request(`http://localhost:3000/project/issues${query}`));
+    return listIssues(new Request(`http://localhost:3000/v1/project/issues${query}`));
   }
 
   it("returns only open issues, most recently updated first", async () => {
@@ -135,7 +136,50 @@ describe("GET /project/issues", () => {
   });
 });
 
-describe("GET /project/issues/{number}", () => {
+describe("GET /v1/project/issues/labels", () => {
+  beforeEach(async () => {
+    await resetDatabase();
+  });
+
+  it("returns open-issue label counts in count and name order", async () => {
+    const project = await createProject();
+    await createIssue({
+      projectId: project.id,
+      number: 1,
+      labels: [
+        { name: "documentation", color: "0075ca" },
+        { name: "help wanted", color: "008672" },
+      ],
+    });
+    await createIssue({
+      projectId: project.id,
+      number: 2,
+      labels: [{ name: "documentation", color: "0075ca" }],
+    });
+    await createIssue({
+      projectId: project.id,
+      number: 3,
+      state: "closed",
+      labels: [{ name: "ignored", color: "ffffff" }],
+    });
+
+    const response = await listIssueLabels();
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({
+      labels: [
+        { name: "documentation", count: 2 },
+        { name: "help wanted", count: 1 },
+      ],
+    });
+  });
+
+  it("returns 404 when no active project exists", async () => {
+    expect((await listIssueLabels()).status).toBe(404);
+  });
+});
+
+describe("GET /v1/project/issues/{number}", () => {
   beforeEach(async () => {
     await resetDatabase();
   });
@@ -153,7 +197,7 @@ describe("GET /project/issues/{number}", () => {
     });
 
     const response = await getIssue(
-      new Request("http://localhost:3000/project/issues/42"),
+      new Request("http://localhost:3000/v1/project/issues/42"),
       issueContext("42"),
     );
     expect(response.status).toBe(200);
@@ -170,12 +214,20 @@ describe("GET /project/issues/{number}", () => {
     await createIssue({ projectId: project.id, number: 1 });
 
     expect(
-      (await getIssue(new Request("http://localhost:3000/project/issues/999"), issueContext("999")))
-        .status,
+      (
+        await getIssue(
+          new Request("http://localhost:3000/v1/project/issues/999"),
+          issueContext("999"),
+        )
+      ).status,
     ).toBe(404);
     expect(
-      (await getIssue(new Request("http://localhost:3000/project/issues/abc"), issueContext("abc")))
-        .status,
+      (
+        await getIssue(
+          new Request("http://localhost:3000/v1/project/issues/abc"),
+          issueContext("abc"),
+        )
+      ).status,
     ).toBe(404);
   });
 });

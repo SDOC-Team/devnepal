@@ -1,10 +1,10 @@
-import type { IssueDto } from "@gov-portal/shared";
+import type { Issue } from "@gov-portal/api-client";
 import Link from "next/link";
 
 import { Chip } from "@/components/ui/chip";
 import { getDictionary, type Locale, localePath } from "@/lib/i18n";
 
-export function IssueRow({ issue, locale }: { issue: IssueDto; locale: Locale }) {
+export function IssueRow({ issue, locale }: { issue: Issue; locale: Locale }) {
   const dict = getDictionary(locale);
   const starter = issue.labels.some((label) => label.name.toLowerCase() === "good first issue");
 

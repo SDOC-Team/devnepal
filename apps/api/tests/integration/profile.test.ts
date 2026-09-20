@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/auth", () => ({ auth: vi.fn() }));
 
-import { GET, PATCH } from "@/app/profile/route";
+import { GET, PATCH } from "@/app/v1/profile/route";
 import { db } from "@/db/client";
 import { members } from "@/db/schema";
 
@@ -11,14 +11,14 @@ import { resetDatabase } from "../helpers/db";
 import { ADMIN_GITHUB_ID, createMember } from "../helpers/factories";
 import { jsonRequest, mockSessionAs } from "../helpers/session";
 
-const PROFILE_URL = "http://localhost:3000/profile";
+const PROFILE_URL = "http://localhost:3000/v1/profile";
 
 async function loadMember(id: string) {
   const rows = await db.select().from(members).where(eq(members.id, id));
   return rows[0] ?? null;
 }
 
-describe("PATCH /profile/", () => {
+describe("PATCH /v1/profile", () => {
   beforeEach(async () => {
     await resetDatabase();
   });
@@ -147,7 +147,7 @@ describe("PATCH /profile/", () => {
   });
 });
 
-describe("GET /profile/", () => {
+describe("GET /v1/profile", () => {
   beforeEach(async () => {
     await resetDatabase();
   });

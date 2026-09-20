@@ -4,15 +4,16 @@
 
 ## Contract impact
 
-- [ ] No changes to `packages/shared`
-- [ ] `packages/shared` changed — needs a reviewer from the frontend and the backend
+- [ ] No changes to `packages/api-contract`
+- [ ] OpenAPI changed — generated client updated and frontend + backend review requested
 
 ## Checks
 
 - [ ] `bun run lint`
 - [ ] `bun run typecheck`
 - [ ] `bun run test` (required for `apps/api` changes)
-- [ ] `bun run build` and/or `bun run build:web`
+- [ ] `bun run api:check`
+- [ ] `bun run build`
 
 ## Notes for reviewers
 
