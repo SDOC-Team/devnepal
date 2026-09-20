@@ -14,10 +14,10 @@ import { localePath } from "@/lib/i18n";
 const PER_PAGE = 15;
 
 const SELECT_CLASS =
-  "h-9 w-full min-w-0 rounded-md border border-input bg-paper px-2.5 py-1 text-sm text-text shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+  "h-9 w-full min-w-0 rounded-md border border-input bg-card px-2.5 py-1 text-sm text-foreground shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
 
 const QUICK_LINK_CLASS =
-  "inline-flex min-h-[var(--control-sm)] items-center gap-2 rounded-pill border border-divider-strong px-3 text-sm text-text no-underline hover:bg-neutral-100 aria-[current=true]:border-accent-700 aria-[current=true]:bg-accent-100 aria-[current=true]:text-accent-800";
+  "inline-flex min-h-8 items-center gap-2 rounded-full border border-border px-3 text-sm text-foreground no-underline hover:bg-muted aria-[current=true]:border-primary aria-[current=true]:bg-primary/5 aria-[current=true]:text-primary";
 
 export default function IssuesPage() {
   const { locale, dict } = useLocale();
@@ -70,11 +70,11 @@ export default function IssuesPage() {
               aria-label={dict.issues.title}
             >
               <div className="flex flex-col-reverse">
-                <dt className="text-sm text-neutral-700">{dict.issues.openLabel}</dt>
+                <dt className="text-sm text-muted-foreground">{dict.issues.openLabel}</dt>
                 <dd className="m-0 font-heading text-lg font-semibold">{total}</dd>
               </div>
               <div className="flex flex-col-reverse">
-                <dt className="text-sm text-neutral-700">{dict.issues.firstIssueLabel}</dt>
+                <dt className="text-sm text-muted-foreground">{dict.issues.firstIssueLabel}</dt>
                 <dd className="m-0 font-heading text-lg font-semibold">{starterCount}</dd>
               </div>
             </dl>
@@ -87,7 +87,7 @@ export default function IssuesPage() {
 
         <search>
           <form
-            className="mb-6 grid grid-cols-1 items-end gap-4 rounded-md border border-divider bg-paper p-4 sm:grid-cols-[1fr_1fr_auto]"
+            className="mb-6 grid grid-cols-1 items-end gap-4 rounded-md border border-border bg-card p-4 sm:grid-cols-[1fr_1fr_auto]"
             onSubmit={(event) => {
               event.preventDefault();
               const form = new FormData(event.currentTarget);
@@ -130,7 +130,7 @@ export default function IssuesPage() {
         </search>
 
         <div className="mb-4 flex flex-wrap items-center gap-2">
-          <span className="mr-1 text-sm font-semibold text-neutral-600">
+          <span className="mr-1 text-sm font-semibold text-muted-foreground">
             {dict.issues.filterBy}
           </span>
           {labels.map((facet) => (
@@ -147,7 +147,7 @@ export default function IssuesPage() {
               className={QUICK_LINK_CLASS}
             >
               {facet.name}
-              <span className="inline-flex min-h-[var(--badge-h)] min-w-[var(--badge-h)] items-center justify-center rounded-pill border border-divider px-2 text-xs leading-tight font-semibold tabular-nums text-neutral-700">
+              <span className="inline-flex min-h-6 min-w-6 items-center justify-center rounded-full border border-border px-2 text-xs leading-tight font-semibold tabular-nums text-muted-foreground">
                 {facet.count}
               </span>
             </Link>
@@ -170,10 +170,10 @@ export default function IssuesPage() {
             onRetry={() => window.location.reload()}
           />
         ) : issuesLoading ? (
-          <LoadingPanel label={dict.common.loading} />
+          <LoadingPanel label={dict.common.loading} layout="rows" />
         ) : issues.length === 0 ? (
           <div
-            className="grid justify-items-start gap-2 rounded-md border border-dashed border-divider-strong bg-paper px-6 py-8"
+            className="grid justify-items-start gap-2 rounded-md border border-dashed border-border bg-card px-6 py-8"
             role="status"
           >
             <strong className="m-0 font-heading text-lg leading-tight font-semibold">
@@ -185,7 +185,7 @@ export default function IssuesPage() {
             </Button>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-md border border-divider bg-paper">
+          <div className="overflow-hidden rounded-md border border-border bg-card">
             {issues.map((issue) => (
               <IssueRow key={issue.number} issue={issue} locale={locale} />
             ))}
@@ -199,7 +199,7 @@ export default function IssuesPage() {
                 ←
               </Button>
             ) : null}
-            <span className="text-sm text-neutral-700">
+            <span className="text-sm text-muted-foreground">
               {page} / {totalPages}
             </span>
             {page < totalPages ? (

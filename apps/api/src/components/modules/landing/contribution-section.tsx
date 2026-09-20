@@ -7,7 +7,7 @@ export function ContributionSection({ dict, locale }: { dict: Dictionary; locale
   return (
     <div className="grid grid-cols-1 items-start gap-5 min-[801px]:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] min-[801px]:gap-16">
       <header className="m-0 block border-0 p-0">
-        <span className="block text-sm font-semibold text-accent-700">
+        <span className="block text-sm font-semibold text-primary">
           {dict.home.contributeKicker}
         </span>
         <h2 id="path-heading" className="mt-5">
@@ -15,13 +15,13 @@ export function ContributionSection({ dict, locale }: { dict: Dictionary; locale
         </h2>
         <p>{dict.home.contributeBody}</p>
         <ul
-          className="mt-5 mb-0 flex max-w-[48ch] list-none flex-wrap gap-x-0 gap-y-1 p-0 text-sm leading-[1.7] text-neutral-700"
+          className="mt-5 mb-0 flex max-w-[48ch] list-none flex-wrap gap-x-0 gap-y-1 p-0 text-sm leading-[1.7] text-muted-foreground"
           aria-label={dict.home.contributeTitle}
         >
           {dict.home.ways.map((way) => (
             <li
               key={way}
-              className="after:mx-[0.55em] after:text-neutral-500 after:content-['·'] last:after:content-none"
+              className="after:mx-[0.55em] after:text-muted-foreground after:content-['·'] last:after:content-none"
             >
               {way}
             </li>
@@ -29,7 +29,7 @@ export function ContributionSection({ dict, locale }: { dict: Dictionary; locale
         </ul>
         <Link
           href={localePath(locale, "/about")}
-          className="mt-6 inline-block text-sm font-medium whitespace-nowrap text-accent-700 hover:text-accent-800"
+          className="mt-6 inline-block text-sm font-medium whitespace-nowrap text-primary hover:text-primary"
         >
           {dict.home.howToContribute} →
         </Link>
@@ -55,14 +55,14 @@ export function ContributionSection({ dict, locale }: { dict: Dictionary; locale
         ].map((card) => (
           <article
             key={card.title}
-            className="relative flex flex-col gap-3 rounded-md border border-divider bg-paper p-6"
+            className="relative flex flex-col gap-3 rounded-md border border-border bg-card p-6"
           >
             <h3 className="m-0 text-lg leading-[1.1] tracking-[0.02em] uppercase">
-              <Link href={card.href} className="text-text no-underline hover:text-accent-700">
+              <Link href={card.href} className="text-foreground no-underline hover:text-primary">
                 {card.title}
               </Link>
             </h3>
-            <p className="m-0 text-base leading-[1.55] text-neutral-800">{card.body}</p>
+            <p className="m-0 text-base leading-[1.55] text-foreground">{card.body}</p>
           </article>
         ))}
       </div>

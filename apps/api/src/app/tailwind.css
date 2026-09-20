@@ -149,7 +149,7 @@
     @apply bg-background text-foreground;
   }
   html {
-    @apply font-sans;
+    @apply font-sans scroll-smooth;
   }
 }
 
@@ -174,10 +174,59 @@
   }
 }
 
+/* Shimmer sweep reads as progress; the pulse fallback covers reduced motion. */
+@keyframes dn-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
 @utility skel {
-  background: var(--neutral-200);
+  /* Follows the theme, so skeletons stay subtle in dark mode. */
+  background-color: var(--muted);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklab, var(--foreground) 6%, transparent) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
   border-radius: var(--radius-sm);
-  animation: dn-pulse 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: dn-shimmer 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skel {
+    background-image: none;
+    animation: dn-pulse 2s ease-in-out infinite;
+  }
+}
+
+/* Indeterminate rail: sweeps rather than loops a full cycle, so it reads as
+   "working" without implying measurable progress. */
+@keyframes dn-rail {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(350%);
+  }
+}
+
+.loading-rail {
+  animation: dn-rail 1.3s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-rail {
+    animation: dn-pulse 2s ease-in-out infinite;
+    transform: none;
+    width: 100%;
+  }
 }
 
 @utility prose-issue {

@@ -28,6 +28,8 @@ function SkillsRow({ skills }: { skills: string[] }) {
   const counterRef = useRef<HTMLSpanElement>(null);
   const [visible, setVisible] = useState(skills.length);
   const overflow = skills.length - visible;
+  const remainingSkills = skills.slice(visible);
+  const remainingSkillsText = remainingSkills.join(", ");
 
   useIsomorphicLayoutEffect(() => {
     const el = containerRef.current;
@@ -61,7 +63,7 @@ function SkillsRow({ skills }: { skills: string[] }) {
   return (
     <div
       ref={containerRef}
-      className="mt-2.5 flex max-h-5 flex-wrap items-center gap-2 overflow-hidden px-4"
+      className="mt-2.5 flex max-h-5 flex-wrap items-center gap-2 overflow-visible px-4"
     >
       {skills.map((skill, i) => (
         <Badge
@@ -73,13 +75,29 @@ function SkillsRow({ skills }: { skills: string[] }) {
           {skill}
         </Badge>
       ))}
-      <Badge
-        ref={counterRef}
-        variant="secondary"
-        className={cn(overflow > 0 ? "" : "invisible absolute")}
-      >
-        +{overflow > 0 ? overflow : skills.length} more
-      </Badge>
+
+      <div className={cn("relative group inline-flex", overflow > 0 ? "" : "invisible absolute")}>
+        <Badge
+          ref={counterRef}
+          variant="secondary"
+          title={remainingSkillsText}
+          className="cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground"
+        >
+          +{overflow > 0 ? overflow : skills.length} more
+        </Badge>
+
+        {remainingSkills.length > 0 ? (
+          <div className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 opacity-0 transition-all duration-150 group-hover:opacity-100 group-hover:pointer-events-auto z-50">
+            <div className="flex flex-wrap gap-1 rounded-md border border-border bg-popover p-2 text-xs font-normal text-popover-foreground shadow-md whitespace-nowrap max-w-[240px]">
+              {remainingSkills.map((skill) => (
+                <span key={skill} className="rounded bg-muted px-1.5 py-0.5 text-[11px]">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }

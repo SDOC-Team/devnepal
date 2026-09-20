@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 
 const TONE_CLASSES = {
-  neutral: "bg-neutral-100 text-neutral-600",
-  warn: "bg-attention-subtle text-attention",
-  error: "bg-error-subtle text-error",
+  neutral: "bg-muted text-muted-foreground",
+  warn: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+  error: "bg-destructive/10 text-destructive",
 } as const;
 
 /**
@@ -33,30 +33,32 @@ export function StatusPage({
 }) {
   return (
     <section
-      className="flex min-h-[60vh] items-center justify-center px-4 py-10"
+      className="flex min-h-[60vh] items-center justify-center px-4 py-12"
       aria-labelledby={titleId}
     >
-      <div className="flex w-full max-w-[520px] flex-col items-center rounded-lg border border-divider bg-paper px-6 py-8 text-center shadow-[0_4px_20px_rgb(0_0_0/0.05)]">
+      <div className="flex w-full max-w-[520px] flex-col items-center rounded-xl border border-border bg-card p-6 text-center sm:p-8">
         {icon !== undefined ? (
           <span
-            className={`mb-4 inline-flex size-[72px] items-center justify-center rounded-circle ${TONE_CLASSES[tone]}`}
+            className={`mb-4 inline-flex size-16 items-center justify-center rounded-full ${TONE_CLASSES[tone]}`}
           >
             {icon}
           </span>
         ) : null}
         {code !== undefined ? (
-          <p className="mt-0 mb-1 text-xs font-bold tracking-[0.1em] uppercase text-neutral-600">
+          <p className="mt-0 mb-1 text-xs font-bold tracking-widest uppercase text-muted-foreground">
             {code}
           </p>
         ) : null}
-        <h1 id={titleId} className="mt-0 mb-3 text-xl leading-tight font-bold">
+        <h1 id={titleId} className="mt-0 mb-3 text-xl font-bold tracking-tight text-foreground">
           {title}
         </h1>
         {body !== undefined ? (
-          <p className="mt-0 mb-6 text-base leading-[1.6] text-neutral-700">{body}</p>
+          <p className="mt-0 mb-6 text-sm leading-relaxed text-muted-foreground">{body}</p>
         ) : null}
         {digest !== undefined ? (
-          <span className="mt-2 block font-mono text-xs text-neutral-600">{digest}</span>
+          <span className="mb-6 block rounded-md border border-border/50 bg-muted/60 px-2.5 py-1 font-mono text-xs text-muted-foreground">
+            {digest}
+          </span>
         ) : null}
         {actions !== undefined ? (
           <div className="flex w-full flex-wrap justify-center gap-3">{actions}</div>

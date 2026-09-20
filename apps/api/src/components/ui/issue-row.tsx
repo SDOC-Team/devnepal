@@ -9,7 +9,7 @@ export function IssueRow({ issue, locale }: { issue: Issue; locale: Locale }) {
   const starter = issue.labels.some((label) => label.name.toLowerCase() === "good first issue");
 
   return (
-    <article className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-3 px-5 py-4 hover:bg-neutral-100 [&+&]:border-t [&+&]:border-divider">
+    <article className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-3 px-5 py-4 hover:bg-muted [&+&]:border-t [&+&]:border-border">
       <div>
         <div className="mt-2 flex flex-wrap gap-1">
           {starter ? <Chip tone="accent">{dict.issues.goodFirst}</Chip> : null}
@@ -22,19 +22,19 @@ export function IssueRow({ issue, locale }: { issue: Issue; locale: Locale }) {
         <h2 className="mt-2 mb-1 text-md">
           <Link
             href={localePath(locale, `/issues/${issue.number}`)}
-            className="text-text no-underline hover:text-accent-700 hover:underline"
+            className="text-foreground no-underline hover:text-primary hover:underline"
           >
             #{issue.number} · {issue.title}
           </Link>
         </h2>
-        <p className="m-0 text-sm text-neutral-700">
+        <p className="m-0 text-sm text-muted-foreground">
           {dict.issues.openedBy} @{issue.authorLogin} · {issue.commentsCount} {dict.issues.comments}
         </p>
       </div>
       <span className="flex flex-col items-end gap-1 whitespace-nowrap">
         <Link
           href={localePath(locale, `/issues/${issue.number}`)}
-          className="text-sm font-semibold text-accent-700 no-underline hover:underline"
+          className="text-sm font-semibold text-primary no-underline hover:underline"
         >
           {dict.issues.readIssue}
         </Link>
@@ -42,7 +42,7 @@ export function IssueRow({ issue, locale }: { issue: Issue; locale: Locale }) {
           href={issue.htmlUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm font-medium text-neutral-600 no-underline hover:underline"
+          className="text-sm font-medium text-muted-foreground no-underline hover:underline"
         >
           {dict.issues.github} ↗
         </a>

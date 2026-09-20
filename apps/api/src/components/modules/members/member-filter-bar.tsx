@@ -25,7 +25,7 @@ export function MemberFilterBar({
   return (
     <search>
       <form
-        className="grid grid-cols-1 gap-4 rounded-md border border-divider bg-paper p-4 sm:grid-cols-2"
+        className="grid grid-cols-1 gap-4 rounded-md border border-border bg-card p-4 sm:grid-cols-2"
         onSubmit={(event) => event.preventDefault()}
       >
         <Field>
@@ -47,7 +47,7 @@ export function MemberFilterBar({
             id="member-skill"
             value={skill}
             onChange={(event: ChangeEvent<HTMLSelectElement>) => onSkillChange(event.target.value)}
-            className="h-9 w-full min-w-0 rounded-md border border-input bg-paper px-2.5 py-1 text-sm text-text shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="h-9 w-full min-w-0 rounded-md border border-input bg-card px-2.5 py-1 text-sm text-foreground shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             <option value="">{dict.members.allSkills}</option>
             {SKILLS.map((entry) => (

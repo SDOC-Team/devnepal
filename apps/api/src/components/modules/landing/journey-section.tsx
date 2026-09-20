@@ -5,9 +5,22 @@ import {
   IdentificationCardIcon,
   MagnifyingGlassIcon,
 } from "@phosphor-icons/react";
+import { useEffect } from "react";
 import type { Dictionary } from "@/lib/i18n";
 
 export function JourneySection({ dict }: { dict: Dictionary }) {
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#contribute") {
+      const timer = setTimeout(() => {
+        const el = document.getElementById("contribute");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   const steps = [
     {
       icon: MagnifyingGlassIcon,
@@ -30,7 +43,7 @@ export function JourneySection({ dict }: { dict: Dictionary }) {
     <section
       id="contribute"
       data-slot="how-it-works"
-      className="flex scroll-mt-4 flex-col gap-5 bg-popover px-4 py-7 sm:px-8 lg:px-16"
+      className="flex scroll-mt-28 flex-col gap-5 bg-popover px-4 py-7 sm:px-8 lg:px-16"
     >
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold text-foreground">{dict.home.howItWorksTitle}</h2>

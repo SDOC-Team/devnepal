@@ -11,9 +11,9 @@ import { MemberAvatar } from "@/components/ui/member-avatar";
 import { ADMIN_TABS, type AdminTab, useAdminMembers } from "@/hooks";
 import type { Dictionary } from "@/lib/i18n";
 
-const CELL = "border-b border-divider px-4 py-3 align-middle";
+const CELL = "border-b border-border px-4 py-3 align-middle";
 const HEAD_CELL =
-  "border-b border-divider px-4 py-3 text-left text-xs font-semibold tracking-[0.08em] uppercase text-neutral-600";
+  "border-b border-border px-4 py-3 text-left text-xs font-semibold tracking-[0.08em] uppercase text-muted-foreground";
 
 function PriorityEditor({
   member,
@@ -81,7 +81,7 @@ export function AdminQueue({ dict }: { dict: Dictionary }) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="mr-1 text-sm font-semibold text-neutral-600">{dict.admin.title}</span>
+        <span className="mr-1 text-sm font-semibold text-muted-foreground">{dict.admin.title}</span>
         {ADMIN_TABS.map((entry) => (
           <a
             key={entry}
@@ -91,7 +91,7 @@ export function AdminQueue({ dict }: { dict: Dictionary }) {
               event.preventDefault();
               setTab(entry);
             }}
-            className="inline-flex min-h-[var(--control-sm)] items-center rounded-pill border border-divider-strong px-3 text-sm text-text no-underline hover:bg-neutral-100 aria-[current=true]:border-accent-700 aria-[current=true]:bg-accent-100 aria-[current=true]:text-accent-800"
+            className="inline-flex min-h-8 items-center rounded-full border border-border px-3 text-sm text-foreground no-underline hover:bg-muted aria-[current=true]:border-primary aria-[current=true]:bg-primary/5 aria-[current=true]:text-primary"
           >
             {dict.admin.tabs[entry]}
           </a>
@@ -100,7 +100,7 @@ export function AdminQueue({ dict }: { dict: Dictionary }) {
 
       {actionError !== null ? (
         <StateBanner tone="danger" role="alert">
-          <span className="text-error">{actionError}</span>
+          <span className="text-destructive">{actionError}</span>
         </StateBanner>
       ) : null}
 
@@ -112,10 +112,10 @@ export function AdminQueue({ dict }: { dict: Dictionary }) {
           onRetry={() => window.location.reload()}
         />
       ) : isLoading ? (
-        <LoadingPanel label={dict.common.loading} />
+        <LoadingPanel label={dict.common.loading} layout="rows" />
       ) : members.length === 0 ? (
         <div
-          className="grid justify-items-start gap-2 rounded-md border border-dashed border-divider-strong bg-paper px-6 py-8"
+          className="grid justify-items-start gap-2 rounded-md border border-dashed border-border bg-card px-6 py-8"
           role="status"
         >
           <strong className="m-0 font-heading text-lg leading-tight font-semibold">
@@ -123,7 +123,7 @@ export function AdminQueue({ dict }: { dict: Dictionary }) {
           </strong>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-md border border-divider bg-paper">
+        <div className="overflow-x-auto rounded-md border border-border bg-card">
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr>
@@ -145,14 +145,16 @@ export function AdminQueue({ dict }: { dict: Dictionary }) {
               {members.map((entry) => {
                 const busy = busyId === entry.id;
                 return (
-                  <tr key={entry.id} className="hover:bg-neutral-100 last:[&>td]:border-b-0">
+                  <tr key={entry.id} className="hover:bg-muted last:[&>td]:border-b-0">
                     <td className={CELL}>
                       <span className="flex flex-wrap items-center gap-3">
                         <MemberAvatar member={entry} size={36} />
                         <span>
                           <strong>{entry.displayName}</strong>
                           <br />
-                          <span className="text-sm text-neutral-700">@{entry.githubUsername}</span>
+                          <span className="text-sm text-muted-foreground">
+                            @{entry.githubUsername}
+                          </span>
                         </span>
                       </span>
                     </td>

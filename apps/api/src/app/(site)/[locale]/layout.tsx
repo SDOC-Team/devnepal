@@ -3,6 +3,7 @@ import { LocaleLang } from "@/components/modules/common/locale-lang";
 import { SiteFooter } from "@/components/modules/common/site-footer";
 import { SiteHeader } from "@/components/modules/common/site-header";
 import { SwrProvider } from "@/components/providers/swr-provider";
+import { Toaster } from "@/components/ui/toaster";
 import { getDictionary, isLocale, LOCALES } from "@/lib/i18n";
 
 export function generateStaticParams(): { locale: string }[] {
@@ -25,6 +26,7 @@ export default async function SiteLayout({
 
   return (
     <SwrProvider>
+      <Toaster />
       <div className="flex min-h-screen flex-col">
         <LocaleLang locale={locale} />
         <a

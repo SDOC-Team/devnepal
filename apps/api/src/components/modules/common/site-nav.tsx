@@ -24,7 +24,7 @@ export function SiteNav({ items, label }: { items: NavItem[]; label: string }) {
               <Link
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className="inline-flex min-h-[var(--control-md)] items-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-neutral-800 no-underline hover:bg-neutral-100 hover:text-accent-700 aria-[current=page]:text-accent-700"
+                className="inline-flex min-h-9 items-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-foreground no-underline hover:bg-muted hover:text-primary aria-[current=page]:text-primary"
               >
                 {item.label}
               </Link>

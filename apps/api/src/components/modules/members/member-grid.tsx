@@ -19,7 +19,7 @@ export function MemberGrid({
   if (members.length === 0) {
     return (
       <div
-        className="grid justify-items-start gap-2 rounded-md border border-dashed border-divider-strong bg-paper px-6 py-8"
+        className="grid justify-items-start gap-2 rounded-md border border-dashed border-border bg-card px-6 py-8"
         role="status"
       >
         <strong className="m-0 font-heading text-lg leading-tight font-semibold">

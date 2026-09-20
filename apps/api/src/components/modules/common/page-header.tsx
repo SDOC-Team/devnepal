@@ -23,17 +23,17 @@ export function PageHeader({
     <header className="mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
       <div className="min-w-0">
         {kicker !== undefined ? (
-          <p className="mb-2 block text-sm font-semibold text-accent-700">{kicker}</p>
+          <p className="mb-2 block text-sm font-semibold text-primary">{kicker}</p>
         ) : null}
         <h1 id={titleId} className="tracking-[-0.01em] leading-[1.08]">
           {title}
         </h1>
         {lede !== undefined ? (
-          <p className="mt-3 max-w-[68ch] text-base leading-[1.55] text-neutral-700">{lede}</p>
+          <p className="mt-3 max-w-[68ch] text-base leading-[1.55] text-muted-foreground">{lede}</p>
         ) : null}
       </div>
       {aside !== undefined ? (
-        <div className="flex-none text-sm text-neutral-700">{aside}</div>
+        <div className="flex-none text-sm text-muted-foreground">{aside}</div>
       ) : null}
     </header>
   );

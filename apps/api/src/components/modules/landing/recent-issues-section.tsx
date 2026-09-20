@@ -25,7 +25,7 @@ export function RecentIssuesSection({
             <ArrowLink href={localePath(locale, "/issues")}>{dict.home.browseIssues} →</ArrowLink>
           }
         />
-        <div className="mt-5 overflow-hidden rounded-md border border-divider bg-paper">
+        <div className="mt-5 overflow-hidden rounded-md border border-border bg-card">
           {issues.map((issue) => (
             <IssueRow key={issue.number} issue={issue} locale={locale} />
           ))}

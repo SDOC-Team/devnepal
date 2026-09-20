@@ -22,7 +22,7 @@ export default function IssueDetailPage() {
   }
 
   if (isLoading) {
-    return <LoadingPanel label={dict.common.loading} />;
+    return <LoadingPanel label={dict.common.loading} layout="detail" />;
   }
 
   if (error !== undefined || issue === undefined) {
@@ -38,14 +38,14 @@ export default function IssueDetailPage() {
 
   return (
     <section
-      className="mx-auto w-[calc(100%-var(--page-gutter)*2)] max-w-[880px] pt-4 pb-16"
+      className="mx-auto w-[calc(100%-2rem)] max-w-[880px] pt-4 pb-16"
       aria-labelledby="issue-title"
     >
       <nav
-        className="flex flex-wrap gap-2 py-5 text-sm text-neutral-700"
+        className="flex flex-wrap gap-2 py-5 text-sm text-muted-foreground"
         aria-label={dict.issues.breadcrumbProject}
       >
-        <Link href={localePath(locale, "/issues")} className="text-accent-700 no-underline">
+        <Link href={localePath(locale, "/issues")} className="text-primary no-underline">
           {dict.issue.breadcrumbProjects}
         </Link>
         <span aria-hidden="true">/</span>
@@ -54,8 +54,8 @@ export default function IssueDetailPage() {
         </span>
       </nav>
 
-      <article className="overflow-hidden rounded-md border border-divider bg-paper">
-        <header className="border-b border-divider p-6">
+      <article className="overflow-hidden rounded-md border border-border bg-card">
+        <header className="border-b border-border p-6">
           <div className="mb-4 flex flex-wrap gap-2">
             <Chip tone={issue.state === "open" ? "success" : "neutral"}>
               {issue.state === "open" ? dict.issue.stateOpen : dict.issue.stateClosed}
@@ -67,13 +67,13 @@ export default function IssueDetailPage() {
           <h1 id="issue-title" className="mt-3 mb-2 max-w-[26ch]">
             {issue.title}
           </h1>
-          <p className="m-0 text-sm text-neutral-700">
+          <p className="m-0 text-sm text-muted-foreground">
             #{issue.number} · {dict.issue.openedBy} @{issue.authorLogin} · {issue.commentsCount}{" "}
             {dict.issue.comments}
           </p>
         </header>
 
-        <div className="prose-issue border-b border-divider p-6">
+        <div className="prose-issue border-b border-border p-6">
           {issue.body !== null && issue.body.trim().length > 0 ? (
             <Markdown>{issue.body}</Markdown>
           ) : (
@@ -85,7 +85,7 @@ export default function IssueDetailPage() {
           <Button render={<a href={issue.htmlUrl} target="_blank" rel="noopener noreferrer" />}>
             {dict.issue.startContributing}
           </Button>
-          <p className="mt-3 mb-0 text-sm text-neutral-700">{dict.issue.sourceNote}</p>
+          <p className="mt-3 mb-0 text-sm text-muted-foreground">{dict.issue.sourceNote}</p>
         </footer>
       </article>
     </section>

@@ -2,15 +2,19 @@
 
 import type { Profile, ProfileUpdate } from "@gov-portal/api-client";
 import { profileUpdateSchema, SKILLS, type Skill } from "@gov-portal/shared";
+import { CheckIcon } from "@phosphor-icons/react";
+import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
+import { toast } from "sonner";
 
 import { StateBanner } from "@/components/modules/common";
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useSaveProfile } from "@/hooks";
-import type { Dictionary } from "@/lib/i18n";
+import { useLocale, useSaveProfile } from "@/hooks";
+import { type Dictionary, localePath } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 type LinkRow = { id: string; value: string };
 
@@ -67,11 +71,15 @@ export function ProfileForm({
   dict: Dictionary;
   onSaved: (member: Profile) => void;
 }) {
+  const { locale } = useLocale();
+  const router = useRouter();
   const [form, setForm] = useState<FormState>(() => formFromMember(member));
   const [saved, setSaved] = useState(false);
   const { save, state } = useSaveProfile((updated) => {
     setSaved(true);
     onSaved(updated);
+    toast.success(dict.profile.saved);
+    router.push(localePath(locale, `/members/${updated.githubUsername}`));
   });
 
   const errors = state.status === "error" ? state.fieldErrors : {};
@@ -106,7 +114,7 @@ export function ProfileForm({
     <form className="flex flex-col gap-5" onSubmit={onSubmit} noValidate>
       {state.status === "error" ? (
         <StateBanner tone="danger" role="alert">
-          <span className="text-error">{state.message}</span>
+          <span className="text-destructive">{state.message}</span>
         </StateBanner>
       ) : null}
       {saved ? (
@@ -193,7 +201,7 @@ export function ProfileForm({
       </Field>
 
       <fieldset className="m-0 border-0 p-0">
-        <legend className="mb-1 text-sm font-semibold text-neutral-800">
+        <legend className="mb-1 text-sm font-semibold text-foreground">
           {dict.profile.fields.links}
         </legend>
         <div className="flex flex-col gap-3">
@@ -216,7 +224,7 @@ export function ProfileForm({
                   }}
                 />
                 {errors[`links.${index}`] !== undefined ? (
-                  <p className="mt-1 text-sm text-error">{errors[`links.${index}`]}</p>
+                  <p className="mt-1 text-sm text-destructive">{errors[`links.${index}`]}</p>
                 ) : null}
               </div>
               <Button
@@ -246,7 +254,7 @@ export function ProfileForm({
               </Button>
             ) : null}
             <p
-              className={`m-0 text-sm ${errors.links !== undefined ? "text-error" : "text-neutral-700"}`}
+              className={`m-0 text-sm ${errors.links !== undefined ? "text-destructive" : "text-muted-foreground"}`}
             >
               {errors.links ?? dict.profile.fields.linksHelp}
             </p>
@@ -255,7 +263,7 @@ export function ProfileForm({
       </fieldset>
 
       <fieldset className="m-0 border-0 p-0">
-        <legend className="mb-1 text-sm font-semibold text-neutral-800">
+        <legend className="mb-1 text-sm font-semibold text-foreground">
           {dict.profile.fields.skills}
         </legend>
         <div className="flex flex-wrap gap-2">
@@ -267,16 +275,26 @@ export function ProfileForm({
                   type="checkbox"
                   checked={active}
                   onChange={() => toggleSkill(skill)}
-                  className="peer absolute size-px opacity-0"
+                  className="peer sr-only"
                 />
-                <span className="inline-flex min-h-[var(--control-sm)] items-center rounded-pill border border-divider-strong px-3 text-xs font-semibold text-neutral-800 hover:border-accent-300 hover:bg-accent-100 hover:text-accent-800 peer-checked:border-accent-700 peer-checked:bg-accent-700 peer-checked:text-paper peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent">
+                <span className="inline-flex min-h-8 items-center gap-1.5 rounded-full border border-border bg-background px-3 text-xs font-semibold text-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50">
+                  {/* Width animates to 0 when unchecked so the pill keeps its
+                      resting size and only grows for the active state. */}
+                  <CheckIcon
+                    weight="bold"
+                    aria-hidden="true"
+                    className={cn(
+                      "size-3 transition-opacity",
+                      active ? "opacity-100" : "hidden opacity-0",
+                    )}
+                  />
                   {skill}
                 </span>
               </label>
             );
           })}
         </div>
-        <p className="mt-3 mb-0 text-sm text-neutral-700">{dict.profile.fields.skillsHelp}</p>
+        <p className="mt-3 mb-0 text-sm text-muted-foreground">{dict.profile.fields.skillsHelp}</p>
       </fieldset>
 
       <div className="flex flex-wrap gap-3">

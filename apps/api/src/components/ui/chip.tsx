@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 
 const TONE_CLASSES = {
-  neutral: "bg-neutral-100 text-neutral-800",
-  accent: "bg-accent-100 text-accent-800",
-  outline: "border-accent-300 bg-accent-100 text-accent-800",
-  success: "bg-success-subtle text-success",
-  attention: "bg-attention-subtle text-attention",
-  danger: "bg-error-subtle text-error",
+  neutral: "bg-muted text-foreground",
+  accent: "bg-primary/10 text-primary",
+  outline: "border-primary/30 bg-primary/5 text-primary",
+  success: "bg-primary/10 text-primary",
+  attention: "bg-chart-1/20 text-foreground",
+  danger: "bg-destructive/10 text-destructive",
 } as const;
 
 /**
@@ -23,7 +23,7 @@ export function Chip({
 }) {
   return (
     <span
-      className={`inline-flex min-h-[var(--badge-h)] w-fit items-center gap-1 rounded-md border border-transparent px-2 text-xs leading-tight font-semibold tracking-[0.02em] whitespace-nowrap ${TONE_CLASSES[tone]}`}
+      className={`inline-flex min-h-6 w-fit items-center gap-1 rounded-md border border-transparent px-2 text-xs leading-tight font-semibold tracking-[0.02em] whitespace-nowrap ${TONE_CLASSES[tone]}`}
     >
       {children}
     </span>
