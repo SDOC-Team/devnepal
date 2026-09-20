@@ -20,6 +20,9 @@
     "db:seed": "bun run --cwd apps/api db:seed",
     "sync:github": "bun run --cwd apps/api sync:github",
     "dev:session": "bun run --cwd apps/api dev:session",
+    "api:lint": "redocly lint --config packages/api-contract/redocly.yaml packages/api-contract/openapi.yaml",
+    "api:generate": "openapi-typescript packages/api-contract/openapi.yaml -o packages/api-client/src/schema.gen.ts && biome format --write packages/api-client/src/schema.gen.ts",
+    "api:check": "bun run api:lint && bun run api:generate && git diff --exit-code -- packages/api-client/src/schema.gen.ts",
     "lint": "biome check .",
     "format": "biome format --write .",
     "prepare": "husky"
@@ -28,7 +31,9 @@
     "@biomejs/biome": "2.5.13",
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.2",
+    "@redocly/cli": "^2.53.3",
     "husky": "^9.1.7",
-    "lint-staged": "^17.5.1"
+    "lint-staged": "^17.5.1",
+    "openapi-typescript": "^7.13.0"
   }
 }

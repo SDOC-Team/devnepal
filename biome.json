@@ -34,5 +34,40 @@
     "rules": {
       "preset": "recommended"
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": [
+        "apps/api/src/app/(site)/**/*.{ts,tsx}",
+        "apps/api/src/components/**/*.{ts,tsx}",
+        "apps/api/src/lib/**/*.{ts,tsx}"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "@/db/**",
+                      "**/db/**",
+                      "@/server/**/repository",
+                      "**/server/**/repository",
+                      "@/config",
+                      "**/config",
+                      "@/auth",
+                      "**/auth"
+                    ],
+                    "message": "Presentation code may use backend services, but not database, repository, authentication, or environment internals."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

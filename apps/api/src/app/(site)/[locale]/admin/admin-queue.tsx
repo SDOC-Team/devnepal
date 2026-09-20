@@ -1,6 +1,6 @@
 "use client";
 
-import type { AdminMemberDto } from "@gov-portal/shared";
+import type { AdminMember } from "@gov-portal/api-client";
 import { useEffect, useState } from "react";
 
 import { ErrorPanel, LoadingPanel, StateBanner } from "@/components/modules/common";
@@ -21,7 +21,7 @@ function PriorityEditor({
   labels,
   onSave,
 }: {
-  member: AdminMemberDto;
+  member: AdminMember;
   busy: boolean;
   labels: { title: string; set: string };
   onSave: (priority: number) => void;
@@ -64,7 +64,7 @@ export function AdminQueue({ dict }: { dict: Dictionary }) {
   const { members, isLoading, error, update } = useAdminMembers(tab);
 
   async function apply(
-    target: AdminMemberDto,
+    target: AdminMember,
     patch: { status?: AdminTab; priority?: number },
   ): Promise<void> {
     setBusyId(target.id);

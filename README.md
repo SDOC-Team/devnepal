@@ -3,8 +3,9 @@
 A public portal for one open-source project: its open GitHub issues, the approved
 member directory, and the profile/moderation flows around it.
 
-One Next.js app serves both the server-rendered UI (`/en`, `/ne`) and the JSON
-REST API (`/members`, `/project`, …) used by external clients.
+One Next.js app serves both the server-rendered UI (`/en`, `/ne`) and the
+versioned JSON REST API (`/v1/members`, `/v1/project`, …). The frontend and
+backend are separate code boundaries, not separate deployments.
 
 ## Stack
 
@@ -16,7 +17,8 @@ REST API (`/members`, `/project`, …) used by external clients.
 | Database | PostgreSQL 17 |
 | ORM | Drizzle ORM + drizzle-kit (plain-SQL migrations) |
 | Auth | Auth.js v5 (`next-auth@5` beta) — GitHub OAuth, JWT sessions, no adapter |
-| Validation | Zod 4, contracts shared through `packages/shared` |
+| API contract | OpenAPI 3.1 in `packages/api-contract`, generated TypeScript client |
+| Runtime validation | Zod 4 in `packages/shared` |
 | Tests | Vitest against a real PostgreSQL database |
 | Lint/format | Biome |
 
@@ -25,7 +27,8 @@ REST API (`/members`, `/project`, …) used by external clients.
 ```
 apps/api/
   src/app/(site)/[locale]/   UI pages (en/ne): home, project, issues, members, profile, admin, about
-  src/app/<rest routes>      REST API route handlers (members, profile, admin, project, avatars, auth, health)
+  src/app/v1/                versioned REST route handlers
+  src/app/<legacy routes>    temporary compatibility aliases to `/v1`
   src/components/            site chrome and UI primitives
   src/lib/                   i18n dictionaries, client auth helpers
   src/server/                services, repositories, authorization seam, storage, errors
@@ -33,7 +36,9 @@ apps/api/
   drizzle/                   generated SQL migrations (committed)
   src/scripts/               seed, GitHub sync, dev-session tools
   tests/                     unit + integration tests, test DB bootstrap
-packages/shared/src/         Zod validation + API DTO contracts
+packages/api-contract/       canonical OpenAPI description
+packages/api-client/         generated API types + browser HTTP client
+packages/shared/src/         runtime Zod validation + internal service DTOs
 docs/frontend.md             frontend onboarding and verification matrix
 scripts/setup.ts             one-command local bootstrap
 compose.yaml                 PostgreSQL for development (and a full api profile)
@@ -42,28 +47,32 @@ compose.yaml                 PostgreSQL for development (and a full api profile)
 
 ## Working together (frontend + backend)
 
-One app, one contract, two territories.
+One application, one API contract, two code territories.
 
-- **`packages/shared` is the contract.** Zod schemas and DTO types for every
-  request and response live there. Both the UI and the REST layer import them;
-  a contract change that breaks either fails `bun run typecheck` in the same CI run.
+- **OpenAPI is the HTTP contract.** `packages/api-contract/openapi.yaml` defines
+  the public `/v1` surface. `packages/api-client/src/schema.gen.ts` is generated;
+  hand-editing it is forbidden. CI lints the description, regenerates the file,
+  and rejects drift.
 - **Ownership.** Frontend work lives in `apps/api/src/app/(site)/**`,
   `apps/api/src/components/**`, and `apps/api/src/lib/**` (i18n, client helpers).
-  Backend work lives in `apps/api/src/app/<rest routes>`, `apps/api/src/server/**`,
-  `apps/api/src/db/**`, and `packages/shared`. See `.github/CODEOWNERS`.
+  Backend work lives in `apps/api/src/app/v1/**`, `apps/api/src/server/**`, and
+  `apps/api/src/db/**`. API changes start in `packages/api-contract`. See
+  `.github/CODEOWNERS`.
 - **Same origin.** UI and API run in one app on one port; no CORS juggling, and
   the session cookie is first-party. `WEB_ORIGIN` remains only as the allowlist
   for future external clients (e.g. mobile).
-- **Reads via services, writes via the shared logic.** Server components call
-  the service layer directly; form mutations go through server actions that call
-  the same services; the REST endpoints exist for external consumers and tests.
+- **No loopback HTTP from the server.** Server Components and Server Actions
+  call `src/server` services in-process. Browser components call `/v1` through
+  `@gov-portal/api-client`. Both paths converge on the same service layer.
+- **The UI cannot bypass the backend.** Biome rejects presentation imports of
+  `src/db`, repositories, authentication, and environment configuration.
 - **Dev data without GitHub.** `bun run setup` seeds six members in every
   moderation state plus a project and sample issues, so the UI is fully
   populated offline. `bun run dev:session <username>` mints a real session for
   authenticated screens.
-- **Contract discipline.** Additive changes only by default. A breaking change
-  needs both teams in the PR, a migration note, and — once a mobile client
-  exists — an API version bump.
+- **Contract discipline.** Change OpenAPI first, regenerate the client, then
+  implement and test the handler. Additive changes are the default. A breaking
+  change needs both teams, a migration note, and a new API version.
 - **Review flow.** Short-lived branches, PR into `main`, CI green + 1 review
   required. Backend changes come with tests in `apps/api/tests` that name the
   invariant they protect.
@@ -83,7 +92,7 @@ gh pr create --fill
 ```
 
 Keep branches short-lived and rebase on `main` when it moves. A PR that touches
-`packages/shared` needs a reviewer from each side. Branches are deleted
+`packages/api-contract` needs a reviewer from each side. Branches are deleted
 automatically after merge.
 
 ## Scaffolding the project
@@ -128,7 +137,7 @@ bun run dev          # UI + API on one port → http://localhost:3000/en
 | http://localhost:3000/ne | the same page in Nepali |
 | http://localhost:3000/en/issues | 8 seeded issues; label filter and search work |
 | http://localhost:3000/en/members | 3 approved members; pending/rejected/hidden are absent |
-| `curl 'localhost:3000/project/issues?perPage=2'` | JSON with `"total": 8` |
+| `curl 'localhost:3000/v1/project/issues?perPage=2'` | JSON with `"total": 8` |
 | `bun run test` | the full Vitest suite passes against `refined_test` |
 
 ### 4. Optional: sign in with GitHub
@@ -224,6 +233,9 @@ bun run test           # Vitest (+ creates and migrates the test database)
 bun run typecheck      # tsc --noEmit
 bun run lint           # Biome check
 bun run format         # Biome format --write
+bun run api:lint       # lint packages/api-contract/openapi.yaml
+bun run api:generate   # regenerate and format the typed client
+bun run api:check      # lint + generate + fail if generated types drift
 bun run db:generate    # generate a migration from the Drizzle schema
 bun run db:migrate     # apply migrations to DATABASE_URL
 bun run db:seed        # sample members, project, and issues for local development
@@ -233,7 +245,9 @@ bun run dev:session    # mint a dev session cookie for a seeded member
 
 ## REST API
 
-Canonical paths have **no trailing slash** (`/members`, not `/members/`).
+Canonical paths are versioned and have **no trailing slash** (`/v1/members`,
+not `/v1/members/`). The old unversioned product routes are compatibility
+aliases during migration; new code must not use them.
 Success bodies are `{ "member": ... }` / `{ "members": [...] }` /
 `{ "project": ... }`; errors are `{ "error": { "code", "message", "details"? } }`.
 UI pages live under `/en` and `/ne` and do not collide with these paths.
@@ -241,17 +255,18 @@ UI pages live under `/en` and `/ne` and do not collide with these paths.
 | Method | Path | Access | Notes |
 |---|---|---|---|
 | `GET` | `/health` | public | 200 when the database answers |
-| `GET` | `/project` | public | The single project + open issue / member counts |
-| `GET` | `/project/issues?label=&q=&page=&perPage=` | public | Open issues, newest first |
-| `GET` | `/project/issues/{number}` | public | Single issue |
-| `GET` | `/members` | public | Approved members only, `priority DESC`, `approvedAt DESC` |
-| `GET` | `/members/{githubUsername}` | public / owner | Case-insensitive username lookup |
-| `GET` | `/members/id/{githubId}` | public / owner | Same member, numeric GitHub ID |
+| `GET` | `/v1/project` | public | The single project + open issue / member counts |
+| `GET` | `/v1/project/issues?label=&q=&page=&perPage=` | public | Open issues, newest first |
+| `GET` | `/v1/project/issues/labels` | public | Open-issue label counts |
+| `GET` | `/v1/project/issues/{number}` | public | Single issue |
+| `GET` | `/v1/members` | public | Approved members only, `priority DESC`, `approvedAt DESC` |
+| `GET` | `/v1/members/{githubUsername}` | public / owner | Case-insensitive username lookup |
+| `GET` | `/v1/members/id/{githubId}` | public / owner | Same member, numeric GitHub ID |
 | `GET` | `/avatars/{key}` | public | Stored avatar bytes, immutable cache headers |
-| `GET` | `/profile` | authenticated | Own member incl. `id`, `status`, `approvedAt`, plus `isAdmin` |
-| `PATCH` | `/profile` | authenticated | Updates the session member only |
-| `GET` | `/admin/members?status=` | admin | Moderation queue, optional status filter |
-| `PATCH` | `/admin/members/{id}` | admin | `{ status?, priority? }` |
+| `GET` | `/v1/profile` | authenticated | Own member incl. `id`, `status`, `approvedAt`, plus `isAdmin` |
+| `PATCH` | `/v1/profile` | authenticated | Updates the session member only |
+| `GET` | `/v1/admin/members?status=` | admin | Moderation queue, optional status filter |
+| `PATCH` | `/v1/admin/members/{id}` | admin | `{ status?, priority? }` |
 | `GET/POST` | `/api/auth/*` | public | Auth.js endpoints (sign-in, callback, session, sign-out) |
 
 ### Visibility rules
@@ -264,7 +279,7 @@ UI pages live under `/en` and `/ne` and do not collide with these paths.
 
 ### Profile updates
 
-`PATCH /profile` accepts only: `displayName`, `headline`, `affiliation`,
+`PATCH /v1/profile` accepts only: `displayName`, `headline`, `affiliation`,
 `location`, `bio`, `links`, `skills`. The payload is strict — any other key
 (`id`, `githubId`, `githubUsername`, `status`, `priority`, `avatarPath`, …) is
 rejected with `400`. The update target is always the authenticated member.
@@ -298,7 +313,7 @@ in `apps/api/src/lib/i18n.ts`.
 - **Self-write only** — profile writes resolve the target exclusively from the
   session; there is no route or payload that can target another member.
 - **Immutables** — UUID, GitHub ID, GitHub username, avatar path, moderation
-  fields, and priority are not writable through `/profile`.
+  fields, and priority are not writable through `/v1/profile`.
 - **Admin is env-only** — `ADMIN_GITHUB_IDS`, re-checked per request and in the
   server-rendered admin page.
 - **No email** — not requested (OAuth scope `read:user`), no column, never returned.
@@ -323,8 +338,8 @@ in `apps/api/src/lib/i18n.ts`.
 bun run test
 ```
 
-The suite creates `refined_test` if needed, applies migrations, and runs 102
-tests covering: member write isolation and injection attempts, all visibility
+The suite creates `refined_test` if needed, applies migrations, and runs tests
+covering: member write isolation and injection attempts, all visibility
 states on both member routes, admin approve/reject/hide/priority and non-admin
 denials, directory ordering, profile validation, avatar handling, the absence of
 an email column, project/issue endpoints and filters, GitHub sync reconciliation
@@ -348,8 +363,8 @@ migrations against the target database before starting the new image
 
 ## Notes
 
-- The API is intentionally unversioned for now; a future mobile client pins to
-  these paths, so the first breaking change will need a coordinated migration.
+- `/v1` is the canonical product API. The unversioned aliases are deprecated
+  migration aids and can be removed after all known consumers move to `/v1`.
 - Live webhook delivery and contribution indexing are a later phase; issues
   are reconciled on demand with `bun run sync:github`, and the signed webhook
   endpoint is ready when delivery is wired.

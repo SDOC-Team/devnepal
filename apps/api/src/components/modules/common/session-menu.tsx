@@ -1,6 +1,6 @@
 "use client";
 
-import type { SelfMemberDto } from "@gov-portal/shared";
+import type { Profile } from "@gov-portal/api-client";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -22,7 +22,7 @@ export function SessionMenu({
   locale: Locale;
   signInLabel: string;
   signOutLabel: string;
-  statusLabels: Record<SelfMemberDto["status"], string>;
+  statusLabels: Record<Profile["status"], string>;
   greetingLabel: string;
   profileLabel: string;
   adminLabel: string;
@@ -69,7 +69,10 @@ export function SessionMenu({
         disabled={busy}
         onClick={() => {
           setBusy(true);
-          signOut().catch(() => setBusy(false));
+          signOut().catch((error: unknown) => {
+            console.error("Failed to sign out", error);
+            setBusy(false);
+          });
         }}
       >
         {signOutLabel}

@@ -3,8 +3,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/auth", () => ({ auth: vi.fn() }));
 
-import { PATCH as adminPatch } from "@/app/admin/members/[id]/route";
-import { GET as adminList } from "@/app/admin/members/route";
+import { PATCH as adminPatch } from "@/app/v1/admin/members/[id]/route";
+import { GET as adminList } from "@/app/v1/admin/members/route";
 import { db } from "@/db/client";
 import { members } from "@/db/schema";
 
@@ -13,7 +13,7 @@ import { ADMIN_GITHUB_ID, createMember } from "../helpers/factories";
 import { jsonRequest, mockSessionAs } from "../helpers/session";
 
 function patchRequest(id: string, body: unknown): Request {
-  return jsonRequest(`http://localhost:3000/admin/members/${id}`, "PATCH", { body });
+  return jsonRequest(`http://localhost:3000/v1/admin/members/${id}`, "PATCH", { body });
 }
 
 function patchContext(id: string): { params: Promise<{ id: string }> } {
@@ -34,7 +34,7 @@ async function loadMember(id: string) {
   return rows[0] ?? null;
 }
 
-describe("PATCH /admin/members/{id}", () => {
+describe("PATCH /v1/admin/members/{id}", () => {
   beforeEach(async () => {
     await resetDatabase();
   });
@@ -162,7 +162,7 @@ describe("PATCH /admin/members/{id}", () => {
   });
 });
 
-describe("GET /admin/members/", () => {
+describe("GET /v1/admin/members", () => {
   beforeEach(async () => {
     await resetDatabase();
   });
@@ -178,7 +178,7 @@ describe("GET /admin/members/", () => {
     mockSessionAs(admin);
 
     const response = await adminList(
-      new Request("http://localhost:3000/admin/members/?status=pending", { method: "GET" }),
+      new Request("http://localhost:3000/v1/admin/members?status=pending", { method: "GET" }),
     );
 
     expect(response.status).toBe(200);
@@ -194,7 +194,7 @@ describe("GET /admin/members/", () => {
     mockSessionAs(admin);
 
     const response = await adminList(
-      new Request("http://localhost:3000/admin/members/?status=everything", { method: "GET" }),
+      new Request("http://localhost:3000/v1/admin/members?status=everything", { method: "GET" }),
     );
 
     expect(response.status).toBe(400);
@@ -203,9 +203,13 @@ describe("GET /admin/members/", () => {
   it("blocks non-admins and unauthenticated users", async () => {
     const member = await createMember({ githubUsername: "not-admin" });
     mockSessionAs(member);
-    expect((await adminList(new Request("http://localhost:3000/admin/members/"))).status).toBe(403);
+    expect((await adminList(new Request("http://localhost:3000/v1/admin/members"))).status).toBe(
+      403,
+    );
 
     mockSessionAs(null);
-    expect((await adminList(new Request("http://localhost:3000/admin/members/"))).status).toBe(401);
+    expect((await adminList(new Request("http://localhost:3000/v1/admin/members"))).status).toBe(
+      401,
+    );
   });
 });

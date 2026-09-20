@@ -6,9 +6,12 @@ WORKDIR /repo
 # Workspace manifests first so dependency installation is cached.
 COPY package.json bun.lock ./
 COPY apps/api/package.json apps/api/package.json
+COPY packages/api-client/package.json packages/api-client/package.json
+COPY packages/api-contract/package.json packages/api-contract/package.json
 COPY packages/shared/package.json packages/shared/package.json
 RUN bun install --frozen-lockfile
 
+COPY packages/api-client packages/api-client
 COPY packages/shared packages/shared
 COPY apps/api apps/api
 

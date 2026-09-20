@@ -1,13 +1,2 @@
-import { errorResponse, json, preflight } from "@/server/http";
-import { listIssueLabels } from "@/server/projects/service";
-
-export const runtime = "nodejs";
-export const OPTIONS = preflight;
-
-export async function GET(): Promise<Response> {
-  try {
-    return json({ labels: await listIssueLabels() });
-  } catch (error) {
-    return errorResponse(error);
-  }
-}
+/** @deprecated Use /v1/project/issues/labels. Kept for existing clients during migration. */
+export { GET, OPTIONS } from "../../../v1/project/issues/labels/route";

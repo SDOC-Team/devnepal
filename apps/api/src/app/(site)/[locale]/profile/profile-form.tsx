@@ -1,12 +1,7 @@
 "use client";
 
-import {
-  type ProfileUpdate,
-  profileUpdateSchema,
-  type SelfMemberDto,
-  SKILLS,
-  type Skill,
-} from "@gov-portal/shared";
+import type { Profile, ProfileUpdate } from "@gov-portal/api-client";
+import { profileUpdateSchema, SKILLS, type Skill } from "@gov-portal/shared";
 import { type FormEvent, useState } from "react";
 
 import { StateBanner } from "@/components/modules/common";
@@ -35,7 +30,7 @@ function newLinkRow(value = ""): LinkRow {
   return { id: crypto.randomUUID(), value };
 }
 
-function formFromMember(member: SelfMemberDto): FormState {
+function formFromMember(member: Profile): FormState {
   return {
     displayName: member.displayName,
     headline: member.headline ?? "",
@@ -68,9 +63,9 @@ export function ProfileForm({
   dict,
   onSaved,
 }: {
-  member: SelfMemberDto;
+  member: Profile;
   dict: Dictionary;
-  onSaved: (member: SelfMemberDto) => void;
+  onSaved: (member: Profile) => void;
 }) {
   const [form, setForm] = useState<FormState>(() => formFromMember(member));
   const [saved, setSaved] = useState(false);

@@ -7,10 +7,10 @@ vi.mock("@/auth", () => ({ auth: vi.fn() }));
 
 import { GET as avatarGet } from "@/app/avatars/[...key]/route";
 import { GET as healthGet } from "@/app/health/route";
-import { OPTIONS as membersOptions } from "@/app/members/route";
-import { PATCH as profilePatch } from "@/app/profile/route";
-import { GET as issueGet } from "@/app/project/issues/[number]/route";
-import { GET as issuesGet } from "@/app/project/issues/route";
+import { OPTIONS as membersOptions } from "@/app/v1/members/route";
+import { PATCH as profilePatch } from "@/app/v1/profile/route";
+import { GET as issueGet } from "@/app/v1/project/issues/[number]/route";
+import { GET as issuesGet } from "@/app/v1/project/issues/route";
 import { RATE_LIMITS } from "@/server/rate-limit";
 
 import { resetDatabase } from "../helpers/db";
@@ -44,7 +44,7 @@ describe("API hardening", () => {
   it("returns the standard error envelope for auth and missing resources", async () => {
     mockSessionAs(null);
     const unauthorized = await profilePatch(
-      jsonRequest("http://localhost:3000/profile", "PATCH", { body: { displayName: "No" } }),
+      jsonRequest("http://localhost:3000/v1/profile", "PATCH", { body: { displayName: "No" } }),
     );
     expect(unauthorized.status).toBe(401);
     const unauthorizedBody = (await unauthorized.json()) as { error: { code: string } };
@@ -52,7 +52,7 @@ describe("API hardening", () => {
 
     await createProject({ fullName: "voidash/gov-portal" });
     const missing = await issueGet(
-      new Request("http://localhost:3000/project/issues/999"),
+      new Request("http://localhost:3000/v1/project/issues/999"),
       issueContext("999"),
     );
     expect(missing.status).toBe(404);
@@ -65,7 +65,7 @@ describe("API hardening", () => {
     mockSessionAs(alice);
 
     const response = await profilePatch(
-      new Request("http://localhost:3000/profile", {
+      new Request("http://localhost:3000/v1/profile", {
         method: "PATCH",
         headers: { "content-type": "application/json" },
         body: "not-json",
@@ -80,7 +80,9 @@ describe("API hardening", () => {
     const project = await createProject({ fullName: "voidash/gov-portal" });
     await createIssue({ projectId: project.id, number: 1 });
 
-    const response = await issuesGet(new Request("http://localhost:3000/project/issues?page=99"));
+    const response = await issuesGet(
+      new Request("http://localhost:3000/v1/project/issues?page=99"),
+    );
     expect(response.status).toBe(200);
     const body = (await response.json()) as { issues: unknown[]; total: number };
     expect(body.issues).toHaveLength(0);
@@ -126,7 +128,7 @@ describe("API hardening", () => {
     let last: Response | null = null;
     for (let attempt = 0; attempt <= RATE_LIMITS.profileWrite.limit; attempt += 1) {
       last = await profilePatch(
-        jsonRequest("http://localhost:3000/profile", "PATCH", {
+        jsonRequest("http://localhost:3000/v1/profile", "PATCH", {
           body: { displayName: "Alice" },
         }),
       );
