@@ -1,0 +1,14 @@
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+
+# Dependencies and planned generated output
+node_modules/
+ui/tokens/dist/
+ui/css/dist/
+
+# Editor and OS
+.DS_Store
+.idea/
+.vscode/

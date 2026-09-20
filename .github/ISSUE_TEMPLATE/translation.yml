@@ -1,0 +1,27 @@
+name: Nepali translation or content
+description: Improve Nepali wording, terminology, or English microcopy
+labels: [i18n, nepali-language]
+body:
+  - type: markdown
+    attributes:
+      value: "This is one of the most valuable kinds of contribution here, and it needs no code."
+  - type: input
+    id: where
+    attributes:
+      label: Where is it?
+      placeholder: "Page, or the string key"
+    validations: { required: true }
+  - type: textarea
+    id: current
+    attributes: { label: Current wording }
+    validations: { required: true }
+  - type: textarea
+    id: suggested
+    attributes: { label: Suggested wording }
+    validations: { required: true }
+  - type: textarea
+    id: why
+    attributes:
+      label: Why is this better?
+      description: Register, accuracy, clarity, or common usage.
+    validations: { required: true }

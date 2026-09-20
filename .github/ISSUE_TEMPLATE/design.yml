@@ -1,0 +1,35 @@
+name: Design or accessibility
+description: Propose an interface improvement or report an accessibility problem
+labels: [design]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Icons, accessibility fixes, typography and content are open now.
+        The core visual language is being settled by the design team — we will open it once the design system is published.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is the problem for a user?
+    validations: { required: true }
+  - type: textarea
+    id: existing
+    attributes:
+      label: Which existing pattern is inadequate, and why?
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Screenshot, link, or description.
+    validations: { required: true }
+  - type: textarea
+    id: bilingual
+    attributes:
+      label: How does this work in both languages?
+      description: Required. Devanagari has different line-height and width behaviour from Latin.
+    validations: { required: true }
+  - type: textarea
+    id: a11y
+    attributes:
+      label: Accessibility
+      description: Keyboard operation, focus order, contrast.
