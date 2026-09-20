@@ -14,7 +14,7 @@ import { useLocale, useMediaQuery, useMemberFilters, useMembers } from "@/hooks"
 import { localePath } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-type SortMode = "featured" | "recent" | "skills";
+type SortMode = "name" | "skills";
 
 export default function MembersPage() {
   const { locale, dict } = useLocale();
@@ -26,7 +26,7 @@ export default function MembersPage() {
   // grid only — the table is not rendered at all rather than merely hidden.
   const isCompact = useMediaQuery("(max-width: 639px)");
   const effectiveView = isCompact ? "grid" : viewMode;
-  const [sortMode, setSortMode] = useState<SortMode>("featured");
+  const [sortMode, setSortMode] = useState<SortMode>("name");
 
   // Only skills actually present in the directory get a tab, so the filter
   // never offers a category that would return nothing.
@@ -43,9 +43,6 @@ export default function MembersPage() {
       return rows.sort(
         (a, b) => b.skills.length - a.skills.length || a.displayName.localeCompare(b.displayName),
       );
-    }
-    if (sortMode === "recent") {
-      return rows.reverse();
     }
     return rows.sort((a, b) => a.displayName.localeCompare(b.displayName));
   }, [filtered, sortMode]);
@@ -149,8 +146,7 @@ export default function MembersPage() {
               onChange={(e) => setSortMode(e.target.value as SortMode)}
               className="h-10 rounded-md border border-input bg-card px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <option value="featured">{dict.members.sortFeatured}</option>
-              <option value="recent">{dict.members.sortRecent}</option>
+              <option value="name">{dict.members.sortFeatured}</option>
               <option value="skills">{dict.members.sortSkills}</option>
             </select>
 
@@ -229,61 +225,67 @@ export default function MembersPage() {
                     </div>
 
                     {/* Metadata Subtitle */}
-                    <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <BuildingsIcon className="size-3.5 shrink-0" />
-                        <span>{member.affiliation ?? "Niural AI"}</span>
-                      </span>
-                      <span>|</span>
-                      <span className="flex items-center gap-1">
-                        <MapPinIcon className="size-3.5 shrink-0" />
-                        <span>{member.location ?? "Kathmandu Nepal"}</span>
-                      </span>
-                    </div>
+                    {member.affiliation !== null || member.location !== null ? (
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                        {member.affiliation !== null ? (
+                          <span className="flex items-center gap-1">
+                            <BuildingsIcon className="size-3.5 shrink-0" />
+                            <span>{member.affiliation}</span>
+                          </span>
+                        ) : null}
+                        {member.affiliation !== null && member.location !== null ? (
+                          <span>|</span>
+                        ) : null}
+                        {member.location !== null ? (
+                          <span className="flex items-center gap-1">
+                            <MapPinIcon className="size-3.5 shrink-0" />
+                            <span>{member.location}</span>
+                          </span>
+                        ) : null}
+                      </div>
+                    ) : null}
 
                     {/* Skills Chips */}
-                    {(() => {
-                      const allSkills =
-                        member.skills.length > 0
-                          ? member.skills
-                          : ["engineering", "security", "data"];
-                      const shown = allSkills.slice(0, 2);
-                      const hidden = allSkills.slice(2);
-                      return (
-                        <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                          {shown.map((skill) => (
-                            <span
-                              key={skill}
-                              className="rounded-md border border-border bg-muted/60 px-2 py-0.5 text-xs text-foreground"
-                            >
-                              {skill}
-                            </span>
-                          ))}
-                          {hidden.length > 0 ? (
-                            <div className="relative group inline-flex">
-                              <span
-                                title={hidden.join(", ")}
-                                className="rounded-md border border-border bg-muted/60 px-2 py-0.5 text-xs text-muted-foreground cursor-pointer transition-colors hover:bg-accent hover:text-foreground"
-                              >
-                                +{hidden.length} more
-                              </span>
-                              <div className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 opacity-0 transition-all duration-150 group-hover:opacity-100 group-hover:pointer-events-auto z-50">
-                                <div className="flex flex-wrap gap-1 rounded-md border border-border bg-popover p-2 text-xs font-normal text-popover-foreground shadow-md whitespace-nowrap max-w-[220px]">
-                                  {hidden.map((skill) => (
-                                    <span
-                                      key={skill}
-                                      className="rounded bg-muted px-1.5 py-0.5 text-[11px]"
-                                    >
-                                      {skill}
-                                    </span>
-                                  ))}
+                    {member.skills.length > 0
+                      ? (() => {
+                          const shown = member.skills.slice(0, 2);
+                          const hidden = member.skills.slice(2);
+                          return (
+                            <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                              {shown.map((skill) => (
+                                <span
+                                  key={skill}
+                                  className="rounded-md border border-border bg-muted/60 px-2 py-0.5 text-xs text-foreground"
+                                >
+                                  {skill}
+                                </span>
+                              ))}
+                              {hidden.length > 0 ? (
+                                <div className="relative group inline-flex">
+                                  <span
+                                    title={hidden.join(", ")}
+                                    className="rounded-md border border-border bg-muted/60 px-2 py-0.5 text-xs text-muted-foreground cursor-pointer transition-colors hover:bg-accent hover:text-foreground"
+                                  >
+                                    +{hidden.length} more
+                                  </span>
+                                  <div className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 opacity-0 transition-all duration-150 group-hover:opacity-100 group-hover:pointer-events-auto z-50">
+                                    <div className="flex flex-wrap gap-1 rounded-md border border-border bg-popover p-2 text-xs font-normal text-popover-foreground shadow-md whitespace-nowrap max-w-[220px]">
+                                      {hidden.map((skill) => (
+                                        <span
+                                          key={skill}
+                                          className="rounded bg-muted px-1.5 py-0.5 text-[11px]"
+                                        >
+                                          {skill}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
+                              ) : null}
                             </div>
-                          ) : null}
-                        </div>
-                      );
-                    })()}
+                          );
+                        })()
+                      : null}
                   </div>
 
                   {/* View Profile Action */}
@@ -313,9 +315,7 @@ export default function MembersPage() {
                       <th className="px-5 py-3.5">ROLE</th>
                       <th className="px-5 py-3.5">ORGANISATION</th>
                       <th className="px-5 py-3.5">CITY</th>
-                      <th className="px-5 py-3.5">FIELD</th>
                       <th className="px-5 py-3.5">SKILLS</th>
-                      <th className="px-5 py-3.5 text-right">CONTRIBUTIONS</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
@@ -352,50 +352,32 @@ export default function MembersPage() {
 
                         {/* Role */}
                         <td className="px-5 py-4 text-muted-foreground">
-                          {member.headline ?? "UX researcher"}
+                          {member.headline ?? "—"}
                         </td>
 
                         {/* Organisation */}
                         <td className="px-5 py-4 font-semibold text-foreground">
-                          {member.affiliation ?? "Niural AI"}
+                          {member.affiliation ?? "—"}
                         </td>
 
                         {/* City */}
                         <td className="px-5 py-4 text-muted-foreground">
-                          {member.location ?? "Patan"}
+                          {member.location ?? "—"}
                         </td>
-
-                        {/* Field */}
-                        <td className="px-5 py-4 text-muted-foreground">Design</td>
 
                         {/* Skills */}
                         <td className="px-5 py-4">
                           <div className="flex flex-wrap gap-1.5">
-                            {(member.skills.length > 0
-                              ? member.skills
-                              : ["Design", "Writing", "UX Research"]
-                            ).map((skill) => (
-                              <span
-                                key={skill}
-                                className="rounded-md border border-border bg-muted/60 px-2 py-0.5 text-xs text-foreground"
-                              >
-                                {skill}
-                              </span>
-                            ))}
-                          </div>
-                        </td>
-
-                        {/* Contributions */}
-                        <td className="px-5 py-4 text-right">
-                          <div className="flex items-center justify-end gap-3 font-semibold text-foreground">
-                            <span>50</span>
-                            <Link
-                              href={localePath(locale, `/members/${member.githubUsername}`)}
-                              className="text-muted-foreground hover:text-primary"
-                              aria-label="View profile"
-                            >
-                              ⊕
-                            </Link>
+                            {member.skills.length > 0
+                              ? member.skills.map((skill) => (
+                                  <span
+                                    key={skill}
+                                    className="rounded-md border border-border bg-muted/60 px-2 py-0.5 text-xs text-foreground"
+                                  >
+                                    {skill}
+                                  </span>
+                                ))
+                              : "—"}
                           </div>
                         </td>
                       </tr>

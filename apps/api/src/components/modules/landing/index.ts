@@ -2,8 +2,6 @@ export { ContributionSection } from "./contribution-section";
 export { HeroSection } from "./hero-section";
 export { JourneySection } from "./journey-section";
 export { MembersSection } from "./members-section";
-export { NotBuildingSection } from "./not-building-section";
 export { ProjectSpotlightSection } from "./project-spotlight-section";
 export { ProjectsSection } from "./projects-section";
-export { RecentActivitySection } from "./recent-activity-section";
 export { RecentIssuesSection } from "./recent-issues-section";

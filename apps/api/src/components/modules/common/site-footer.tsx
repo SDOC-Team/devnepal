@@ -13,20 +13,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
     { href: localePath(locale, "/about"), label: dict.footer.aboutPlatform },
     { href: localePath(locale, "/project"), label: dict.footer.departments },
     { href: localePath(locale, "/members"), label: dict.footer.whosWho },
-    { href: localePath(locale, "/project"), label: dict.footer.directorates },
-  ];
-
-  const governanceLinks = [
-    { href: localePath(locale, "/about"), label: dict.footer.codeOfConduct },
-    { href: localePath(locale, "/about"), label: dict.footer.security },
-    { href: localePath(locale, "/about"), label: dict.footer.privacyNotice },
-    { href: localePath(locale, "/about"), label: dict.footer.licence },
-  ];
-
-  const legalLinks = [
-    { href: localePath(locale, "/about"), label: dict.footer.termsConditions },
-    { href: localePath(locale, "/about"), label: dict.footer.privacyPolicy },
-    { href: localePath(locale, "/about"), label: dict.footer.contactUs },
+    { href: localePath(locale, "/issues"), label: dict.footer.directorates },
   ];
 
   return (
@@ -53,43 +40,18 @@ export function SiteFooter({ locale }: { locale: Locale }) {
             ))}
           </nav>
 
-          <nav aria-label={dict.footer.governance} className="flex flex-col gap-4 sm:w-50">
-            <h2 className="text-sm font-semibold">{dict.footer.governance}</h2>
-            {governanceLinks.map((link) => (
-              <Link key={link.label} href={link.href} className={footerLinkClass}>
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="flex flex-col gap-5">
-            <div className="flex items-center gap-3">
-              {/* biome-ignore lint/performance/noImgElement: official government emblem */}
-              <img
-                src="/official-website-bar/emblem-of-nepal.png"
-                alt=""
-                width={60}
-                height={51}
-                className="h-auto w-15 shrink-0"
-              />
-              <div className="flex flex-col">
-                <p className="text-base font-semibold">नेपाल सरकार</p>
-                <p className="text-sm">Government of Nepal</p>
-              </div>
-            </div>
-            <div className="flex flex-col gap-3">
-              <p className="text-xs">Office of the Prime Minister and Council of Ministers</p>
-              <p className="text-xs">Singhadurbar, Kathmandu</p>
-              <a
-                href="https://opmcm.gov.np"
-                target="_blank"
-                rel="noreferrer"
-                className={`${footerLinkClass} inline-flex items-center gap-1`}
-              >
-                opmcm.gov.np
-                <ArrowSquareOutIcon size={12} />
-              </a>
-            </div>
+          <div className="flex flex-col gap-3 sm:w-50">
+            <p className="text-sm font-semibold">{dict.footer.repository}</p>
+            <p className="text-xs leading-4.5">{dict.footer.note}</p>
+            <a
+              href="https://github.com/SDOC-Team/devnepal"
+              target="_blank"
+              rel="noreferrer"
+              className={`${footerLinkClass} inline-flex items-center gap-1`}
+            >
+              SDOC-Team/devnepal
+              <ArrowSquareOutIcon size={12} />
+            </a>
           </div>
         </div>
       </div>
@@ -99,13 +61,6 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           <p className="text-xs font-medium text-primary-foreground/80">
             {dict.footer.legalCopyright}
           </p>
-          <nav aria-label="Legal" className="flex flex-wrap gap-x-8 gap-y-2">
-            {legalLinks.map((link) => (
-              <Link key={link.label} href={link.href} className={footerLinkClass}>
-                {link.label}
-              </Link>
-            ))}
-          </nav>
         </div>
       </div>
     </footer>

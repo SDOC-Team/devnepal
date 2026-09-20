@@ -3,7 +3,6 @@
 import {
   BriefcaseIcon,
   BuildingsIcon,
-  CaretRightIcon,
   CheckCircleIcon,
   GithubLogoIcon,
   MapPinIcon,
@@ -27,7 +26,6 @@ export default function MemberDetailPage() {
   const { username } = useParams<{ username: string }>();
   const { member: profile, isLoading, error } = useMember(username);
   const { actor } = useActor();
-  const [activeTab, setActiveTab] = useState<"overview" | "contributions">("overview");
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
@@ -39,8 +37,11 @@ export default function MemberDetailPage() {
           url,
         });
         return;
-      } catch {
-        // Fallback to clipboard
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+        console.error("Native profile sharing failed; falling back to clipboard", error);
       }
     }
 
@@ -48,8 +49,8 @@ export default function MemberDetailPage() {
       await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Fallback
+    } catch (error) {
+      console.error("Copying the profile URL failed", error);
     }
   };
 
@@ -74,80 +75,9 @@ export default function MemberDetailPage() {
 
   const isOwner = actor !== null && actor.member.githubId === profile.githubId;
   const isPending = actor !== null && isOwner && actor.member.status !== "approved";
-
-  // Sample/mock contributions matching the visual spec if none available
-  const sampleContributions = [
-    {
-      id: "1",
-      author: profile.displayName,
-      action: "improved the Nepali translation of the contribute page",
-      status: "MERGED",
-      date: "14 Bhadra 2083 (30 Aug)",
-    },
-    {
-      id: "2",
-      author: profile.displayName,
-      action: "improved the Nepali translation of the contribute page",
-      status: "MERGED",
-      date: "14 Bhadra 2083 (30 Aug)",
-    },
-    {
-      id: "3",
-      author: profile.displayName,
-      action: "improved the Nepali translation of the contribute page",
-      status: "MERGED",
-      date: "14 Bhadra 2083 (30 Aug)",
-    },
-    {
-      id: "4",
-      author: profile.displayName,
-      action: "improved the Nepali translation of the contribute page",
-      status: "MERGED",
-      date: "14 Bhadra 2083 (30 Aug)",
-    },
-    {
-      id: "5",
-      author: profile.displayName,
-      action: "improved the Nepali translation of the contribute page",
-      status: "MERGED",
-      date: "14 Bhadra 2083 (30 Aug)",
-    },
-    {
-      id: "6",
-      author: profile.displayName,
-      action: "improved the Nepali translation of the contribute page",
-      status: "MERGED",
-      date: "14 Bhadra 2083 (30 Aug)",
-    },
-    {
-      id: "7",
-      author: profile.displayName,
-      action: "improved the Nepali translation of the contribute page",
-      status: "OPENED",
-      date: "14 Bhadra 2083 (30 Aug)",
-    },
-    {
-      id: "8",
-      author: profile.displayName,
-      action: "improved the Nepali translation of the contribute page",
-      status: "CLOSED",
-      date: "14 Bhadra 2083 (30 Aug)",
-    },
-    {
-      id: "9",
-      author: profile.displayName,
-      action: "improved the Nepali translation of the contribute page",
-      status: "CLOSED",
-      date: "14 Bhadra 2083 (30 Aug)",
-    },
-    {
-      id: "10",
-      author: profile.displayName,
-      action: "improved the Nepali translation of the contribute page",
-      status: "CLOSED",
-      date: "14 Bhadra 2083 (30 Aug)",
-    },
-  ];
+  const hasBio = profile.bio !== null;
+  const hasSidebar =
+    profile.skills.length > 0 || profile.affiliation !== null || profile.links.length > 0;
 
   return (
     <div className="w-full bg-background min-h-screen">
@@ -210,12 +140,7 @@ export default function MemberDetailPage() {
                     <MapPinIcon className="size-4 shrink-0 text-muted-foreground" />
                     <span>{profile.location}</span>
                   </span>
-                ) : (
-                  <span className="flex items-center gap-1.5">
-                    <MapPinIcon className="size-4 shrink-0 text-muted-foreground" />
-                    <span>Kathmandu Nepal</span>
-                  </span>
-                )}
+                ) : null}
               </div>
             </div>
           </div>
@@ -268,34 +193,6 @@ export default function MemberDetailPage() {
         </div>
       </div>
 
-      {/* Tabs Navigation Strip */}
-      <div className="border-b border-border bg-background px-4">
-        <div className="mx-auto flex max-w-[1200px] gap-8 overflow-x-auto">
-          <button
-            type="button"
-            onClick={() => setActiveTab("overview")}
-            className={`py-3.5 text-sm font-medium border-b-2 transition-colors cursor-pointer ${
-              activeTab === "overview"
-                ? "border-primary text-primary font-semibold"
-                : "border-transparent text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Overview
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("contributions")}
-            className={`py-3.5 text-sm font-medium border-b-2 transition-colors cursor-pointer ${
-              activeTab === "contributions"
-                ? "border-primary text-primary font-semibold"
-                : "border-transparent text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Contributions
-          </button>
-        </div>
-      </div>
-
       {/* Main Content Area */}
       <div className="mx-auto max-w-[1200px] px-4 py-8">
         {isPending ? (
@@ -304,83 +201,30 @@ export default function MemberDetailPage() {
           </StateBanner>
         ) : null}
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px]">
-          {/* Left Main Column */}
-          <div className="space-y-8">
-            {/* Bio Prose */}
+        <div
+          className={
+            hasBio && hasSidebar
+              ? "grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px]"
+              : "grid grid-cols-1 gap-8"
+          }
+        >
+          {hasBio ? (
             <div>
               <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
-                {profile.bio ??
-                  "I work on payment rails and I am interested in how public systems handle money. Happy to mentor on Django, especially for a first contribution to a government repository."}
+                {profile.bio}
               </p>
             </div>
-
-            {/* Contributions Section */}
-            <div>
-              <h2 className="mb-4 text-lg font-bold tracking-tight text-foreground">
-                Contributions
-              </h2>
-
-              <div className="overflow-hidden rounded-xl border border-border bg-card divide-y divide-border">
-                {sampleContributions.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex flex-wrap items-center justify-between gap-4 p-4 text-sm transition-colors hover:bg-muted/40"
-                  >
-                    <div className="flex min-w-0 items-center gap-2">
-                      <span className="font-semibold text-foreground">{item.author}</span>
-                      <span className="text-muted-foreground">{item.action}</span>
-                    </div>
-
-                    <div className="flex shrink-0 items-center gap-4">
-                      {item.status === "MERGED" ? (
-                        <span className="rounded-full bg-primary px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider text-primary-foreground">
-                          {item.status}
-                        </span>
-                      ) : item.status === "OPENED" ? (
-                        <span className="rounded-full border border-border bg-muted px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                          {item.status}
-                        </span>
-                      ) : (
-                        <span className="rounded-full bg-destructive/10 px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider text-destructive">
-                          {item.status}
-                        </span>
-                      )}
-
-                      <span className="text-xs text-muted-foreground">{item.date}</span>
-
-                      <CaretRightIcon className="size-4 text-muted-foreground" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          ) : null}
 
           {/* Right Sidebar Column */}
-          <div className="space-y-6">
-            {/* Skills Card */}
-            <div className="rounded-xl border border-border bg-card p-5">
-              <h3 className="mb-3 text-sm font-bold text-foreground">Skills</h3>
-              <div className="flex flex-wrap gap-2">
-                {profile.skills.length > 0
-                  ? profile.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="rounded-md border border-border bg-muted/60 px-2.5 py-1 text-xs font-medium text-foreground"
-                      >
-                        {skill}
-                      </span>
-                    ))
-                  : [
-                      "Engineering",
-                      "UI/UX",
-                      "Data",
-                      "Security",
-                      "Documentation",
-                      "Localization",
-                      "Research",
-                    ].map((skill) => (
+          {hasSidebar ? (
+            <div className={`space-y-6 ${hasBio ? "" : "max-w-sm"}`}>
+              {/* Skills Card */}
+              {profile.skills.length > 0 ? (
+                <div className="rounded-xl border border-border bg-card p-5">
+                  <h3 className="mb-3 text-sm font-bold text-foreground">Skills</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {profile.skills.map((skill) => (
                       <span
                         key={skill}
                         className="rounded-md border border-border bg-muted/60 px-2.5 py-1 text-xs font-medium text-foreground"
@@ -388,30 +232,29 @@ export default function MemberDetailPage() {
                         {skill}
                       </span>
                     ))}
-              </div>
-            </div>
-
-            {/* Affiliation Card */}
-            <div className="rounded-xl border border-border bg-card p-5">
-              <h3 className="mb-3 text-sm font-bold text-foreground">Affiliation</h3>
-              <div className="space-y-2.5 text-sm text-foreground">
-                <div className="flex items-center gap-2">
-                  <BuildingsIcon className="size-4 text-muted-foreground" />
-                  <span className="font-medium">{profile.affiliation ?? "Niural AI"}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <BuildingsIcon className="size-4 text-muted-foreground" />
-                  <span className="font-medium">MIT</span>
-                </div>
-              </div>
-            </div>
+              ) : null}
 
-            {/* Links Card */}
-            <div className="rounded-xl border border-border bg-card p-5">
-              <h3 className="mb-3 text-sm font-bold text-foreground">Links</h3>
-              <div className="flex flex-wrap gap-2">
-                {profile.links.length > 0
-                  ? profile.links.map((link) => (
+              {/* Affiliation Card */}
+              {profile.affiliation !== null ? (
+                <div className="rounded-xl border border-border bg-card p-5">
+                  <h3 className="mb-3 text-sm font-bold text-foreground">Affiliation</h3>
+                  <div className="space-y-2.5 text-sm text-foreground">
+                    <div className="flex items-center gap-2">
+                      <BuildingsIcon className="size-4 text-muted-foreground" />
+                      <span className="font-medium">{profile.affiliation}</span>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+
+              {/* Links Card */}
+              {profile.links.length > 0 ? (
+                <div className="rounded-xl border border-border bg-card p-5">
+                  <h3 className="mb-3 text-sm font-bold text-foreground">Links</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {profile.links.map((link) => (
                       <a
                         key={link}
                         href={link}
@@ -421,20 +264,12 @@ export default function MemberDetailPage() {
                       >
                         {link.replace(/^https?:\/\//, "")}
                       </a>
-                    ))
-                  : ["github.com", "linkedin.com", "dev.to", "twitter.com", "personal.site"].map(
-                      (link) => (
-                        <span
-                          key={link}
-                          className="rounded-md border border-border bg-muted/60 px-2.5 py-1 text-xs font-medium text-foreground"
-                        >
-                          {link}
-                        </span>
-                      ),
-                    )}
-              </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
             </div>
-          </div>
+          ) : null}
         </div>
       </div>
     </div>

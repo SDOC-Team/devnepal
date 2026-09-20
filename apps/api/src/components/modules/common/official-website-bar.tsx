@@ -15,15 +15,10 @@ import { LOCALES, type Locale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 const ASSETS = {
-  emblem: "/official-website-bar/emblem-of-nepal.png",
-  caret: "/official-website-bar/caret.svg",
   accessibility: "/official-website-bar/accessibility.svg",
   divider: "/official-website-bar/divider.svg",
   language: "/official-website-bar/language.svg",
   caretDown: "/official-website-bar/caret-down.svg",
-  bank: "/official-website-bar/bank-fill.svg",
-  lock: "/official-website-bar/lock-fill.svg",
-  external: "/official-website-bar/external-link.svg",
 } as const;
 
 const LANGUAGES = [
@@ -59,7 +54,6 @@ function MastheadIcon({
 }
 
 function OfficialWebsiteBar({ locale }: { locale: Locale }) {
-  const [identified, setIdentified] = useState(false);
   const [fontSize, setFontSize] = useState<FontSizeOption>("normal");
   const { resolvedTheme, setTheme } = useTheme();
   const router = useRouter();
@@ -98,35 +92,11 @@ function OfficialWebsiteBar({ locale }: { locale: Locale }) {
       <div className="bg-primary px-3 py-0.5 text-primary-foreground sm:px-6 lg:px-12">
         <div className="mx-auto flex min-h-7 sm:min-h-8 w-full max-w-[1200px] flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex min-w-0 flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2">
-              {/* biome-ignore lint/performance/noImgElement: national emblem */}
-              <img src={ASSETS.emblem} alt="" width={16} height={14} className="shrink-0" />
-              <p className="text-[11px] font-medium sm:text-xs">
-                {locale === "ne"
-                  ? "नेपाल सरकारको आधिकारिक वेबसाइट"
-                  : "A Nepal Government Official Website"}
-              </p>
-            </div>
-            <button
-              type="button"
-              className={cn(
-                chromeControlClassName,
-                "cursor-pointer px-1 py-0.5 text-[11px] sm:text-xs",
-              )}
-              aria-expanded={identified}
-              aria-controls="official-website-identify-panel"
-              onClick={() => setIdentified((open) => !open)}
-            >
-              {locale === "ne" ? "कसरी पहिचान गर्ने" : "How to identify"}
-              <span
-                className={cn(
-                  "inline-flex transition-transform motion-reduce:transition-none",
-                  identified && "rotate-180",
-                )}
-              >
-                <MastheadIcon src={ASSETS.caret} />
-              </span>
-            </button>
+            <p className="text-[11px] font-medium sm:text-xs">
+              {locale === "ne"
+                ? "समुदायद्वारा निर्मित खुला स्रोत प्लेटफर्म"
+                : "A community-built open-source platform"}
+            </p>
           </div>
 
           <div className="flex items-center justify-end gap-3">
@@ -264,48 +234,6 @@ function OfficialWebsiteBar({ locale }: { locale: Locale }) {
           </div>
         </div>
       </div>
-
-      {identified ? (
-        <div
-          id="official-website-identify-panel"
-          className="flex flex-col gap-6 bg-muted px-4 py-3 transition-opacity duration-200 ease-out starting:opacity-0 motion-reduce:transition-none sm:flex-row sm:px-8 lg:px-16"
-        >
-          <div className="flex min-w-0 flex-1 items-start gap-2">
-            <MastheadIcon src={ASSETS.bank} className="dark:brightness-0 dark:invert" />
-            <div className="flex min-w-0 flex-col gap-1">
-              <p className="text-sm font-semibold">Official website links end with .gov.np</p>
-              <p className="text-sm text-muted-foreground">
-                Government agencies communicate via .gov.np websites (e.g. nepal.gov.np).
-              </p>
-              <a
-                href="https://nepal.gov.np"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1 text-sm text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 dark:text-foreground"
-              >
-                Trusted websites
-                <MastheadIcon src={ASSETS.external} />
-              </a>
-            </div>
-          </div>
-          <div className="flex min-w-0 flex-1 items-start gap-2">
-            <MastheadIcon src={ASSETS.lock} className="dark:brightness-0 dark:invert" />
-            <div className="flex min-w-0 flex-col gap-1">
-              <p className="text-sm font-semibold">Secure websites use HTTPS</p>
-              <p className="text-sm text-muted-foreground">
-                {"Look for a lock ("}
-                <MastheadIcon
-                  src={ASSETS.lock}
-                  className="inline-block align-text-bottom dark:brightness-0 dark:invert"
-                />
-                {
-                  ") or https:// as an added precaution. Share sensitive information only on official, secure websites."
-                }
-              </p>
-            </div>
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 }

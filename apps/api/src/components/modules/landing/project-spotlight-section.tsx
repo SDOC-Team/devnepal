@@ -1,5 +1,5 @@
 import type { IssueDto, ProjectDto } from "@gov-portal/shared";
-import { CaretRightIcon, ShieldCheckIcon } from "@phosphor-icons/react/ssr";
+import { CaretRightIcon } from "@phosphor-icons/react/ssr";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -7,25 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { type Dictionary, type Locale, localePath } from "@/lib/i18n";
-
-const DEFAULT_OPEN_ISSUES = [
-  {
-    title: "Nepali language and content",
-    description: "Translation review, Devanagari readability, a technical glossary.",
-  },
-  {
-    title: "Frontend",
-    description: "Empty states, mobile profile layout, loading and error states.",
-  },
-  {
-    title: "Accessibility",
-    description: "Keyboard audit, contrast audit, focus styles, screen-reader testing.",
-  },
-  {
-    title: "Documentation",
-    description: "Setup guides, contributor onboarding, a Nepali readme.",
-  },
-] as const;
 
 export function ProjectSpotlightSection({
   dict,
@@ -54,20 +35,12 @@ export function ProjectSpotlightSection({
     }
   }
 
-  const issueRows =
-    labelGroups.size > 0
-      ? Array.from(labelGroups.entries()).map(([label, group]) => ({
-          key: label,
-          title: group.title,
-          description: group.description,
-          href: localePath(locale, "/issues"),
-        }))
-      : DEFAULT_OPEN_ISSUES.map((item) => ({
-          key: item.title,
-          title: item.title,
-          description: item.description,
-          href: localePath(locale, "/issues"),
-        }));
+  const issueRows = Array.from(labelGroups.entries()).map(([label, group]) => ({
+    key: label,
+    title: group.title,
+    description: group.description,
+    href: localePath(locale, "/issues"),
+  }));
 
   return (
     <section
@@ -79,11 +52,11 @@ export function ProjectSpotlightSection({
         <h2 className="text-2xl font-semibold text-foreground">{dict.home.openForContribTitle}</h2>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className={`grid gap-5 ${issueRows.length > 0 ? "lg:grid-cols-3" : ""}`}>
         {/* Featured Project Card */}
         <Card
           data-slot="project-card"
-          className="gap-0 py-0 transition-colors duration-200 hover:bg-muted hover:ring-foreground/20 lg:col-span-2 lg:flex-row"
+          className={`gap-0 py-0 transition-colors duration-200 hover:bg-muted hover:ring-foreground/20 lg:flex-row ${issueRows.length > 0 ? "lg:col-span-2" : ""}`}
         >
           <div className="p-4 lg:max-w-[55%] lg:flex-1">
             <div className="relative aspect-[681/491] w-full overflow-hidden rounded-lg lg:aspect-auto lg:h-full">
@@ -107,15 +80,11 @@ export function ProjectSpotlightSection({
                     {project.title}
                   </Link>
                 </h3>
-                <div className="flex shrink-0 flex-wrap items-center gap-2">
+                {project.license !== null ? (
                   <Badge variant="outline" className="h-[22px]">
-                    MIT Licence
+                    {project.license}
                   </Badge>
-                  <Badge className="h-[22px] bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-foreground">
-                    <ShieldCheckIcon data-icon="inline-start" weight="fill" />
-                    Official
-                  </Badge>
-                </div>
+                ) : null}
               </div>
               <p className="text-base text-card-foreground">
                 {project.description ?? dict.home.openForContribDesc}
@@ -169,44 +138,45 @@ export function ProjectSpotlightSection({
           </CardContent>
         </Card>
 
-        {/* Open Issues Card */}
-        <Card
-          data-slot="open-issues-card"
-          className="gap-0 py-0 transition-colors duration-200 hover:ring-foreground/20"
-        >
-          <CardContent className="flex flex-col gap-2 px-4 pt-4 pb-4">
-            <div className="flex items-center justify-between gap-3">
-              <h3 className="text-lg font-semibold text-card-foreground">
-                {dict.home.issuesPanelTitle}
-              </h3>
-              <Button
-                variant="link"
-                nativeButton={false}
-                render={<Link href={localePath(locale, "/issues")} />}
-                className="h-auto p-0 text-sm text-secondary-foreground"
-              >
-                {dict.home.browseAllIssues}
-              </Button>
-            </div>
-            <div className="flex flex-col">
-              {issueRows.map((issue) => (
-                <Link
-                  key={issue.key}
-                  href={issue.href}
-                  className="group flex items-center gap-3 border-t border-border py-2 pr-4 pl-5 transition-colors outline-none first:border-t-0 hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50"
+        {issueRows.length > 0 ? (
+          <Card
+            data-slot="open-issues-card"
+            className="gap-0 py-0 transition-colors duration-200 hover:ring-foreground/20"
+          >
+            <CardContent className="flex flex-col gap-2 px-4 pt-4 pb-4">
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-lg font-semibold text-card-foreground">
+                  {dict.home.issuesPanelTitle}
+                </h3>
+                <Button
+                  variant="link"
+                  nativeButton={false}
+                  render={<Link href={localePath(locale, "/issues")} />}
+                  className="h-auto p-0 text-sm text-secondary-foreground"
                 >
-                  <span className="flex min-w-0 flex-1 flex-col gap-1">
-                    <span className="text-base font-medium text-card-foreground">
-                      {issue.title}
+                  {dict.home.browseAllIssues}
+                </Button>
+              </div>
+              <div className="flex flex-col">
+                {issueRows.map((issue) => (
+                  <Link
+                    key={issue.key}
+                    href={issue.href}
+                    className="group flex items-center gap-3 border-t border-border py-2 pr-4 pl-5 transition-colors outline-none first:border-t-0 hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50"
+                  >
+                    <span className="flex min-w-0 flex-1 flex-col gap-1">
+                      <span className="text-base font-medium text-card-foreground">
+                        {issue.title}
+                      </span>
+                      <span className="text-sm text-muted-foreground">{issue.description}</span>
                     </span>
-                    <span className="text-sm text-muted-foreground">{issue.description}</span>
-                  </span>
-                  <CaretRightIcon className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground" />
-                </Link>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                    <CaretRightIcon className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground" />
+                  </Link>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        ) : null}
       </div>
     </section>
   );
