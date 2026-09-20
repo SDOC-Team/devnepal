@@ -25,16 +25,20 @@ export default async function SiteLayout({
 
   return (
     <SwrProvider>
-      <LocaleLang locale={locale} />
-      <a
-        className="sr-only focus:not-sr-only focus:block focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground"
-        href="#main-content"
-      >
-        {dict.common.skipToContent}
-      </a>
-      <SiteHeader locale={locale} />
-      <main id="main-content">{children}</main>
-      <SiteFooter locale={locale} />
+      <div className="flex min-h-screen flex-col">
+        <LocaleLang locale={locale} />
+        <a
+          className="sr-only focus:not-sr-only focus:block focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground"
+          href="#main-content"
+        >
+          {dict.common.skipToContent}
+        </a>
+        <SiteHeader locale={locale} />
+        <main id="main-content" className="flex-1">
+          {children}
+        </main>
+        <SiteFooter locale={locale} />
+      </div>
     </SwrProvider>
   );
 }
