@@ -20,7 +20,6 @@
 
 ## Maintainers, and how you become one
 
-**Maintainers are currently appointed, not promoted.** Everyone currently holding the role was invited by the core team rather than earning it through contribution.
 
 | Level | Who | What they can do |
 |---|---|---|
@@ -28,9 +27,8 @@
 | **Maintainer** | Appointed by the core team. **May be from outside government** | Binding approval of pull requests in their area |
 | **Core** | Government appointment or contract | Merge, release, deploy |
 
-**Why appointment first.** Review capacity is what limits how fast this moves, and we need reviewers before there is any track record to promote from. The first maintainers are people we already know can review.
 
-**What comes next.** Once there is a body of contributors with a real track record, we will publish criteria for moving from contributor to maintainer — a promotion path, rather than appointment — and start promoting from contribution rather than acquaintance. The criteria will be stated plainly rather than left to judgement.
+**What comes next.** Once there is a body of contributors with a real track record, we will publish criteria for moving from contributor to maintainer — a promotion path, rather than appointment — and start promoting from contribution. The criteria will be stated plainly rather than left to judgement.
 
 **What holds regardless:**
 

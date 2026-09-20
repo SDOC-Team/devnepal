@@ -5,17 +5,15 @@
 Office of the Prime Minister, Government of Nepal
 <https://pmdevcore.gov.np> · [नेपालीमा पढ्नुहोस् →](./README.ne.md)
 
-> **Current stage: documentation and planning.** Contributions to the specs and documentation are welcome.
+> **Current stage: documentation and planning.**
 
 ---
 
 ## What this is
 
-devNepal is where the Government of Nepal publishes technology work that anyone can contribute to. All the work happens in public repositories.
+devNepal is where the Government of Nepal publishes technology projects that anyone can contribute to. All the work happens in public repositories. This repository is for devNepal.
 
-The planned portal will list projects and show recent activity across them. Optional member profiles will collect public activity, including accepted work.
-
-This repository is the portal itself — and the first project listed on it. **The first thing devNepal built is devNepal, in public, from the first commit.**
+**The first project devNepal is building is devNepal itself, in public, from the first commit.**
 
 ---
 
@@ -39,9 +37,7 @@ This repository is the portal itself — and the first project listed on it. **T
 
 ## Contribution is not only code
 
-Design, Nepali translation, documentation, testing, accessibility and security work should all be reviewed and credited the same way. See [MAINTAINERS.md](./MAINTAINERS.md) for area contacts. If you want to contribute something not on that list, open an issue and ask — the list grows as the people who can review it arrive.
-
-If you improve a Nepali error message or find a contrast failure, you have contributed. Tell us and we will credit it.
+Design, Nepali translation, documentation, testing, accessibility and security work are reviewed and credited the same way. See [MAINTAINERS.md](./MAINTAINERS.md) for area contacts. If you want to contribute to an area not on that list, open an issue and ask.
 
 ---
 
@@ -52,7 +48,7 @@ git clone https://github.com/SDOC-Team/devnepal.git
 cd devnepal
 ```
 
-Read and edit the Markdown documents, then follow [CONTRIBUTING.md](./CONTRIBUTING.md) to submit a pull request. There is no runnable application yet.
+Follow [CONTRIBUTING.md](./CONTRIBUTING.md) to submit a pull request. There is no runnable application yet.
 
 ---
 

@@ -23,7 +23,7 @@ If we are ever at capacity we will say so publicly and pause new claims, rather 
 
 **Only claim issues labelled `ready`. Comment on the issue to claim it.** We will assign it to you. If nothing suitable is ready, open a proposal or ask for clarification before starting.
 
-After 14 days without activity, maintainers should check in and may manually unassign the issue, leaving an explanation. This is never a judgement on you — claim it again whenever you are ready.
+After 14 days without activity, maintainers will check in and may manually unassign the issue, leaving an explanation. This is never a judgement on you — claim it again whenever you are ready.
 
 **Open an issue before large or design work.** A proposal that arrives as a finished artifact has already cost you a weekend, and we would rather agree the problem with you first.
 
@@ -62,7 +62,7 @@ You retain copyright in your contribution. We do not ask you to assign or transf
 
 ## Contribution is not only code
 
-Design, Nepali translation, documentation, testing, accessibility and security work are all reviewed and credited the same way as code. If you want to contribute something not on that list, open an issue and ask — the list grows as the people who can review it arrive.
+Design, Nepali translation, documentation, testing, accessibility and security work are all reviewed and credited the same way as code. If you want to contribute to an area not on that list, open an issue and ask — the list grows as the people who can review it arrive.
 
 If you improve a Nepali error message or find a contrast failure, you have contributed. Tell us and we will credit it.
 
