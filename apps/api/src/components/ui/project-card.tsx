@@ -25,18 +25,18 @@ export function ProjectCard({
   topics?: string[];
 }) {
   return (
-    <article className="flex flex-col justify-between gap-4 rounded-md border border-divider bg-paper p-5">
+    <article className="flex flex-col justify-between gap-4 rounded-md border border-border bg-card p-5">
       <div className="flex flex-col gap-3">
         <h3 className="m-0 text-md">
           <Link
             href={localePath(locale, "/project")}
-            className="text-text no-underline hover:text-accent-700 hover:underline"
+            className="text-foreground no-underline hover:text-primary hover:underline"
           >
             {project.title}
           </Link>
         </h3>
-        {owner !== undefined ? <p className="m-0 text-sm text-text-secondary">{owner}</p> : null}
-        <p className="m-0 text-sm leading-normal text-text-secondary">
+        {owner !== undefined ? <p className="m-0 text-sm text-muted-foreground">{owner}</p> : null}
+        <p className="m-0 text-sm leading-normal text-muted-foreground">
           {project.description ?? dict.project.none}
         </p>
 

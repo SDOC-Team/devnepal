@@ -22,12 +22,14 @@ export function ContributionPath({ dict, locale }: { dict: Dictionary; locale: L
 
       <section
         aria-labelledby="limits-heading"
-        className="mt-6 rounded-md border border-divider bg-paper p-8"
+        className="mt-6 rounded-xl border border-border bg-card p-8"
       >
         <h2 id="limits-heading" className="mt-0 mb-3 text-lg">
           {dict.about.sections.limitsTitle}
         </h2>
-        <p>{dict.about.sections.limitsBody}</p>
+        <p className="m-0 max-w-[68ch] leading-[1.6] text-muted-foreground">
+          {dict.about.sections.limitsBody}
+        </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Button render={<Link href={localePath(locale, "/issues")} />}>
             {dict.about.actions.browseIssues}

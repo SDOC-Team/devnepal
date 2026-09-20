@@ -22,13 +22,13 @@ export function SectionHeading({
     <header className="mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
       <div className="min-w-0">
         {kicker !== undefined ? (
-          <span className="mb-2 block text-sm font-semibold text-accent-700">{kicker}</span>
+          <span className="mb-2 block text-sm font-semibold text-primary">{kicker}</span>
         ) : null}
         <h2 id={titleId} className="m-0 leading-[1.08] tracking-[-0.01em]">
           {title}
         </h2>
         {lede !== undefined ? (
-          <p className="mt-3 max-w-[68ch] text-base leading-[1.55] text-neutral-700">{lede}</p>
+          <p className="mt-3 max-w-[68ch] text-base leading-[1.55] text-muted-foreground">{lede}</p>
         ) : null}
       </div>
       {action}

@@ -19,11 +19,11 @@ export default function GlobalError({
   reset: () => void;
 }) {
   return (
-    <html lang="en" data-color-mode="light" data-light-theme="light">
+    <html lang="en" suppressHydrationWarning className="antialiased font-sans">
       <head>
         <title>Error · Dev Nepal</title>
       </head>
-      <body>
+      <body className="flex min-h-screen flex-col justify-center bg-background text-foreground selection:bg-primary/15">
         <main>
           <StatusPage
             tone="error"

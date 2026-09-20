@@ -1,5 +1,6 @@
 export { ArrowLink } from "./arrow-link";
 export { LanguageSwitch } from "./language-switch";
+export { type LoadingLayout, LoadingSkeleton } from "./loading-skeleton";
 export { LocaleLang } from "./locale-lang";
 export { PageHeader } from "./page-header";
 export { ErrorPanel, LoadingPanel } from "./query-state";

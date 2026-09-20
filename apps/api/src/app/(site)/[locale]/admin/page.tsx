@@ -10,7 +10,7 @@ export default function AdminPage() {
   const { actor, isLoading, isSignedOut, error } = useActor();
 
   if (isLoading) {
-    return <LoadingPanel label={dict.common.loading} />;
+    return <LoadingPanel label={dict.common.loading} layout="rows" />;
   }
 
   if (error !== undefined) {
@@ -29,11 +29,11 @@ export default function AdminPage() {
       <section className="py-12" aria-labelledby="admin-heading">
         <div className="container-narrow">
           <header className="mb-8 max-w-[70ch]">
-            <p className="mb-2 block text-sm font-semibold text-accent-700">{dict.admin.kicker}</p>
+            <p className="mb-2 block text-sm font-semibold text-primary">{dict.admin.kicker}</p>
             <h1 id="admin-heading" className="mt-0 mb-3 leading-[1.08] tracking-[-0.01em]">
               {dict.admin.title}
             </h1>
-            <p className="m-0 max-w-[68ch] text-md leading-[1.55] text-neutral-700">
+            <p className="m-0 max-w-[68ch] text-md leading-[1.55] text-muted-foreground">
               {dict.admin.signInBody}
             </p>
           </header>
@@ -48,11 +48,11 @@ export default function AdminPage() {
       <section className="py-12" aria-labelledby="admin-heading">
         <div className="container-narrow">
           <header className="mb-8 max-w-[70ch]">
-            <p className="mb-2 block text-sm font-semibold text-accent-700">{dict.admin.kicker}</p>
+            <p className="mb-2 block text-sm font-semibold text-primary">{dict.admin.kicker}</p>
             <h1 id="admin-heading" className="mt-0 mb-3 leading-[1.08] tracking-[-0.01em]">
               {dict.admin.notAuthorizedTitle}
             </h1>
-            <p className="m-0 max-w-[68ch] text-md leading-[1.55] text-neutral-700">
+            <p className="m-0 max-w-[68ch] text-md leading-[1.55] text-muted-foreground">
               {dict.admin.notAuthorizedBody}
             </p>
           </header>
@@ -64,9 +64,9 @@ export default function AdminPage() {
   return (
     <section className="py-12" aria-labelledby="admin-heading">
       <div className="container">
-        <header className="mb-6 flex items-end justify-between gap-6">
+        <header className="mb-6 flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-[72ch]">
-            <p className="mb-2 block text-sm font-semibold text-accent-700">{dict.admin.kicker}</p>
+            <p className="mb-2 block text-sm font-semibold text-primary">{dict.admin.kicker}</p>
             <h1 id="admin-heading" className="mb-2 text-3xl">
               {dict.admin.title}
             </h1>

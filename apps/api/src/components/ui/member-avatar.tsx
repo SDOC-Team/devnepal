@@ -8,7 +8,7 @@ export function MemberAvatar({
   if (member.avatarUrl === null) {
     return (
       <span
-        className="grid flex-none place-items-center rounded-circle border border-divider bg-accent-100 font-heading text-accent-800"
+        className="grid flex-none place-items-center rounded-circle border border-border bg-primary/5 font-heading text-primary"
         aria-hidden="true"
         style={{ width: size, height: size, fontSize: Math.round(size / 2.6) }}
       >
@@ -20,7 +20,7 @@ export function MemberAvatar({
     // biome-ignore lint/performance/noImgElement: avatars are locally served files with varying keys; next/image adds no value here
     <img
       src={member.avatarUrl}
-      alt=""
+      alt={member.displayName}
       width={size}
       height={size}
       loading="lazy"

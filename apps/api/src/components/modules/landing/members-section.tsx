@@ -1,10 +1,10 @@
 import type { PublicMemberDto } from "@gov-portal/shared";
+import Link from "next/link";
 
-import { ArrowLink, SectionHeading } from "@/components/modules/common";
+import { Button } from "@/components/ui/button";
 import { MemberCard } from "@/components/ui/member-card";
 import { type Dictionary, type Locale, localePath } from "@/lib/i18n";
 
-/** Member directory preview. Hidden entirely when no members are approved. */
 export function MembersSection({
   dict,
   locale,
@@ -19,23 +19,27 @@ export function MembersSection({
   }
 
   return (
-    <section className="py-12" aria-labelledby="members-heading">
-      <div className="container">
-        <SectionHeading
-          title={dict.home.contributorsTitle}
-          titleId="members-heading"
-          action={
-            <ArrowLink href={localePath(locale, "/members")}>
-              {dict.home.viewAllContributors}
-            </ArrowLink>
-          }
-        />
+    <section
+      id="members"
+      data-slot="contributors"
+      className="flex scroll-mt-4 flex-col gap-6 px-4 py-12 sm:px-8 lg:px-16 lg:py-16"
+    >
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-semibold text-foreground">{dict.home.contributorsTitle}</h2>
+        <Button
+          variant="ghost"
+          size="sm"
+          nativeButton={false}
+          render={<Link href={localePath(locale, "/members")} />}
+        >
+          {dict.home.viewAllContributors}
+        </Button>
+      </div>
 
-        <div className="grid grid-cols-1 gap-6 min-[521px]:grid-cols-2 min-[1081px]:grid-cols-4">
-          {members.map((member) => (
-            <MemberCard key={member.githubId} dict={dict} locale={locale} member={member} />
-          ))}
-        </div>
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {members.map((member) => (
+          <MemberCard key={member.githubId} dict={dict} locale={locale} member={member} />
+        ))}
       </div>
     </section>
   );

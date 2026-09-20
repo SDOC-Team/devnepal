@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
 
 const TONE_CLASSES = {
-  neutral: "border-l-divider-strong bg-transparent",
-  success: "border-l-success bg-success-subtle",
-  attention: "border-l-attention bg-attention-subtle",
-  danger: "border-l-error bg-error-subtle",
+  neutral: "border-l-border bg-muted/40",
+  success: "border-l-primary bg-primary/5",
+  attention: "border-l-chart-1 bg-chart-1/10",
+  danger: "border-l-destructive bg-destructive/5",
 } as const;
 
 /**

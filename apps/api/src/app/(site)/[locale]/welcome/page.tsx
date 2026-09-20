@@ -4,10 +4,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-import { ErrorPanel, LoadingPanel, StateBanner } from "@/components/modules/common";
+import { ErrorPanel, LoadingPanel, PageHeader } from "@/components/modules/common";
 import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useActor, useLocale } from "@/hooks";
 import { localePath } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 export default function WelcomePage() {
   const { locale, dict } = useLocale();
@@ -36,7 +38,7 @@ export default function WelcomePage() {
   }, [isLoading, isSignedOut, isAdmin, status, locale, router]);
 
   if (isLoading || isSignedOut || isAdmin || status === "approved") {
-    return <LoadingPanel label={dict.common.loading} />;
+    return <LoadingPanel label={dict.common.loading} layout="detail" />;
   }
 
   if (error !== undefined) {
@@ -51,7 +53,7 @@ export default function WelcomePage() {
   }
 
   if (actor === null || status === undefined) {
-    return <LoadingPanel label={dict.common.loading} />;
+    return <LoadingPanel label={dict.common.loading} layout="detail" />;
   }
 
   const copy =
@@ -76,18 +78,29 @@ export default function WelcomePage() {
   return (
     <section className="py-12" aria-labelledby="welcome-heading">
       <div className="container-narrow">
-        <p className="mb-2 block text-sm font-semibold text-accent-700">{dict.welcome.kicker}</p>
-        <h1 id="welcome-heading">{copy.title}</h1>
-        <StateBanner tone={status === "pending" ? "attention" : "danger"} role="status">
-          {dict.profile.status[status]}
-        </StateBanner>
-        <p className="mt-4 max-w-[58ch] text-md leading-[1.55] text-neutral-800">{copy.body}</p>
-        <div className="mt-6 flex flex-wrap items-center gap-3">
-          <Button render={<Link href={localePath(locale, "/profile")} />}>{copy.cta}</Button>
-          <Button variant="outline" render={<Link href={localePath(locale, "/issues")} />}>
-            {dict.welcome.browseIssues}
-          </Button>
-        </div>
+        <PageHeader kicker={dict.welcome.kicker} title={copy.title} titleId="welcome-heading" />
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "size-2 rounded-full",
+                  status === "pending" ? "bg-chart-1" : "bg-destructive",
+                )}
+              />
+              {dict.profile.status[status]}
+            </CardTitle>
+            <CardDescription className="max-w-[58ch] leading-[1.55]">{copy.body}</CardDescription>
+          </CardHeader>
+          <CardFooter className="flex flex-wrap items-center gap-3">
+            <Button render={<Link href={localePath(locale, "/profile")} />}>{copy.cta}</Button>
+            <Button variant="outline" render={<Link href={localePath(locale, "/issues")} />}>
+              {dict.welcome.browseIssues}
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
     </section>
   );

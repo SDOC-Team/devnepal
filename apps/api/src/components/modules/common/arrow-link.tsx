@@ -6,7 +6,7 @@ export function ArrowLink({ href, children }: { href: string; children: ReactNod
   return (
     <Link
       href={href}
-      className="flex-none whitespace-nowrap pb-0.5 text-sm font-medium text-accent-700 hover:text-accent-800"
+      className="flex-none whitespace-nowrap pb-0.5 text-sm font-medium text-primary hover:text-primary"
     >
       {children}
     </Link>

@@ -5,7 +5,9 @@ import {
   HeroSection,
   JourneySection,
   MembersSection,
+  NotBuildingSection,
   ProjectSpotlightSection,
+  RecentActivitySection,
 } from "@/components/modules/landing";
 import { useLocale, useMembers, useProject, useProjectIssues } from "@/hooks";
 
@@ -26,6 +28,8 @@ export default function HomePage() {
     <>
       <HeroSection dict={dict} locale={locale} />
 
+      <JourneySection dict={dict} />
+
       <ProjectSpotlightSection dict={dict} locale={locale} project={project} issues={issues} />
 
       <MembersSection
@@ -34,7 +38,9 @@ export default function HomePage() {
         members={members.slice(0, MEMBER_PREVIEW_COUNT)}
       />
 
-      <JourneySection dict={dict} />
+      <RecentActivitySection />
+
+      <NotBuildingSection locale={locale} />
     </>
   );
 }
