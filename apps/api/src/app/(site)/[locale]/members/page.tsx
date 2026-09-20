@@ -9,7 +9,6 @@ import { ErrorPanel, LoadingPanel } from "@/components/modules/common";
 import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Chip } from "@/components/ui/chip";
 import { Input } from "@/components/ui/input";
 import { useLocale, useMediaQuery, useMemberFilters, useMembers } from "@/hooks";
 import { localePath } from "@/lib/i18n";
@@ -200,7 +199,7 @@ export default function MembersPage() {
                   className="flex flex-col justify-between rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/40 hover:shadow-xs"
                 >
                   <div className="space-y-4">
-                    {/* Top Row: Avatar + Name + Featured Tag */}
+                    {/* Top Row: Avatar + Name */}
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="flex min-w-0 items-center gap-3">
                         <Avatar className="size-12">
@@ -227,8 +226,6 @@ export default function MembersPage() {
                           </p>
                         </div>
                       </div>
-
-                      <Chip tone="accent">⭐ {dict.members.featured}</Chip>
                     </div>
 
                     {/* Metadata Subtitle */}

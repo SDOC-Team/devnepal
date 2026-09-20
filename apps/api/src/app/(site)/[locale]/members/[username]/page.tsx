@@ -187,7 +187,14 @@ export default function MemberDetailPage() {
                 <h1 className="text-2xl font-bold tracking-tight text-foreground">
                   {profile.displayName}
                 </h1>
-                <Chip tone="accent">⭐ {dict.members.featured}</Chip>
+                {/* The public member DTO carries no status or priority, so the
+                    only status we can state here is the viewer's own. Everyone
+                    listed in the directory is by definition approved. */}
+                {isOwner ? (
+                  <Chip tone={actor.member.status === "approved" ? "success" : "attention"}>
+                    {dict.profile.statusShort[actor.member.status]}
+                  </Chip>
+                ) : null}
               </div>
 
               <div className="mt-2 flex flex-wrap items-center gap-4 text-xs sm:text-sm text-muted-foreground">
@@ -410,7 +417,7 @@ export default function MemberDetailPage() {
                         href={link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="rounded-md border border-border bg-muted/60 px-2.5 py-1 text-xs font-medium text-foreground hover:bg-muted transition-colors"
+                        className="max-w-full break-all rounded-md border border-border bg-muted/60 px-2.5 py-1 text-xs font-medium text-foreground transition-colors hover:bg-muted"
                       >
                         {link.replace(/^https?:\/\//, "")}
                       </a>

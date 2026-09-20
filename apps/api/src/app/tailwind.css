@@ -155,7 +155,10 @@
   html {
     @apply font-sans scroll-smooth;
   }
-  /* Break long unbroken strings rather than letting them widen the layout. */
+  /* Long strings must not widen the layout. `break-word` only breaks a word
+     that would otherwise overflow on its own, so ordinary names and headings
+     wrap at spaces as usual; `anywhere` was breaking them mid-word. Components
+     that render raw URLs opt into `break-all` locally. */
   p,
   h1,
   h2,
@@ -167,7 +170,7 @@
   td,
   th,
   a {
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
   /* Media never exceeds its column. */
   img,
