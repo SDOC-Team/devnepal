@@ -153,7 +153,7 @@ export default function MemberDetailPage() {
     <div className="w-full bg-background min-h-screen">
       {/* Breadcrumb Bar */}
       <div className="border-b border-border bg-card px-4 py-3">
-        <div className="mx-auto flex max-w-[1200px] items-center gap-2 text-sm text-muted-foreground">
+        <div className="mx-auto flex max-w-[1200px] flex-wrap items-center gap-2 text-sm text-muted-foreground">
           <Link href={localePath(locale, "/")} className="hover:text-foreground transition-colors">
             Home
           </Link>
@@ -174,7 +174,7 @@ export default function MemberDetailPage() {
       {/* Member Profile Hero Header */}
       <div className="border-b border-border bg-muted/30 px-4 py-8 dark:bg-card">
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-6">
-          <div className="flex items-center gap-5">
+          <div className="flex min-w-0 flex-wrap items-center gap-5">
             <div className="relative">
               <div className="overflow-hidden rounded-full border border-border shadow-xs">
                 <MemberAvatar member={profile} size={72} />
@@ -183,7 +183,7 @@ export default function MemberDetailPage() {
             </div>
 
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-2xl font-bold tracking-tight text-foreground">
                   {profile.displayName}
                 </h1>
@@ -263,7 +263,7 @@ export default function MemberDetailPage() {
 
       {/* Tabs Navigation Strip */}
       <div className="border-b border-border bg-background px-4">
-        <div className="mx-auto flex max-w-[1200px] gap-8">
+        <div className="mx-auto flex max-w-[1200px] gap-8 overflow-x-auto">
           <button
             type="button"
             onClick={() => setActiveTab("overview")}

@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Chip } from "@/components/ui/chip";
 import { Input } from "@/components/ui/input";
-import { useLocale, useMemberFilters, useMembers } from "@/hooks";
+import { useLocale, useMediaQuery, useMemberFilters, useMembers } from "@/hooks";
 import { localePath } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +23,10 @@ export default function MembersPage() {
   const { query, setQuery, skill, setSkill, filtered, clear } = useMemberFilters(members);
 
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
+  // The directory table needs ~860px to stay readable, so phones get the card
+  // grid only — the table is not rendered at all rather than merely hidden.
+  const isCompact = useMediaQuery("(max-width: 639px)");
+  const effectiveView = isCompact ? "grid" : viewMode;
   const [sortMode, setSortMode] = useState<SortMode>("featured");
 
   // Only skills actually present in the directory get a tab, so the filter
@@ -151,8 +155,8 @@ export default function MembersPage() {
               <option value="skills">{dict.members.sortSkills}</option>
             </select>
 
-            {/* View Mode Switcher */}
-            <div className="inline-flex rounded-md border border-border bg-card p-1">
+            {/* View Mode Switcher — table view is unavailable on phones. */}
+            <div className="hidden rounded-md border border-border bg-card p-1 sm:inline-flex">
               <Button
                 size="sm"
                 variant={viewMode === "grid" ? "secondary" : "ghost"}
@@ -187,7 +191,7 @@ export default function MembersPage() {
                 {dict.members.clear}
               </Button>
             </div>
-          ) : viewMode === "grid" ? (
+          ) : effectiveView === "grid" ? (
             /* Grid View */
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {visible.map((member) => (
@@ -197,8 +201,8 @@ export default function MembersPage() {
                 >
                   <div className="space-y-4">
                     {/* Top Row: Avatar + Name + Featured Tag */}
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div className="flex min-w-0 items-center gap-3">
                         <Avatar className="size-12">
                           <AvatarImage
                             src={
@@ -211,14 +215,14 @@ export default function MembersPage() {
                           </AvatarFallback>
                           <AvatarBadge className="size-4 text-primary fill-primary" />
                         </Avatar>
-                        <div>
+                        <div className="min-w-0">
                           <Link
                             href={localePath(locale, `/members/${member.githubUsername}`)}
-                            className="text-base font-bold text-foreground hover:text-primary transition-colors"
+                            className="block truncate text-base font-bold text-foreground transition-colors hover:text-primary"
                           >
                             {member.displayName}
                           </Link>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="truncate text-xs text-muted-foreground">
                             {member.headline ?? `@${member.githubUsername}`}
                           </p>
                         </div>
@@ -305,7 +309,7 @@ export default function MembersPage() {
             /* Table View */
             <div className="overflow-hidden rounded-xl border border-border bg-card shadow-xs">
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
+                <table className="w-full min-w-[860px] text-left text-sm">
                   <thead className="border-b border-border bg-muted/50 text-xs uppercase font-bold tracking-wider text-muted-foreground">
                     <tr>
                       <th className="px-5 py-3.5">MEMBER</th>

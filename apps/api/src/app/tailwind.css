@@ -147,9 +147,34 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Nothing should be able to scroll the page sideways on a phone; long
+       user-supplied strings (profile links, usernames, issue titles) are the
+       usual culprits and are handled by the wrap rule below. */
+    overflow-x: hidden;
   }
   html {
     @apply font-sans scroll-smooth;
+  }
+  /* Break long unbroken strings rather than letting them widen the layout. */
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  li,
+  dd,
+  dt,
+  td,
+  th,
+  a {
+    overflow-wrap: anywhere;
+  }
+  /* Media never exceeds its column. */
+  img,
+  svg,
+  video,
+  canvas {
+    max-width: 100%;
   }
 }
 

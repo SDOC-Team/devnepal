@@ -64,7 +64,7 @@ export default function AdminPage() {
   return (
     <section className="py-12" aria-labelledby="admin-heading">
       <div className="container">
-        <header className="mb-6 flex items-end justify-between gap-6">
+        <header className="mb-6 flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-[72ch]">
             <p className="mb-2 block text-sm font-semibold text-primary">{dict.admin.kicker}</p>
             <h1 id="admin-heading" className="mb-2 text-3xl">

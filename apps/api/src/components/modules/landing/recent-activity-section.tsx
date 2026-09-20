@@ -45,17 +45,22 @@ function ActivityRow({ actor, action, status, date, href }: ActivityItem) {
       target="_blank"
       rel="noreferrer"
       data-slot="activity-row"
-      className="group flex items-center gap-4 border-t border-border py-4 pr-4 pl-5 outline-none transition-colors duration-200 first:border-t-0 hover:bg-muted focus-visible:bg-muted"
+      className="group flex items-center gap-3 border-t border-border py-4 pr-4 pl-5 outline-none transition-colors duration-200 first:border-t-0 hover:bg-muted focus-visible:bg-muted sm:gap-4"
     >
-      <p className="min-w-0 flex-1 text-base text-foreground">
-        <span className="font-semibold">{actor}</span> {action}
-      </p>
-      <span className="w-24 shrink-0">
-        <Badge variant={STATUS_VARIANTS[status]} className="uppercase">
-          {status}
-        </Badge>
-      </span>
-      <span className="hidden w-44 shrink-0 text-right text-xs text-muted-foreground sm:block">
+      {/* On narrow screens the badge and date sit under the text instead of
+          competing with it for width, so the sentence keeps a readable measure. */}
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-4">
+        <p className="m-0 min-w-0 flex-1 text-base text-foreground">
+          <span className="font-semibold">{actor}</span> {action}
+        </p>
+        <div className="flex shrink-0 items-center gap-3">
+          <Badge variant={STATUS_VARIANTS[status]} className="uppercase sm:w-24 sm:justify-center">
+            {status}
+          </Badge>
+          <span className="text-xs text-muted-foreground sm:hidden">{date}</span>
+        </div>
+      </div>
+      <span className="hidden w-44 shrink-0 text-right text-xs text-muted-foreground lg:block">
         {date}
       </span>
       <CaretRightIcon

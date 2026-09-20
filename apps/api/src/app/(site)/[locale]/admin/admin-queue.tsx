@@ -124,7 +124,7 @@ export function AdminQueue({ dict }: { dict: Dictionary }) {
         </div>
       ) : (
         <div className="overflow-x-auto rounded-md border border-border bg-card">
-          <table className="w-full border-collapse text-sm">
+          <table className="w-full min-w-[720px] border-collapse text-sm">
             <thead>
               <tr>
                 <th scope="col" className={HEAD_CELL}>

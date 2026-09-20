@@ -20,7 +20,7 @@ export function MemberAvatar({
     // biome-ignore lint/performance/noImgElement: avatars are locally served files with varying keys; next/image adds no value here
     <img
       src={member.avatarUrl}
-      alt=""
+      alt={member.displayName}
       width={size}
       height={size}
       loading="lazy"
