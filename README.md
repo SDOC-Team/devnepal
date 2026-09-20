@@ -66,10 +66,9 @@ One application, one API contract, two code territories.
   `@gov-portal/api-client`. Both paths converge on the same service layer.
 - **The UI cannot bypass the backend.** Biome rejects presentation imports of
   `src/db`, repositories, authentication, and environment configuration.
-- **Dev data without GitHub.** `bun run setup` seeds six members in every
-  moderation state plus a project and sample issues, so the UI is fully
-  populated offline. `bun run dev:session <username>` mints a real session for
-  authenticated screens.
+- **Real project data.** `bun run setup` initializes `SDOC-Team/devnepal` from
+  GitHub and syncs its issues. Member profiles are created only through GitHub
+  sign-in; the setup path does not insert fabricated accounts or activity.
 - **Contract discipline.** Change OpenAPI first, regenerate the client, then
   implement and test the handler. Additive changes are the default. A breaking
   change needs both teams, a migration note, and a new API version.
@@ -104,8 +103,8 @@ the Postgres image (~2 GB the first time).
 ### 1. Clone and bootstrap
 
 ```sh
-git clone git@github.com:voidash/gov-portal.git
-cd gov-portal
+git clone git@github.com:SDOC-Team/devnepal.git
+cd devnepal
 bun run setup
 ```
 
@@ -116,8 +115,8 @@ bun run setup
 2. starts PostgreSQL with Docker Compose and waits until it is healthy
 3. installs the workspace dependencies with Bun
 4. applies the Drizzle migrations
-5. seeds the database: six members (every moderation state), the project row,
-   and eight sample issues
+5. verifies `SDOC-Team/devnepal` through the GitHub API, initializes the project
+   row, and syncs its real issues
 
 Nothing else is required — the design assets, translations, fonts, and vendored
 styles all ship with the repository.
@@ -171,18 +170,18 @@ Add the cookie in DevTools → Application → Cookies → `http://localhost:300
 and put the printed ID in `ADMIN_GITHUB_IDS` (then restart) for admin access.
 See [`docs/frontend.md`](docs/frontend.md) for the full verification matrix.
 
-### 6. Optional: real GitHub issues
+### 6. Refresh GitHub issues
 
 Issues are reconciled from the project's public repository over the REST API
 (no webhook infrastructure needed yet):
 
 ```sh
-bun run sync:github      # pulls all issues for voidash/gov-portal, replaces fixtures
+bun run sync:github      # reconciles issues for the configured active project
 ```
 
-Set `GITHUB_TOKEN` to lift the anonymous rate limit. The repository ships with a
-handful of real open issues (documentation, accessibility, and first-issue
-tasks), so a sync replaces the sample fixtures with the GitHub list.
+Set `GITHUB_TOKEN` to lift the anonymous rate limit. GitHub remains the source
+of truth; the portal does not insert placeholder issues when the repository has
+none.
 
 A signature-verified webhook endpoint (`POST /webhooks/github`) is implemented
 and tested — deliveries are deduplicated in an event ledger and applied to the
@@ -214,6 +213,7 @@ until then. Contribution indexing is a later phase.
 | `AUTH_GITHUB_ID` | for sign-in | GitHub OAuth App client ID |
 | `AUTH_GITHUB_SECRET` | for sign-in | GitHub OAuth App client secret |
 | `ADMIN_GITHUB_IDS` | for admin | Comma-separated admin GitHub numeric IDs (may be empty) |
+| `GITHUB_PROJECT_REPOSITORY` | yes | Public GitHub repository to index; defaults to `SDOC-Team/devnepal` |
 | `STORAGE_DIR` | yes | Directory for stored avatars (persistent volume) |
 | `WEB_ORIGIN` | external clients | CORS allowlist for non-browser clients (mobile); the UI is same-origin |
 | `GITHUB_TOKEN` | optional | Raises the GitHub API rate limit for `sync:github` |
@@ -238,9 +238,9 @@ bun run api:generate   # regenerate and format the typed client
 bun run api:check      # lint + generate + fail if generated types drift
 bun run db:generate    # generate a migration from the Drizzle schema
 bun run db:migrate     # apply migrations to DATABASE_URL
-bun run db:seed        # sample members, project, and issues for local development
+bun run db:init        # initialize SDOC-Team/devnepal and sync its GitHub issues
 bun run sync:github    # reconcile issues from the project's GitHub repository
-bun run dev:session    # mint a dev session cookie for a seeded member
+bun run dev:session    # mint a dev session cookie for an existing member
 ```
 
 ## REST API

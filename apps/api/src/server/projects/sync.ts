@@ -58,7 +58,7 @@ export function mapGitHubIssue(issue: GithubApiIssue): Omit<NewGithubIssue, "pro
 
 /**
  * Reconciles the single project's issues from the public GitHub REST API.
- * Idempotent: upserts by (project, number) and replaces sample fixtures.
+ * Idempotent: upserts by (project, number) and removes legacy sample fixtures.
  * `fetchImpl` is injectable so tests never touch the network.
  */
 export async function syncProjectIssues(
@@ -67,7 +67,7 @@ export async function syncProjectIssues(
   const fetchImpl = options.fetchImpl ?? fetch;
   const project = await repo.findActiveProject();
   if (project === null) {
-    throw new Error("No active project to sync; seed the database first");
+    throw new Error("No active project to sync; initialize it first with bun run db:init");
   }
 
   const [owner, name] = project.fullName.split("/");

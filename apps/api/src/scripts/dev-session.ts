@@ -28,7 +28,7 @@ async function main(): Promise<void> {
   const member = rows[0];
   if (member === undefined) {
     console.error(
-      `No member with GitHub username "${username}". Seed the database first: bun run db:seed`,
+      `No member with GitHub username "${username}". Sign in with GitHub first, then retry.`,
     );
     process.exit(1);
   }

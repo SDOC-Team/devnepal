@@ -90,14 +90,14 @@ async function main(): Promise<void> {
   console.log("\n▸ applying database migrations");
   run(["bun", "run", "--cwd", "apps/api", "db:migrate"]);
 
-  console.log("\n▸ seeding sample members");
-  run(["bun", "run", "--cwd", "apps/api", "db:seed"]);
+  console.log("\n▸ initializing the GitHub project and issues");
+  run(["bun", "run", "--cwd", "apps/api", "db:init"]);
 
   console.log("\nDone. Start the app:");
   console.log("  bun run dev       # UI + API → http://localhost:3000/en");
   if (!githubCredentialsConfigured()) {
     console.log(
-      "\nNote: GitHub sign-in is not configured yet. The seeded directory works without it.",
+      "\nNote: GitHub sign-in is not configured yet. Add OAuth credentials before creating member profiles.",
     );
     console.log(
       "To enable sign-in, add AUTH_GITHUB_ID / AUTH_GITHUB_SECRET to apps/api/.env.local (see README).",

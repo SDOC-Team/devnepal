@@ -11,7 +11,7 @@
     "test:watch": "vitest",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:seed": "bun run src/scripts/seed.ts",
+    "db:init": "bun run src/scripts/init-project.ts",
     "sync:github": "bun run src/scripts/sync-github.ts",
     "dev:session": "bun run src/scripts/dev-session.ts"
   },

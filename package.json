@@ -17,7 +17,7 @@
     "db:down": "docker compose down",
     "db:generate": "bun run --cwd apps/api db:generate",
     "db:migrate": "bun run --cwd apps/api db:migrate",
-    "db:seed": "bun run --cwd apps/api db:seed",
+    "db:init": "bun run --cwd apps/api db:init",
     "sync:github": "bun run --cwd apps/api sync:github",
     "dev:session": "bun run --cwd apps/api dev:session",
     "api:lint": "redocly lint --config packages/api-contract/redocly.yaml packages/api-contract/openapi.yaml",
