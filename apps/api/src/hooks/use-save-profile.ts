@@ -1,0 +1,43 @@
+import type { ProfileUpdate, SelfMemberDto } from "@gov-portal/shared";
+import { useState } from "react";
+import { apiMutate } from "@/lib/api-client";
+import { ApiError } from "@/lib/api-error";
+
+export type SaveProfileState =
+  | { status: "idle" }
+  | { status: "saving" }
+  | { status: "error"; message: string; fieldErrors: Record<string, string> };
+
+function fieldErrorsFrom(error: ApiError): Record<string, string> {
+  const errors: Record<string, string> = {};
+  for (const issue of error.details ?? []) {
+    errors[issue.path] = issue.message;
+  }
+  return errors;
+}
+
+/** PATCH /profile, then revalidate the caller's SWR profile cache via `onSaved`. */
+export function useSaveProfile(onSaved: (member: SelfMemberDto) => void) {
+  const [state, setState] = useState<SaveProfileState>({ status: "idle" });
+
+  async function save(update: ProfileUpdate): Promise<boolean> {
+    setState({ status: "saving" });
+    try {
+      const { member } = await apiMutate<{ member: SelfMemberDto }>("/profile", "PATCH", update);
+      setState({ status: "idle" });
+      onSaved(member);
+      return true;
+    } catch (error) {
+      const apiError =
+        error instanceof ApiError ? error : new ApiError(500, "unknown_error", "Unexpected error");
+      setState({
+        status: "error",
+        message: apiError.message,
+        fieldErrors: fieldErrorsFrom(apiError),
+      });
+      return false;
+    }
+  }
+
+  return { save, state };
+}

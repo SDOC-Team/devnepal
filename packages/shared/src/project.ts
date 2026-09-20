@@ -54,3 +54,10 @@ export const issueListDtoSchema = z.object({
 });
 
 export type IssueListDto = z.infer<typeof issueListDtoSchema>;
+
+export const labelFacetDtoSchema = z.object({
+  name: z.string(),
+  count: z.number().int().nonnegative(),
+});
+
+export type LabelFacetDto = z.infer<typeof labelFacetDtoSchema>;

@@ -1,25 +1,29 @@
 import Link from "next/link";
+import { WarnIcon } from "@/components/modules/common/status-icons";
+import { StatusPage } from "@/components/modules/common/status-page";
+import { Button } from "@/components/ui/button";
 
+/**
+ * 404 page for the (site)/[locale] route group.
+ * Shown when a page within a valid locale is not found.
+ */
 export default function SiteNotFound() {
   return (
-    <section className="section" aria-labelledby="not-found-heading">
-      <div className="container dn-container--narrow">
-        <p className="dn-section-kicker">404</p>
-        <h1 id="not-found-heading">Page not found · पृष्ठ भेटिएन</h1>
-        <p className="hero__lead">
-          That address does not exist on this portal, or the profile is not public.
-          <br />
-          यो ठेगाना यो पोर्टलमा छैन, वा प्रोफाइल सार्वजनिक छैन।
-        </p>
-        <div className="hero__actions">
-          <Link className="btn btn--primary" href="/en">
-            Home · गृहपृष्ठ
-          </Link>
-          <Link className="btn" href="/en/members">
-            Members · सदस्यहरू
-          </Link>
-        </div>
-      </div>
-    </section>
+    <StatusPage
+      tone="warn"
+      icon={<WarnIcon />}
+      code="404"
+      title="Page not found"
+      titleId="not-found-heading"
+      body="That address does not exist on this portal, or the resource is not public."
+      actions={
+        <>
+          <Button render={<Link href="/en" />}>Go to homepage</Button>
+          <Button variant="outline" render={<Link href="/en/issues" />}>
+            Browse open issues
+          </Button>
+        </>
+      }
+    />
   );
 }

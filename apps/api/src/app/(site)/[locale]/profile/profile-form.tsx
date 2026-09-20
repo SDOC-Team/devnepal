@@ -7,12 +7,15 @@ import {
   SKILLS,
   type Skill,
 } from "@gov-portal/shared";
-import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
 
+import { StateBanner } from "@/components/modules/common";
+import { Button } from "@/components/ui/button";
+import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useSaveProfile } from "@/hooks";
 import type { Dictionary } from "@/lib/i18n";
-
-import { saveProfile } from "./actions";
 
 type LinkRow = { id: string; value: string };
 
@@ -60,13 +63,24 @@ function toPayload(form: FormState): ProfileUpdate {
   };
 }
 
-export function ProfileForm({ member, dict }: { member: SelfMemberDto; dict: Dictionary }) {
-  const router = useRouter();
+export function ProfileForm({
+  member,
+  dict,
+  onSaved,
+}: {
+  member: SelfMemberDto;
+  dict: Dictionary;
+  onSaved: (member: SelfMemberDto) => void;
+}) {
   const [form, setForm] = useState<FormState>(() => formFromMember(member));
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [saveError, setSaveError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
-  const [saving, setSaving] = useState(false);
+  const { save, state } = useSaveProfile((updated) => {
+    setSaved(true);
+    onSaved(updated);
+  });
+
+  const errors = state.status === "error" ? state.fieldErrors : {};
+  const saving = state.status === "saving";
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]): void {
     setForm((current) => ({ ...current, [key]: value }));
@@ -84,200 +98,196 @@ export function ProfileForm({ member, dict }: { member: SelfMemberDto; dict: Dic
 
   async function onSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
-    setSaveError(null);
     setSaved(false);
 
     const parsed = profileUpdateSchema.safeParse(toPayload(form));
     if (!parsed.success) {
-      const mapped: Record<string, string> = {};
-      for (const issue of parsed.error.issues) {
-        mapped[issue.path.map(String).join(".")] = issue.message;
-      }
-      setErrors(mapped);
       return;
     }
-    setErrors({});
-    setSaving(true);
-    try {
-      const result = await saveProfile(parsed.data);
-      if (!result.ok) {
-        setSaveError(result.message === "unauthorized" ? dict.profile.signInTitle : result.message);
-        setErrors(result.errors);
-        return;
-      }
-      setSaved(true);
-      router.refresh();
-    } catch {
-      setSaveError(dict.profile.saveError);
-    } finally {
-      setSaving(false);
-    }
+    await save(parsed.data);
   }
 
   return (
-    <form className="field-group dn-profile-form" onSubmit={onSubmit} noValidate>
-      {saveError !== null ? (
-        <div className="dn-state-banner is-danger error-summary" role="alert">
-          {saveError}
-        </div>
+    <form className="flex flex-col gap-5" onSubmit={onSubmit} noValidate>
+      {state.status === "error" ? (
+        <StateBanner tone="danger" role="alert">
+          <span className="text-error">{state.message}</span>
+        </StateBanner>
       ) : null}
       {saved ? (
-        <div className="dn-state-banner is-success" role="status">
+        <StateBanner tone="success" role="status">
           {dict.profile.saved}
-        </div>
+        </StateBanner>
       ) : null}
 
-      <div className="field">
-        <label htmlFor="displayName">{dict.profile.fields.displayName} *</label>
-        <input
+      <Field>
+        <FieldLabel htmlFor="displayName">{dict.profile.fields.displayName} *</FieldLabel>
+        <Input
           id="displayName"
-          className="form-control"
           type="text"
           value={form.displayName}
           maxLength={160}
+          aria-invalid={errors.displayName !== undefined}
           onChange={(event) => update("displayName", event.target.value)}
         />
         {errors.displayName !== undefined ? (
-          <p className="field__error">{errors.displayName}</p>
+          <FieldError>{errors.displayName}</FieldError>
         ) : (
-          <p className="field__help">{dict.profile.fields.displayNameHelp}</p>
+          <FieldDescription>{dict.profile.fields.displayNameHelp}</FieldDescription>
         )}
-      </div>
+      </Field>
 
-      <div className="field-group">
-        <div className="field">
-          <label htmlFor="headline">{dict.profile.fields.headline}</label>
-          <input
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <Field>
+          <FieldLabel htmlFor="headline">{dict.profile.fields.headline}</FieldLabel>
+          <Input
             id="headline"
-            className="form-control"
             type="text"
             value={form.headline}
             maxLength={140}
             placeholder={dict.profile.fields.headlinePlaceholder}
+            aria-invalid={errors.headline !== undefined}
             onChange={(event) => update("headline", event.target.value)}
           />
-          {errors.headline !== undefined ? <p className="field__error">{errors.headline}</p> : null}
-        </div>
-        <div className="field">
-          <label htmlFor="affiliation">{dict.profile.fields.affiliation}</label>
-          <input
+          {errors.headline !== undefined ? <FieldError>{errors.headline}</FieldError> : null}
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="affiliation">{dict.profile.fields.affiliation}</FieldLabel>
+          <Input
             id="affiliation"
-            className="form-control"
             type="text"
             value={form.affiliation}
             maxLength={140}
             placeholder={dict.profile.fields.affiliationPlaceholder}
+            aria-invalid={errors.affiliation !== undefined}
             onChange={(event) => update("affiliation", event.target.value)}
           />
-          {errors.affiliation !== undefined ? (
-            <p className="field__error">{errors.affiliation}</p>
-          ) : null}
-        </div>
+          {errors.affiliation !== undefined ? <FieldError>{errors.affiliation}</FieldError> : null}
+        </Field>
       </div>
 
-      <div className="field">
-        <label htmlFor="location">{dict.profile.fields.location}</label>
-        <input
+      <Field>
+        <FieldLabel htmlFor="location">{dict.profile.fields.location}</FieldLabel>
+        <Input
           id="location"
-          className="form-control"
           type="text"
           value={form.location}
           maxLength={100}
           placeholder={dict.profile.fields.locationPlaceholder}
+          aria-invalid={errors.location !== undefined}
           onChange={(event) => update("location", event.target.value)}
         />
-        {errors.location !== undefined ? <p className="field__error">{errors.location}</p> : null}
-      </div>
+        {errors.location !== undefined ? <FieldError>{errors.location}</FieldError> : null}
+      </Field>
 
-      <div className="field">
-        <label htmlFor="bio">{dict.profile.fields.bio}</label>
-        <textarea
+      <Field>
+        <FieldLabel htmlFor="bio">{dict.profile.fields.bio}</FieldLabel>
+        <Textarea
           id="bio"
-          className="form-control"
           rows={5}
           value={form.bio}
           maxLength={500}
+          aria-invalid={errors.bio !== undefined}
           onChange={(event) => update("bio", event.target.value)}
         />
-        <p className={errors.bio !== undefined ? "field__error" : "field__help"}>
-          {errors.bio ?? dict.profile.fields.bioHelp}
-        </p>
-      </div>
+        {errors.bio !== undefined ? (
+          <FieldError>{errors.bio}</FieldError>
+        ) : (
+          <FieldDescription>{dict.profile.fields.bioHelp}</FieldDescription>
+        )}
+      </Field>
 
-      <fieldset className="field">
-        <legend>{dict.profile.fields.links}</legend>
-        {form.links.map((row, index) => (
-          <div key={row.id} className="hero__actions" style={{ alignItems: "flex-start" }}>
-            <div style={{ flex: 1 }}>
-              <input
-                className="form-control"
-                type="url"
-                value={row.value}
-                placeholder="https://…"
-                aria-label={`${dict.profile.fields.links} ${index + 1}`}
-                onChange={(event) => {
+      <fieldset className="m-0 border-0 p-0">
+        <legend className="mb-1 text-sm font-semibold text-neutral-800">
+          {dict.profile.fields.links}
+        </legend>
+        <div className="flex flex-col gap-3">
+          {form.links.map((row, index) => (
+            <div key={row.id} className="flex flex-wrap items-start gap-3">
+              <div className="flex-1">
+                <Input
+                  type="url"
+                  value={row.value}
+                  placeholder="https://…"
+                  aria-label={`${dict.profile.fields.links} ${index + 1}`}
+                  aria-invalid={errors[`links.${index}`] !== undefined}
+                  onChange={(event) => {
+                    update(
+                      "links",
+                      form.links.map((entry) =>
+                        entry.id === row.id ? { ...entry, value: event.target.value } : entry,
+                      ),
+                    );
+                  }}
+                />
+                {errors[`links.${index}`] !== undefined ? (
+                  <p className="mt-1 text-sm text-error">{errors[`links.${index}`]}</p>
+                ) : null}
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() =>
                   update(
                     "links",
-                    form.links.map((entry) =>
-                      entry.id === row.id ? { ...entry, value: event.target.value } : entry,
-                    ),
-                  );
-                }}
-              />
-              {errors[`links.${index}`] !== undefined ? (
-                <p className="field__error">{errors[`links.${index}`]}</p>
-              ) : null}
+                    form.links.filter((entry) => entry.id !== row.id),
+                  )
+                }
+              >
+                {dict.profile.fields.remove}
+              </Button>
             </div>
-            <button
-              type="button"
-              className="btn btn-sm"
-              onClick={() =>
-                update(
-                  "links",
-                  form.links.filter((entry) => entry.id !== row.id),
-                )
-              }
+          ))}
+          <div className="flex flex-wrap items-center gap-3">
+            {form.links.length < MAX_LINKS ? (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => update("links", [...form.links, newLinkRow()])}
+              >
+                {dict.profile.fields.addLink}
+              </Button>
+            ) : null}
+            <p
+              className={`m-0 text-sm ${errors.links !== undefined ? "text-error" : "text-neutral-700"}`}
             >
-              {dict.profile.fields.remove}
-            </button>
+              {errors.links ?? dict.profile.fields.linksHelp}
+            </p>
           </div>
-        ))}
-        <div className="hero__actions">
-          {form.links.length < MAX_LINKS ? (
-            <button
-              type="button"
-              className="btn btn-sm"
-              onClick={() => update("links", [...form.links, newLinkRow()])}
-            >
-              {dict.profile.fields.addLink}
-            </button>
-          ) : null}
-          <p className={errors.links !== undefined ? "field__error" : "field__help"}>
-            {errors.links ?? dict.profile.fields.linksHelp}
-          </p>
         </div>
       </fieldset>
 
-      <fieldset className="field">
-        <legend>{dict.profile.fields.skills}</legend>
-        <div className="dn-catalog-chips">
+      <fieldset className="m-0 border-0 p-0">
+        <legend className="mb-1 text-sm font-semibold text-neutral-800">
+          {dict.profile.fields.skills}
+        </legend>
+        <div className="flex flex-wrap gap-2">
           {SKILLS.map((skill) => {
             const active = form.skills.includes(skill);
             return (
-              <label key={skill}>
-                <input type="checkbox" checked={active} onChange={() => toggleSkill(skill)} />
-                <span>{skill}</span>
+              <label key={skill} className="cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={active}
+                  onChange={() => toggleSkill(skill)}
+                  className="peer absolute size-px opacity-0"
+                />
+                <span className="inline-flex min-h-[var(--control-sm)] items-center rounded-pill border border-divider-strong px-3 text-xs font-semibold text-neutral-800 hover:border-accent-300 hover:bg-accent-100 hover:text-accent-800 peer-checked:border-accent-700 peer-checked:bg-accent-700 peer-checked:text-paper peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent">
+                  {skill}
+                </span>
               </label>
             );
           })}
         </div>
-        <p className="field__help">{dict.profile.fields.skillsHelp}</p>
+        <p className="mt-3 mb-0 text-sm text-neutral-700">{dict.profile.fields.skillsHelp}</p>
       </fieldset>
 
-      <div className="button-group dn-profile-form__actions">
-        <button className="btn btn--primary" type="submit" disabled={saving}>
+      <div className="flex flex-wrap gap-3">
+        <Button type="submit" disabled={saving}>
           {saving ? dict.profile.saving : dict.profile.save}
-        </button>
+        </Button>
       </div>
     </form>
   );

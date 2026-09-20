@@ -66,6 +66,18 @@
   --color-border: var(--color-divider);
   --color-rule: var(--color-divider);
 
+  /* The footer's own band. A brighter blue than --color-state, kept as its
+     own scale because the footer is a full-width brand surface rather than
+     part of the product chrome. White on --color-footer measures 6.2:1 and
+     on --color-footer-deep 15.4:1; the 0.85-alpha white used for secondary
+     copy on the band clears AA at body size. --color-footer-card is the
+     raised "Need support?" panel inside the band. */
+  --color-footer: #0756d6;
+  --color-footer-card: #173fae;
+  --color-footer-deep: #091c3d;
+  --color-footer-fg: #ffffff;
+  --color-footer-ink: #0f172a;
+
   --color-error: #9a3c3c;
   --color-error-subtle: #fbe9e9;
   --color-attention: #7a5a10;
@@ -94,6 +106,19 @@
   --fs-2xl: 32px;
   --fs-3xl: 40px;
   --fs-4xl: 52px;
+
+  /* Responsive heading sizes — a separate scale from --fs-*, since h1–h3
+     scale with viewport width rather than sit at a fixed step. */
+  --fs-h1: clamp(34px, 5vw, 46px);
+  --fs-h2: clamp(26px, 3.5vw, 32px);
+  --fs-h3: clamp(21px, 2.8vw, 24px);
+  /* The landing hero's oversized display heading — bigger and tighter
+     leading than a normal page h1, used only there. */
+  --fs-hero: clamp(44px, 6.4vw, 84px);
+  /* The project page's repo title and its owner prefix, which scale as a
+     pair so "owner / name" keeps its proportions across widths. */
+  --fs-repo: clamp(32px, 4.4vw, 52px);
+  --fs-repo-owner: clamp(22px, 2.6vw, 30px);
 
   --lh-tight: 1.2;
   --lh-snug: 1.35;
@@ -158,4 +183,71 @@
 
   --focus-outline: 2px solid var(--color-accent-700);
   --focus-offset: 2px;
+
+  /* --dn-color-* / --dn-radius-* — aliases of the tokens above, spelled
+     under a different prefix solely so src/app/tailwind.css's `@theme
+     inline` block can reference them. Tailwind's own theme namespace for
+     color and radius is spelled identically to this file's names
+     (--color-*, --radius-*), so `@theme inline { --color-x: var(--color-x) }`
+     is a self-reference that resolves to nothing — these aliases exist only
+     to break that collision. Every value here must stay a `var()` pointing
+     at the real token above; never a literal. */
+  --dn-color-bg: var(--color-bg);
+  --dn-color-paper: var(--color-paper);
+  --dn-color-surface: var(--color-surface);
+  --dn-color-text: var(--color-text);
+  --dn-color-state: var(--color-state);
+  --dn-color-state-deep: var(--color-state-deep);
+  --dn-color-accent: var(--color-accent);
+  --dn-color-accent-100: var(--color-accent-100);
+  --dn-color-accent-200: var(--color-accent-200);
+  --dn-color-accent-300: var(--color-accent-300);
+  --dn-color-accent-600: var(--color-accent-600);
+  --dn-color-accent-700: var(--color-accent-700);
+  --dn-color-accent-800: var(--color-accent-800);
+  --dn-color-accent-900: var(--color-accent-900);
+  --dn-color-action: var(--color-action);
+  --dn-color-action-fg: var(--color-action-fg);
+  --dn-color-action-hover: var(--color-action-hover);
+  --dn-color-neutral-100: var(--color-neutral-100);
+  --dn-color-neutral-200: var(--color-neutral-200);
+  --dn-color-neutral-300: var(--color-neutral-300);
+  --dn-color-neutral-400: var(--color-neutral-400);
+  --dn-color-neutral-500: var(--color-neutral-500);
+  --dn-color-neutral-600: var(--color-neutral-600);
+  --dn-color-neutral-700: var(--color-neutral-700);
+  --dn-color-neutral-800: var(--color-neutral-800);
+  --dn-color-divider: var(--color-divider);
+  --dn-color-divider-strong: var(--color-divider-strong);
+  --dn-color-fg: var(--color-fg);
+  --dn-color-bg-muted: var(--color-bg-muted);
+  --dn-color-bg-subtle: var(--color-bg-subtle);
+  --dn-color-text-secondary: var(--color-text-secondary);
+  --dn-color-border: var(--color-border);
+  --dn-color-rule: var(--color-rule);
+  --dn-color-error: var(--color-error);
+  --dn-color-error-subtle: var(--color-error-subtle);
+  --dn-color-attention: var(--color-attention);
+  --dn-color-attention-subtle: var(--color-attention-subtle);
+  --dn-color-success: var(--color-success);
+  --dn-color-success-subtle: var(--color-success-subtle);
+  --dn-color-accent-subtle-1: var(--color-accent-subtle-1);
+  --dn-color-accent-subtle-2: var(--color-accent-subtle-2);
+  --dn-color-footer: var(--color-footer);
+  --dn-color-footer-card: var(--color-footer-card);
+  --dn-color-footer-deep: var(--color-footer-deep);
+  --dn-color-footer-fg: var(--color-footer-fg);
+  --dn-color-footer-ink: var(--color-footer-ink);
+
+  --dn-radius-none: var(--radius-none);
+  --dn-radius-sm: var(--radius-sm);
+  --dn-radius-md: var(--radius-md);
+  --dn-radius-lg: var(--radius-lg);
+  --dn-radius-pill: var(--radius-pill);
+  --dn-radius-circle: var(--radius-circle);
+
+  --dn-font-body: var(--font-body);
+  --dn-font-heading: var(--font-heading);
+  --dn-font-latin: var(--font-latin);
+  --dn-font-nepali: var(--font-nepali);
 }

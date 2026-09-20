@@ -1,42 +1,67 @@
+"use client";
+
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-import { isAdminGithubId } from "@/config";
-import { getDictionary, isLocale, type Locale, localePath } from "@/lib/i18n";
-import { getActor } from "@/server/actor";
+import { ErrorPanel, LoadingPanel, StateBanner } from "@/components/modules/common";
+import { Button } from "@/components/ui/button";
+import { useActor, useLocale } from "@/hooks";
+import { localePath } from "@/lib/i18n";
 
-export const dynamic = "force-dynamic";
+export default function WelcomePage() {
+  const { locale, dict } = useLocale();
+  const router = useRouter();
+  const { actor, isLoading, isSignedOut, error } = useActor();
 
-export default async function WelcomePage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  if (!isLocale(locale)) {
-    notFound();
+  const status = actor?.member.status;
+  const isAdmin = actor?.isAdmin ?? false;
+
+  useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+    if (isSignedOut) {
+      router.replace(localePath(locale));
+      return;
+    }
+    // Admin privileges come from ADMIN_GITHUB_IDS, not from member status.
+    if (isAdmin) {
+      router.replace(localePath(locale, "/admin"));
+      return;
+    }
+    if (status === "approved") {
+      router.replace(localePath(locale));
+    }
+  }, [isLoading, isSignedOut, isAdmin, status, locale, router]);
+
+  if (isLoading || isSignedOut || isAdmin || status === "approved") {
+    return <LoadingPanel label={dict.common.loading} />;
   }
-  const activeLocale: Locale = locale;
-  const dict = getDictionary(activeLocale);
 
-  const actor = await getActor();
-  if (actor === null) {
-    redirect(localePath(activeLocale));
+  if (error !== undefined) {
+    return (
+      <ErrorPanel
+        message={error.message}
+        retryLabel={dict.common.retry}
+        title={dict.common.errorTitle}
+        onRetry={() => window.location.reload()}
+      />
+    );
   }
 
-  // Admin privileges come from ADMIN_GITHUB_IDS, not from member status.
-  if (isAdminGithubId(actor.githubId)) {
-    redirect(localePath(activeLocale, "/admin"));
-  }
-
-  if (actor.status === "approved") {
-    redirect(localePath(activeLocale));
+  if (actor === null || status === undefined) {
+    return <LoadingPanel label={dict.common.loading} />;
   }
 
   const copy =
-    actor.status === "rejected"
+    status === "rejected"
       ? {
           title: dict.welcome.rejectedTitle,
           body: dict.welcome.rejectedBody,
           cta: dict.welcome.openProfile,
         }
-      : actor.status === "hidden"
+      : status === "hidden"
         ? {
             title: dict.welcome.hiddenTitle,
             body: dict.welcome.hiddenBody,
@@ -49,26 +74,19 @@ export default async function WelcomePage({ params }: { params: Promise<{ locale
           };
 
   return (
-    <section className="section" aria-labelledby="welcome-heading">
-      <div className="container dn-container--narrow">
-        <p className="dn-section-kicker">{dict.welcome.kicker}</p>
+    <section className="py-12" aria-labelledby="welcome-heading">
+      <div className="container-narrow">
+        <p className="mb-2 block text-sm font-semibold text-accent-700">{dict.welcome.kicker}</p>
         <h1 id="welcome-heading">{copy.title}</h1>
-        <div
-          className={`dn-state-banner ${actor.status === "pending" ? "is-attention" : "is-danger"}`}
-          role="status"
-        >
-          {dict.profile.status[actor.status]}
-        </div>
-        <p className="hero__lead" style={{ marginTop: "1rem" }}>
-          {copy.body}
-        </p>
-        <div className="hero__actions">
-          <Link className="btn btn--primary" href={localePath(activeLocale, "/profile")}>
-            {copy.cta}
-          </Link>
-          <Link className="btn" href={localePath(activeLocale, "/issues")}>
+        <StateBanner tone={status === "pending" ? "attention" : "danger"} role="status">
+          {dict.profile.status[status]}
+        </StateBanner>
+        <p className="mt-4 max-w-[58ch] text-md leading-[1.55] text-neutral-800">{copy.body}</p>
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <Button render={<Link href={localePath(locale, "/profile")} />}>{copy.cta}</Button>
+          <Button variant="outline" render={<Link href={localePath(locale, "/issues")} />}>
             {dict.welcome.browseIssues}
-          </Link>
+          </Button>
         </div>
       </div>
     </section>
