@@ -2,7 +2,6 @@
 
 import {
   BriefcaseIcon,
-  BuildingsIcon,
   CheckCircleIcon,
   GithubLogoIcon,
   MapPinIcon,
@@ -20,6 +19,8 @@ import { MemberAvatar } from "@/components/ui/member-avatar";
 import { useActor, useLocale, useMember } from "@/hooks";
 import { ApiError } from "@/lib/api-error";
 import { localePath } from "@/lib/i18n";
+
+import { MemberProfileContent } from "./member-profile-content";
 
 export default function MemberDetailPage() {
   const { locale, dict } = useLocale();
@@ -75,17 +76,13 @@ export default function MemberDetailPage() {
 
   const isOwner = actor !== null && actor.member.githubId === profile.githubId;
   const isPending = actor !== null && isOwner && actor.member.status !== "approved";
-  const hasBio = profile.bio !== null;
-  const hasSidebar =
-    profile.skills.length > 0 || profile.affiliation !== null || profile.links.length > 0;
-
   return (
-    <div className="w-full bg-background min-h-screen">
+    <div className="w-full bg-background">
       {/* Breadcrumb Bar */}
       <div className="border-b border-border bg-card px-4 py-3">
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-center gap-2 text-sm text-muted-foreground">
           <Link href={localePath(locale, "/")} className="hover:text-foreground transition-colors">
-            Home
+            {dict.member.home}
           </Link>
           <span>/</span>
           <Link
@@ -162,7 +159,7 @@ export default function MemberDetailPage() {
               <Button
                 variant="outline"
                 size="icon-sm"
-                aria-label="Share profile"
+                aria-label={dict.member.shareProfile}
                 onClick={handleShare}
                 className="cursor-pointer"
               >
@@ -170,7 +167,7 @@ export default function MemberDetailPage() {
               </Button>
               {copied ? (
                 <span className="absolute -top-8 left-1/2 -translate-x-1/2 rounded-md bg-foreground px-2 py-0.5 text-[11px] font-semibold text-background shadow-xs whitespace-nowrap z-50">
-                  Copied link!
+                  {dict.member.copiedLink}
                 </span>
               ) : null}
             </div>
@@ -194,83 +191,14 @@ export default function MemberDetailPage() {
       </div>
 
       {/* Main Content Area */}
-      <div className="mx-auto max-w-[1200px] px-4 py-8">
+      <div className="mx-auto max-w-[1200px] px-4 py-6 sm:py-8">
         {isPending ? (
           <StateBanner tone="attention" role="status" className="mb-6">
             {dict.profile.status[actor.member.status]}
           </StateBanner>
         ) : null}
 
-        <div
-          className={
-            hasBio && hasSidebar
-              ? "grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px]"
-              : "grid grid-cols-1 gap-8"
-          }
-        >
-          {hasBio ? (
-            <div>
-              <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
-                {profile.bio}
-              </p>
-            </div>
-          ) : null}
-
-          {/* Right Sidebar Column */}
-          {hasSidebar ? (
-            <div className={`space-y-6 ${hasBio ? "" : "max-w-sm"}`}>
-              {/* Skills Card */}
-              {profile.skills.length > 0 ? (
-                <div className="rounded-xl border border-border bg-card p-5">
-                  <h3 className="mb-3 text-sm font-bold text-foreground">Skills</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {profile.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="rounded-md border border-border bg-muted/60 px-2.5 py-1 text-xs font-medium text-foreground"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-
-              {/* Affiliation Card */}
-              {profile.affiliation !== null ? (
-                <div className="rounded-xl border border-border bg-card p-5">
-                  <h3 className="mb-3 text-sm font-bold text-foreground">Affiliation</h3>
-                  <div className="space-y-2.5 text-sm text-foreground">
-                    <div className="flex items-center gap-2">
-                      <BuildingsIcon className="size-4 text-muted-foreground" />
-                      <span className="font-medium">{profile.affiliation}</span>
-                    </div>
-                  </div>
-                </div>
-              ) : null}
-
-              {/* Links Card */}
-              {profile.links.length > 0 ? (
-                <div className="rounded-xl border border-border bg-card p-5">
-                  <h3 className="mb-3 text-sm font-bold text-foreground">Links</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {profile.links.map((link) => (
-                      <a
-                        key={link}
-                        href={link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="max-w-full break-all rounded-md border border-border bg-muted/60 px-2.5 py-1 text-xs font-medium text-foreground transition-colors hover:bg-muted"
-                      >
-                        {link.replace(/^https?:\/\//, "")}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-            </div>
-          ) : null}
-        </div>
+        <MemberProfileContent profile={profile} dict={dict} locale={locale} isOwner={isOwner} />
       </div>
     </div>
   );
