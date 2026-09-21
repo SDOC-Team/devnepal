@@ -55,6 +55,12 @@ export function ProjectSpotlightSection({
         </div>
         <CardContent className="flex flex-1 flex-col gap-4 px-4 pt-4 pb-6 lg:justify-between">
           <div className="flex flex-col gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge className="bg-primary text-primary-foreground">
+                {dict.home.governmentOfNepal}
+              </Badge>
+              <span className="text-sm text-muted-foreground">{dict.home.programmeOwner}</span>
+            </div>
             <div className="flex flex-wrap items-center gap-3">
               <h3 className="min-w-0 flex-1 text-2xl font-semibold text-card-foreground">
                 <Link

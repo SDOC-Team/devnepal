@@ -87,6 +87,8 @@ const en = {
     seeProject: "Open the project",
     statsKicker: "Today on the portal",
     openForContribTitle: "Featured project",
+    governmentOfNepal: "Government of Nepal",
+    programmeOwner: "Office of the Prime Minister and Council of Ministers",
     stackLabel: "Stack",
     membersTitle: "Community members",
     openForContribDesc:
@@ -324,7 +326,7 @@ const en = {
     },
   },
   footer: {
-    note: "A community-built open-source platform for finding and contributing to public-interest software.",
+    note: "A Government of Nepal digital collaboration initiative for public technology.",
     repository: "Source on GitHub",
     platform: "Platform",
     aboutPlatform: "About platform",
@@ -332,7 +334,7 @@ const en = {
     whosWho: "Members",
     directorates: "Open issues",
     legalCopyright:
-      "© 2026 Dev Nepal community. Content available under the terms stated in the repository.",
+      "© 2026 Government of Nepal. Content available under the terms stated in the repository.",
   },
   common: {
     loading: "Loading…",
@@ -426,6 +428,8 @@ const ne: Dictionary = {
     seeProject: "परियोजना खोल्नुहोस्",
     statsKicker: "आज पोर्टलमा",
     openForContribTitle: "विशेष परियोजना",
+    governmentOfNepal: "नेपाल सरकार",
+    programmeOwner: "प्रधानमन्त्री तथा मन्त्रिपरिषद्को कार्यालय",
     stackLabel: "स्ट्याक",
     membersTitle: "समुदायका सदस्यहरू",
     openForContribDesc:
@@ -657,14 +661,14 @@ const ne: Dictionary = {
     },
   },
   footer: {
-    note: "सार्वजनिक हितका सफ्टवेयर खोज्न र योगदान गर्न समुदायले बनाएको खुला स्रोत प्लेटफर्म।",
+    note: "सार्वजनिक प्रविधिका लागि नेपाल सरकारको डिजिटल सहकार्य पहल।",
     repository: "GitHub मा स्रोत",
     platform: "प्लेटफर्म",
     aboutPlatform: "प्लेटफर्मको बारेमा",
     departments: "परियोजना",
     whosWho: "सदस्यहरू",
     directorates: "खुला इशुहरू",
-    legalCopyright: "© २०२६ Dev Nepal समुदाय। सामग्री रिपोजिटरीमा उल्लेखित सर्तहरू अन्तर्गत उपलब्ध।",
+    legalCopyright: "© २०२६ नेपाल सरकार। सामग्री रिपोजिटरीमा उल्लेखित सर्तहरू अन्तर्गत उपलब्ध।",
   },
   common: {
     loading: "लोड हुँदै…",

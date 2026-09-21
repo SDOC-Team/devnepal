@@ -53,6 +53,36 @@ export function SiteFooter({ locale }: { locale: Locale }) {
               <ArrowSquareOutIcon size={12} />
             </a>
           </div>
+
+          <div className="flex flex-col gap-4 sm:w-72">
+            <div className="flex items-center gap-3">
+              {/* biome-ignore lint/performance/noImgElement: national emblem */}
+              <img
+                src="/official-website-bar/emblem-of-nepal.png"
+                alt=""
+                width={60}
+                height={51}
+                className="h-auto w-15 shrink-0"
+              />
+              <div className="flex flex-col">
+                <p className="text-base font-semibold">नेपाल सरकार</p>
+                <p className="text-sm">Government of Nepal</p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <p className="text-xs">Office of the Prime Minister and Council of Ministers</p>
+              <p className="text-xs">Singhadurbar, Kathmandu</p>
+              <a
+                href="https://opmcm.gov.np"
+                target="_blank"
+                rel="noreferrer"
+                className={`${footerLinkClass} inline-flex items-center gap-1`}
+              >
+                opmcm.gov.np
+                <ArrowSquareOutIcon size={12} />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 

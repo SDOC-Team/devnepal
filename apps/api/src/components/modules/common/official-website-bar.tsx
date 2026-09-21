@@ -15,6 +15,7 @@ import { LOCALES, type Locale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 const ASSETS = {
+  emblem: "/official-website-bar/emblem-of-nepal.png",
   accessibility: "/official-website-bar/accessibility.svg",
   divider: "/official-website-bar/divider.svg",
   language: "/official-website-bar/language.svg",
@@ -92,11 +93,19 @@ function OfficialWebsiteBar({ locale }: { locale: Locale }) {
       <div className="bg-primary px-3 py-0.5 text-primary-foreground sm:px-6 lg:px-12">
         <div className="mx-auto flex min-h-7 sm:min-h-8 w-full max-w-[1200px] flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex min-w-0 flex-wrap items-center gap-3">
-            <p className="text-[11px] font-medium sm:text-xs">
-              {locale === "ne"
-                ? "समुदायद्वारा निर्मित खुला स्रोत प्लेटफर्म"
-                : "A community-built open-source platform"}
-            </p>
+            {/* biome-ignore lint/performance/noImgElement: national emblem */}
+            <img src={ASSETS.emblem} alt="" width={20} height={17} className="shrink-0" />
+            <div className="flex flex-wrap items-center gap-x-2 text-[11px] font-medium sm:text-xs">
+              <span>{locale === "ne" ? "नेपाल सरकार" : "Government of Nepal"}</span>
+              <span aria-hidden className="text-primary-foreground/60">
+                ·
+              </span>
+              <span>
+                {locale === "ne"
+                  ? "प्रधानमन्त्री तथा मन्त्रिपरिषद्को कार्यालय"
+                  : "Office of the Prime Minister and Council of Ministers"}
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center justify-end gap-3">
