@@ -1,8 +1,8 @@
 import type { Locale } from "./i18n";
 
 /**
- * The portal is a Nepal government service: every timestamp renders in Nepal
- * time regardless of where the server or the reader is.
+ * Dev Nepal serves a Nepal-based community, so timestamps render in Nepal time
+ * regardless of where the server or reader is located.
  */
 export const DISPLAY_TIME_ZONE = "Asia/Kathmandu";
 

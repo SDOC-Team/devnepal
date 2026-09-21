@@ -2,6 +2,7 @@ import type { Issue } from "@gov-portal/api-client";
 import Link from "next/link";
 
 import { Chip } from "@/components/ui/chip";
+import { formatDateTime } from "@/lib/format";
 import { getDictionary, type Locale, localePath } from "@/lib/i18n";
 
 export function IssueRow({ issue, locale }: { issue: Issue; locale: Locale }) {
@@ -29,6 +30,8 @@ export function IssueRow({ issue, locale }: { issue: Issue; locale: Locale }) {
         </h2>
         <p className="m-0 text-sm text-muted-foreground">
           {dict.issues.openedBy} @{issue.authorLogin} · {issue.commentsCount} {dict.issues.comments}
+          {" · "}
+          {dict.issues.updated} {formatDateTime(issue.updatedAt, locale)}
         </p>
       </div>
       <span className="flex flex-col items-end gap-1 whitespace-nowrap">

@@ -88,14 +88,17 @@ const en = {
     statsKicker: "Today on the portal",
     openForContribTitle: "Featured project",
     stackLabel: "Stack",
-    contributorsTitle: "Community members",
-    viewAllContributors: "View all members",
+    membersTitle: "Community members",
     openForContribDesc:
       "The platform you are reading: the member directory, project listings and the contribution flow. Its own code is the first repository open for public contribution.",
     openForContribTopics: ["TypeScript", "Next.js", "React", "Drizzle", "PostgreSQL"],
     seeTheIssues: "See the Issues",
     issuesPanelTitle: "Open Issues",
     browseAllIssues: "Browse all issues",
+    githubActivityKicker: "GitHub activity",
+    githubActivityTitle: "Recently updated issues",
+    githubActivityBody:
+      "Live work from the public project repository, ordered by the latest GitHub update.",
     viewAllMembers: "View all members",
     howItWorksTitle: "How does it work ?",
     howStep1Title: "Find work that fits",
@@ -164,6 +167,7 @@ const en = {
       "Issues appear here after the project repository is synchronised. Try clearing the filter.",
     openedBy: "opened by",
     comments: "comments",
+    updated: "updated",
     readIssue: "Read issue",
     github: "Open on GitHub",
     goodFirst: "Good first issue",
@@ -221,7 +225,7 @@ const en = {
     links: "Links",
     viewOnGithub: "View profile on GitHub",
     sharedNote:
-      "This member completed this profile after admin approval. GitHub remains the source of their contribution record.",
+      "Profile details are member-provided. GitHub is the source of truth for repository activity.",
     notFoundTitle: "Profile not available",
     notFoundBody:
       "This member either does not exist or has not been approved for the public directory.",
@@ -328,7 +332,7 @@ const en = {
     whosWho: "Members",
     directorates: "Open issues",
     legalCopyright:
-      "© 2026 Dev Nepal contributors. Content available under the terms stated in the repository.",
+      "© 2026 Dev Nepal community. Content available under the terms stated in the repository.",
   },
   common: {
     loading: "Loading…",
@@ -423,14 +427,17 @@ const ne: Dictionary = {
     statsKicker: "आज पोर्टलमा",
     openForContribTitle: "विशेष परियोजना",
     stackLabel: "स्ट्याक",
-    contributorsTitle: "समुदायका सदस्यहरू",
-    viewAllContributors: "सबै सदस्य हेर्नुहोस्",
+    membersTitle: "समुदायका सदस्यहरू",
     openForContribDesc:
       "तपाईंले पढिरहनु भएको यो प्लेटफर्म: सदस्य निर्देशिका, परियोजना सूची र योगदान प्रवाह। यसको कोड सार्वजनिक योगदानका लागि खुला पहिलो रिपोजिटरी हो।",
     openForContribTopics: ["TypeScript", "Next.js", "React", "Drizzle", "PostgreSQL"],
     seeTheIssues: "इशुहरू हेर्नुहोस्",
     issuesPanelTitle: "खुला इशुहरू",
     browseAllIssues: "सबै इशुहरू हेर्नुहोस्",
+    githubActivityKicker: "GitHub गतिविधि",
+    githubActivityTitle: "हालै अद्यावधिक भएका इशुहरू",
+    githubActivityBody:
+      "सार्वजनिक परियोजना रिपोजिटरीको वास्तविक काम, पछिल्लो GitHub अद्यावधिकअनुसार क्रमबद्ध।",
     viewAllMembers: "सबै सदस्य हेर्नुहोस्",
     howItWorksTitle: "यो कसरी काम गर्छ ?",
     howStep1Title: "उपयुक्त काम भेट्नुहोस्",
@@ -496,6 +503,7 @@ const ne: Dictionary = {
     emptyBody: "रिपोजिटरी सिंक भएपछि इशुहरू यहाँ देखिन्छन्। फिल्टर हटाएर प्रयास गर्नुहोस्।",
     openedBy: "खोलेको",
     comments: "टिप्पणी",
+    updated: "अद्यावधिक",
     readIssue: "इशु पढ्नुहोस्",
     github: "GitHub मा खोल्नुहोस्",
     goodFirst: "पहिलो योगदानका लागि",
@@ -551,8 +559,7 @@ const ne: Dictionary = {
     skills: "सीपहरू",
     links: "लिंकहरू",
     viewOnGithub: "GitHub मा प्रोफाइल हेर्नुहोस्",
-    sharedNote:
-      "यो प्रोफाइल एड्मिन स्वीकृति पछि सदस्य आफैंले पूरा गरेको हो। योगदानको अभिलेखका लागि GitHub नै स्रोत हो।",
+    sharedNote: "प्रोफाइल विवरण सदस्यले दिएका हुन्। रिपोजिटरी गतिविधिका लागि GitHub नै आधिकारिक स्रोत हो।",
     notFoundTitle: "प्रोफाइल उपलब्ध छैन",
     notFoundBody: "यो सदस्य हुँदैन वा सार्वजनिक निर्देशिकाका लागि स्वीकृत भएको छैन।",
     back: "निर्देशिकामा फर्कनुहोस्",
@@ -657,7 +664,7 @@ const ne: Dictionary = {
     departments: "परियोजना",
     whosWho: "सदस्यहरू",
     directorates: "खुला इशुहरू",
-    legalCopyright: "© २०२६ Dev Nepal योगदानकर्ताहरू। सामग्री रिपोजिटरीमा उल्लेखित सर्तहरू अन्तर्गत उपलब्ध।",
+    legalCopyright: "© २०२६ Dev Nepal समुदाय। सामग्री रिपोजिटरीमा उल्लेखित सर्तहरू अन्तर्गत उपलब्ध।",
   },
   common: {
     loading: "लोड हुँदै…",

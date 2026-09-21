@@ -3,8 +3,12 @@ export type Place = { name: string; lat: number; lon: number };
 /** Every arc starts or ends here. */
 export const HUB: Place = { name: "Kathmandu", lat: 27.7172, lon: 85.324 };
 
-/** Contributor cities. Spread across every populated continent on purpose. */
-export const CONTRIBUTORS: Place[] = [
+/**
+ * Decorative waypoints for the globe animation. These are deliberately not
+ * presented as member or contributor data; locations require a verified data
+ * source before they can be represented as such.
+ */
+export const DECORATIVE_WAYPOINTS: Place[] = [
   { name: "San Francisco", lat: 37.7749, lon: -122.4194 },
   { name: "Seattle", lat: 47.6062, lon: -122.3321 },
   { name: "Austin", lat: 30.2672, lon: -97.7431 },

@@ -7,7 +7,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { username } = await params;
   const title = `@${username}`;
-  const description = `View ${username}'s public profile on Dev Nepal — their skills, contributions, affiliation, and links.`;
+  const description = `View ${username}'s approved public profile on Dev Nepal, including the details they chose to share.`;
   return {
     title,
     description,

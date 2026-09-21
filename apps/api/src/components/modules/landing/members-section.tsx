@@ -21,18 +21,18 @@ export function MembersSection({
   return (
     <section
       id="members"
-      data-slot="contributors"
+      data-slot="members"
       className="flex scroll-mt-4 flex-col gap-6 px-4 py-12 sm:px-8 lg:px-16 lg:py-16"
     >
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold text-foreground">{dict.home.contributorsTitle}</h2>
+        <h2 className="text-2xl font-semibold text-foreground">{dict.home.membersTitle}</h2>
         <Button
           variant="ghost"
           size="sm"
           nativeButton={false}
           render={<Link href={localePath(locale, "/members")} />}
         >
-          {dict.home.viewAllContributors}
+          {dict.home.viewAllMembers}
         </Button>
       </div>
 

@@ -10,7 +10,7 @@ import {
   loadLandMask,
   sampleSurfaceGrid,
 } from "./geo";
-import { CONTRIBUTORS, HUB } from "./routes";
+import { DECORATIVE_WAYPOINTS, HUB } from "./routes";
 import { ARC, DOTS, RIPPLE } from "./shaders";
 
 const RADIUS = 1;
@@ -239,7 +239,7 @@ export function createGlobeScene(host: HTMLElement): GlobeScene | null {
   const parallels = hairline(buildGraticule("parallels", PARALLEL_STEP), neutral, PARALLEL_OPACITY);
   spin.add(meridians, parallels);
 
-  // ── hub + contributor markers ──
+  // ── Nepal hub + abstract route markers ──
   const hubUnit = latLonToVector3(HUB.lat, HUB.lon);
   const markerMaterial = new THREE.MeshBasicMaterial({
     color: accent,
@@ -260,7 +260,7 @@ export function createGlobeScene(host: HTMLElement): GlobeScene | null {
     return ring;
   });
 
-  const cityUnits = CONTRIBUTORS.map((city) => latLonToVector3(city.lat, city.lon));
+  const cityUnits = DECORATIVE_WAYPOINTS.map((city) => latLonToVector3(city.lat, city.lon));
   const cityMarkers = new THREE.InstancedMesh(
     new THREE.CircleGeometry(1, 12),
     markerMaterial,

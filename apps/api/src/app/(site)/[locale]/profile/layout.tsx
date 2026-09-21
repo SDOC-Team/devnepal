@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Edit Profile",
   description:
-    "Update your Dev Nepal member profile — add your bio, skills, affiliation, location, and links to showcase your contributions.",
+    "Update the bio, skills, affiliation, location, and links shown on your Dev Nepal member profile.",
   robots: { index: false, follow: false },
 };
 

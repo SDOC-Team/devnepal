@@ -4,7 +4,7 @@ import { ArrowLink, SectionHeading } from "@/components/modules/common";
 import { IssueRow } from "@/components/ui/issue-row";
 import { type Dictionary, type Locale, localePath } from "@/lib/i18n";
 
-/** Most recent open issues. The caller omits this section when there are none. */
+/** Most recently updated open issues from the active project's GitHub sync. */
 export function RecentIssuesSection({
   dict,
   locale,
@@ -18,9 +18,10 @@ export function RecentIssuesSection({
     <section className="py-12" aria-labelledby="recent-issues-heading">
       <div className="container">
         <SectionHeading
-          kicker={dict.project.issuesKicker}
-          title={dict.project.issuesTitle}
+          kicker={dict.home.githubActivityKicker}
+          title={dict.home.githubActivityTitle}
           titleId="recent-issues-heading"
+          lede={dict.home.githubActivityBody}
           action={
             <ArrowLink href={localePath(locale, "/issues")}>{dict.home.browseIssues} →</ArrowLink>
           }

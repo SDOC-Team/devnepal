@@ -71,7 +71,7 @@ export default function MembersPage() {
             {dict.members.title}
           </h1>
           <p className="mt-2 text-base text-primary-foreground/90 sm:text-lg">
-            People who chose to contribute.
+            {dict.members.lede}
           </p>
         </div>
       </div>

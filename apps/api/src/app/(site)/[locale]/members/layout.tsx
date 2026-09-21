@@ -10,12 +10,10 @@ export async function generateMetadata({
   const dict = isLocale(locale) ? getDictionary(locale) : getDictionary("en");
   return {
     title: dict.members.title,
-    description:
-      "Browse all Dev Nepal contributors — engineers, designers, researchers, and more — who are building public technology in Nepal.",
+    description: "Browse community member profiles approved for the Dev Nepal directory.",
     openGraph: {
       title: `${dict.members.title} · Dev Nepal`,
-      description:
-        "Browse all Dev Nepal contributors — engineers, designers, researchers, and more — who are building public technology in Nepal.",
+      description: "Browse community member profiles approved for the Dev Nepal directory.",
     },
   };
 }
