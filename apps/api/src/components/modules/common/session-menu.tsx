@@ -4,6 +4,7 @@ import type { Profile } from "@gov-portal/api-client";
 import { GithubLogoIcon, ShieldCheckIcon, SignOutIcon, UserIcon } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -40,6 +41,7 @@ export function SessionMenu({
   greetingLabel,
   profileLabel,
   adminLabel,
+  retryLabel,
 }: {
   locale: Locale;
   signInLabel: string;
@@ -48,17 +50,36 @@ export function SessionMenu({
   greetingLabel: string;
   profileLabel: string;
   adminLabel: string;
+  retryLabel: string;
 }) {
-  const { actor, isLoading } = useActor();
+  const { actor, isLoading, isSignedOut, error, refresh } = useActor();
   const [busy, setBusy] = useState(false);
 
   if (isLoading) {
     return null;
   }
 
+  if (error !== undefined || (actor === null && !isSignedOut)) {
+    return (
+      <Button variant="outline" onClick={() => void refresh()} title={error?.message}>
+        {retryLabel}
+      </Button>
+    );
+  }
+
   if (actor === null) {
     return (
-      <Button size="default" onClick={() => void signInWithGitHub(`/${locale}/welcome`)}>
+      <Button
+        size="default"
+        onClick={() => {
+          signInWithGitHub(`/${locale}/welcome`).catch((signInError: unknown) => {
+            console.error("Failed to start GitHub sign-in", signInError);
+            toast.error(
+              signInError instanceof Error ? signInError.message : "Could not start GitHub sign-in",
+            );
+          });
+        }}
+      >
         <GithubLogoIcon data-icon="inline-start" />
         {signInLabel}
       </Button>

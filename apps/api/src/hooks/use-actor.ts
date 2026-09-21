@@ -9,8 +9,8 @@ export type Actor = ProfileResponse;
 /**
  * The signed-in actor, backed by GET /v1/profile (cookie session). A 401 means
  * "signed out" — an expected state, not an error — so `error` stays
- * undefined and callers branch on `actor === null` once `isLoading` is
- * false. Any other failure is surfaced through `error`.
+ * undefined and callers branch on `isSignedOut` once `isLoading` is false.
+ * Any other failure is surfaced through `error`.
  */
 export function useActor() {
   const { data, error, isLoading, mutate } = useSWR<Actor, ApiError>(

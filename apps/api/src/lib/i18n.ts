@@ -27,6 +27,7 @@ const en = {
     signIn: "Sign in with GitHub",
     signOut: "Sign out",
     greeting: "Signed in as",
+    retryAccount: "Retry account",
   },
   welcome: {
     kicker: "Onboarding",
@@ -369,6 +370,7 @@ const ne: Dictionary = {
     signIn: "GitHub बाट साइन इन",
     signOut: "साइन आउट",
     greeting: "साइन इन:",
+    retryAccount: "खाता फेरि जाँच्नुहोस्",
   },
   welcome: {
     kicker: "स्वागत",

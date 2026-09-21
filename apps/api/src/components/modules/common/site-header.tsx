@@ -81,6 +81,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
               greetingLabel={dict.session.greeting}
               profileLabel={dict.nav.myProfile}
               adminLabel={dict.nav.admin}
+              retryLabel={dict.session.retryAccount}
             />
 
             <DropdownMenu>

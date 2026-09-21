@@ -21,7 +21,12 @@ export function HeroSection({ dict, locale }: { dict: Dictionary; locale: Locale
           <p className="text-base text-pretty text-secondary-foreground">{dict.home.lead}</p>
         </div>
         <div className="flex flex-wrap items-center gap-4">
-          <HeroSignIn label={dict.session.signIn} locale={locale} />
+          <HeroSignIn
+            label={dict.session.signIn}
+            profileLabel={dict.nav.myProfile}
+            retryLabel={dict.session.retryAccount}
+            locale={locale}
+          />
           <Button
             size="lg"
             variant="outline"

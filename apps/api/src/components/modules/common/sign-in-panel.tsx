@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { signInWithGitHub } from "@/lib/auth-client";
@@ -17,7 +18,13 @@ export function SignInPanel({ label, locale }: { label: string; locale: Locale }
           disabled={busy}
           onClick={() => {
             setBusy(true);
-            signInWithGitHub(`/${locale}/welcome`).catch(() => setBusy(false));
+            signInWithGitHub(`/${locale}/welcome`).catch((error: unknown) => {
+              console.error("Failed to start GitHub sign-in", error);
+              toast.error(
+                error instanceof Error ? error.message : "Could not start GitHub sign-in",
+              );
+              setBusy(false);
+            });
           }}
         >
           {label}
