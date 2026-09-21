@@ -90,22 +90,16 @@ function OfficialWebsiteBar({ locale }: { locale: Locale }) {
 
   return (
     <div data-slot="official-website-bar" className="w-full">
-      <div className="bg-primary px-3 py-0.5 text-primary-foreground sm:px-6 lg:px-12">
-        <div className="mx-auto flex min-h-7 sm:min-h-8 w-full max-w-[1200px] flex-wrap items-center justify-between gap-3 text-xs">
+      <div className="bg-primary px-4 py-0.5 text-primary-foreground sm:px-8 lg:px-16">
+        <div className="flex min-h-7 w-full flex-wrap items-center justify-between gap-3 text-xs sm:min-h-8">
           <div className="flex min-w-0 flex-wrap items-center gap-3">
             {/* biome-ignore lint/performance/noImgElement: national emblem */}
-            <img src={ASSETS.emblem} alt="" width={20} height={17} className="shrink-0" />
-            <div className="flex flex-wrap items-center gap-x-2 text-[11px] font-medium sm:text-xs">
-              <span>{locale === "ne" ? "नेपाल सरकार" : "Government of Nepal"}</span>
-              <span aria-hidden className="text-primary-foreground/60">
-                ·
-              </span>
-              <span>
-                {locale === "ne"
-                  ? "प्रधानमन्त्री तथा मन्त्रिपरिषद्को कार्यालय"
-                  : "Office of the Prime Minister and Council of Ministers"}
-              </span>
-            </div>
+            <img src={ASSETS.emblem} alt="" width={16} height={14} className="shrink-0" />
+            <p className="text-[11px] font-medium sm:text-xs">
+              {locale === "ne"
+                ? "नेपाल सरकारको आधिकारिक वेबसाइट"
+                : "A Nepal Government Official Website"}
+            </p>
           </div>
 
           <div className="flex items-center justify-end gap-3">
