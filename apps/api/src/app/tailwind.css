@@ -1,0 +1,292 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* Primitives — owner's Figma collection (brand neutrals; Tailwind v4 supplies the rest). */
+:root {
+  --white: #ffffff;
+  --black: #000000;
+  --neutral-50: #fafafa;
+  --neutral-100: #fcfcfc;
+  --neutral-200: #eeeeef;
+  --neutral-300: #e5e5e6;
+  --neutral-400: #d5d6d8;
+  --neutral-500: #b7b9bd;
+  --neutral-600: #4d5056;
+  --neutral-700: #25272a;
+  --neutral-800: #202225;
+  --neutral-900: #1b1d20;
+  --neutral-950: #17191c;
+}
+
+/* Semantics — light. Replaced from Figma on 2026-09-20 (design.md Drift Log). */
+:root {
+  --background: var(--neutral-50);
+  --foreground: var(--neutral-950);
+  --card: var(--neutral-100);
+  --card-foreground: var(--neutral-900);
+  --popover: var(--neutral-200);
+  --popover-foreground: var(--neutral-700);
+  --primary: #0052d6;
+  --primary-foreground: #eff6ff;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717b;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+  --destructive: #e7000b;
+  --border: var(--neutral-300);
+  /* Figma maps --input to neutral-50 (= page background). That is an input
+     fill, not a border; shadcn uses --input for borders, so it follows --border. */
+  --input: var(--neutral-300);
+  --ring: #a1a1a1;
+  --chart-1: #8ec5ff;
+  --chart-2: #2b7fff;
+  --chart-3: #155dfc;
+  --chart-4: #1447e6;
+  --chart-5: #193cb8;
+  --radius: 0.625rem;
+  --sidebar: #fafafa;
+  --sidebar-foreground: #09090b;
+  --sidebar-primary: #155dfc;
+  --sidebar-primary-foreground: #eff6ff;
+  --sidebar-accent: #f4f4f5;
+  --sidebar-accent-foreground: #18181b;
+  --sidebar-border: #e4e4e7;
+  --sidebar-ring: #a1a1a1;
+}
+
+/* Semantics — dark. */
+.dark {
+  --background: var(--neutral-950);
+  --foreground: var(--neutral-50);
+  --card: var(--neutral-900);
+  --card-foreground: var(--neutral-100);
+  --popover: var(--neutral-800);
+  --popover-foreground: var(--neutral-300);
+  --primary: #0052d6;
+  --primary-foreground: var(--neutral-50);
+  --secondary: var(--neutral-800);
+  --secondary-foreground: var(--neutral-50);
+  --muted: var(--neutral-800);
+  --muted-foreground: var(--neutral-400);
+  --accent: var(--neutral-700);
+  --accent-foreground: var(--neutral-50);
+  --destructive: #ff7f6e;
+  --border: var(--neutral-700);
+  /* Figma: neutral-950 (= page background). Follows --border for the same reason as light. */
+  --input: var(--neutral-700);
+  --ring: var(--neutral-500);
+  /* Figma aliases these to --blue-8…12, which are not in the primitive set;
+     the ramp is the same five blues as light. */
+  --chart-1: #8ec5ff;
+  --chart-2: #2b7fff;
+  --chart-3: #155dfc;
+  --chart-4: #1447e6;
+  --chart-5: #193cb8;
+  --sidebar: var(--neutral-900);
+  --sidebar-foreground: var(--neutral-50);
+  --sidebar-primary: #155dfc;
+  --sidebar-primary-foreground: var(--neutral-50);
+  --sidebar-accent: var(--neutral-800);
+  --sidebar-accent-foreground: var(--neutral-50);
+  --sidebar-border: var(--neutral-700);
+  --sidebar-ring: var(--neutral-500);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* Nothing should be able to scroll the page sideways on a phone; long
+       user-supplied strings (profile links, usernames, issue titles) are the
+       usual culprits and are handled by the wrap rule below. */
+    overflow-x: hidden;
+  }
+  html {
+    @apply font-sans scroll-smooth;
+  }
+  /* Long strings must not widen the layout. `break-word` only breaks a word
+     that would otherwise overflow on its own, so ordinary names and headings
+     wrap at spaces as usual; `anywhere` was breaking them mid-word. Components
+     that render raw URLs opt into `break-all` locally. */
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  li,
+  dd,
+  dt,
+  td,
+  th,
+  a {
+    overflow-wrap: break-word;
+  }
+  /* Media never exceeds its column. */
+  img,
+  svg,
+  video,
+  canvas {
+    max-width: 100%;
+  }
+}
+
+/* Utilities used across the application */
+@utility container {
+  width: min(1200px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+@utility container-narrow {
+  width: min(720px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+@keyframes dn-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Shimmer sweep reads as progress; the pulse fallback covers reduced motion. */
+@keyframes dn-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@utility skel {
+  /* Follows the theme, so skeletons stay subtle in dark mode. */
+  background-color: var(--muted);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklab, var(--foreground) 6%, transparent) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  border-radius: var(--radius-sm);
+  animation: dn-shimmer 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skel {
+    background-image: none;
+    animation: dn-pulse 2s ease-in-out infinite;
+  }
+}
+
+/* Indeterminate rail: sweeps rather than loops a full cycle, so it reads as
+   "working" without implying measurable progress. */
+@keyframes dn-rail {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(350%);
+  }
+}
+
+.loading-rail {
+  animation: dn-rail 1.3s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-rail {
+    animation: dn-pulse 2s ease-in-out infinite;
+    transform: none;
+    width: 100%;
+  }
+}
+
+@utility prose-issue {
+  min-height: 160px;
+  font-size: 1rem;
+  line-height: 1.7;
+
+  & > :first-child {
+    margin-top: 0;
+  }
+
+  & h2 {
+    margin: 1.5rem 0 0.5rem;
+    font-size: 1.25rem;
+  }
+
+  & :is(ul, ol) {
+    padding-inline-start: 1.5rem;
+  }
+
+  & :is(ul, ol) :is(ul, ol) {
+    padding-inline-start: 1.25rem;
+  }
+
+  & li + li {
+    margin-block-start: 0.25rem;
+  }
+
+  & code {
+    padding: 1px 0.25rem;
+    border-radius: var(--radius-md);
+    background: var(--neutral-100);
+    font-size: 0.92em;
+  }
+}

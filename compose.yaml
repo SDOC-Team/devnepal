@@ -1,0 +1,54 @@
+services:
+  db:
+    image: postgres:17-alpine
+    # Local-development credentials only. Production deployments must replace
+    # these values through their secret manager and should not publish Postgres.
+    environment:
+      POSTGRES_USER: refined
+      POSTGRES_PASSWORD: refined
+      POSTGRES_DB: refined
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - gov-portal-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U refined -d refined"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - apps/api/.env.local
+    environment:
+      DATABASE_URL: postgres://refined:refined@db:5432/refined
+      STORAGE_DIR: /app/storage
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - gov-portal-avatars:/app/storage
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  # Gate API startup on a successful schema migration. This is safe to rerun:
+  # Drizzle records applied migrations in the database.
+  migrate:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: migrate
+    restart: "no"
+    environment:
+      DATABASE_URL: postgres://refined:refined@db:5432/refined
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  gov-portal-pgdata:
+  gov-portal-avatars:

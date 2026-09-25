@@ -1,0 +1,21 @@
+# Default owner for the repository.
+*                       @voidash
+
+# Frontend territory — replace @voidash with the frontend handles once access
+# is granted, for example:
+# (site) and UI internals: @frontend-handle-1 @frontend-handle-2
+/apps/api/src/app/(site)/   @voidash
+/apps/api/src/components/   @voidash
+/apps/api/src/lib/          @voidash
+/apps/api/src/app/globals.css @voidash
+
+# Backend and the API contract.
+/apps/api/src/app/v1/       @voidash
+/apps/api/src/server/       @voidash
+/apps/api/src/db/           @voidash
+/packages/api-contract/     @voidash
+/packages/api-client/       @voidash
+/packages/shared/           @voidash
+
+# Repository plumbing.
+/.github/                   @voidash

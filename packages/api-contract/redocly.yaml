@@ -1,0 +1,9 @@
+extends:
+  - recommended
+
+rules:
+  # Auth.js owns its browser session lifecycle. It is deliberately excluded
+  # from the public product API contract below.
+  security-defined: error
+  # Some public read-only operations have no caller-controlled failure mode.
+  operation-4xx-response: off

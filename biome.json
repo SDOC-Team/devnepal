@@ -1,0 +1,73 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.13/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "includes": ["**", "!apps/api/drizzle", "!apps/api/.next", "!apps/api/public"]
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always"
+    }
+  },
+  "css": {
+    "parser": {
+      "cssModules": false,
+      "allowWrongLineComments": false,
+      "tailwindDirectives": true
+    },
+    "linter": {
+      "enabled": true
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended"
+    }
+  },
+  "overrides": [
+    {
+      "includes": [
+        "apps/api/src/app/(site)/**/*.{ts,tsx}",
+        "apps/api/src/components/**/*.{ts,tsx}",
+        "apps/api/src/lib/**/*.{ts,tsx}"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "@/db/**",
+                      "**/db/**",
+                      "@/server/**/repository",
+                      "**/server/**/repository",
+                      "@/config",
+                      "**/config",
+                      "@/auth",
+                      "**/auth"
+                    ],
+                    "message": "Presentation code may use backend services, but not database, repository, authentication, or environment internals."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

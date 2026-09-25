@@ -1,0 +1,253 @@
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/inter-latin.woff2") format("woff2");
+}
+
+:root {
+  /* Ground and paper. The page is a cool grey desk; every card, sheet and queue
+     is a white sheet laid on it. Shadows are banned by the design gate, so this
+     pair carries the whole depth model — a surface reads as raised because it is
+     lighter than the ground and edged with a hairline. */
+  --color-bg: #f2f5f7;
+  --color-paper: #ffffff;
+  --color-surface: #e5e9ee;
+  --color-text: #181c20;
+
+  /* The state band, drawn from the platform blue rather than a second hue. It
+     takes the -800 step because white on it measures 8.0:1 and because that is
+     deeper than the -700 the primary button uses, so the band reads as the
+     authority above the product instead of competing with its call to action.
+     #5395fc itself can never go here: it is 2.97:1 against white. */
+  --color-state: var(--color-accent-800);
+  --color-state-deep: var(--color-accent-900);
+
+  /* Primary. #5395fc is the brand blue and sits at the middle of the ramp. It
+     carries 2.97:1 against white, so it may never hold white text — it is a
+     signal colour for borders, focus rings, fills and dots. The -700 step is the
+     one that carries text: 5.7:1 on white, 5.2:1 on the ground. */
+  --color-accent: #5395fc;
+  --color-accent-100: #e4eefe;
+  --color-accent-200: #c7dcfd;
+  --color-accent-300: #91bbfd;
+  --color-accent-600: #2f7aee;
+  --color-accent-700: #2163ca;
+  --color-accent-800: #204f97;
+  --color-accent-900: #1c3c6e;
+
+  /* Neutrals share the ground's hue so nothing reads warm against it. -600 is
+     the lightest step allowed to carry body text (4.6:1 on the ground). */
+  /* The primary action's fill. Because #5395fc cannot hold white text, the
+     button takes the -700 step and the brand blue does the signal work below.
+     To put #5395fc on the button instead, set --color-action to
+     var(--color-accent) and --color-action-fg to var(--color-text): that
+     pairing measures 5.8:1 and is the only accessible way to use it there. */
+  --color-action: var(--color-accent-700);
+  --color-action-fg: var(--color-paper);
+  --color-action-hover: var(--color-accent-800);
+
+  --color-neutral-100: #eaeef2;
+  --color-neutral-200: #dde3e9;
+  --color-neutral-300: #c6cfd8;
+  --color-neutral-400: #a8b3be;
+  --color-neutral-500: #8b97a3;
+  --color-neutral-600: #65707b;
+  --color-neutral-700: #4c565f;
+  --color-neutral-800: #333c44;
+
+  --color-divider: color-mix(in srgb, #181c20 13%, transparent);
+  --color-divider-strong: color-mix(in srgb, #181c20 24%, transparent);
+  --color-fg: var(--color-text);
+  --color-bg-muted: var(--color-surface);
+  --color-bg-subtle: var(--color-neutral-100);
+  --color-text-secondary: var(--color-neutral-700);
+  --color-border: var(--color-divider);
+  --color-rule: var(--color-divider);
+
+  /* The footer's own band. A brighter blue than --color-state, kept as its
+     own scale because the footer is a full-width brand surface rather than
+     part of the product chrome. White on --color-footer measures 6.2:1 and
+     on --color-footer-deep 15.4:1; the 0.85-alpha white used for secondary
+     copy on the band clears AA at body size. --color-footer-card is the
+     raised "Need support?" panel inside the band. */
+  --color-footer: #0756d6;
+  --color-footer-card: #173fae;
+  --color-footer-deep: #091c3d;
+  --color-footer-fg: #ffffff;
+  --color-footer-ink: #0f172a;
+
+  --color-error: #9a3c3c;
+  --color-error-subtle: #fbe9e9;
+  --color-attention: #7a5a10;
+  --color-attention-subtle: #fbf2d9;
+  --color-success: #2c6b4c;
+  --color-success-subtle: #e0f1e8;
+  --color-accent-subtle-1: var(--color-accent-100);
+  --color-accent-subtle-2: var(--color-accent-300);
+
+  --font-body: "Inter", "Noto Sans Devanagari", system-ui, sans-serif;
+  --font-heading: "Inter", "Noto Sans Devanagari", system-ui, sans-serif;
+  --font-latin: var(--font-body);
+  --font-nepali: "Noto Sans Devanagari", system-ui, sans-serif;
+  --font-heading-weight: 600;
+
+  /* One type scale. Every font-size in the platform is one of these steps; a
+     raw px size is a bug. Body sits at 16px because 15px read small for a
+     public service page. */
+  --fs-2xs: 11px;
+  --fs-xs: 12px;
+  --fs-sm: 14px;
+  --fs-base: 16px;
+  --fs-md: 18px;
+  --fs-lg: 21px;
+  --fs-xl: 26px;
+  --fs-2xl: 32px;
+  --fs-3xl: 40px;
+  --fs-4xl: 52px;
+
+  /* Responsive heading sizes — a separate scale from --fs-*, since h1–h3
+     scale with viewport width rather than sit at a fixed step. */
+  --fs-h1: clamp(34px, 5vw, 46px);
+  --fs-h2: clamp(26px, 3.5vw, 32px);
+  --fs-h3: clamp(21px, 2.8vw, 24px);
+  /* The landing hero's oversized display heading — bigger and tighter
+     leading than a normal page h1, used only there. */
+  --fs-hero: clamp(44px, 6.4vw, 84px);
+  /* The project page's repo title and its owner prefix, which scale as a
+     pair so "owner / name" keeps its proportions across widths. */
+  --fs-repo: clamp(32px, 4.4vw, 52px);
+  --fs-repo-owner: clamp(22px, 2.6vw, 30px);
+
+  --lh-tight: 1.2;
+  --lh-snug: 1.35;
+  --lh-normal: 1.55;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  --border-1: 1px solid var(--color-divider);
+  --border-2: 1px solid var(--color-divider);
+  --border-4: 1px solid var(--color-divider);
+
+  /* One corner. Every bordered surface in the platform rounds to the same 8px;
+     sm and lg are aliases kept so older call sites land on that same corner
+     rather than inventing a second one. Pills and avatars are the only
+     exceptions, because they are shapes rather than panels. */
+  --radius: 8px;
+  --radius-none: 0;
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius);
+  --radius-pill: 999px;
+  --radius-circle: 50%;
+
+  /* Wide, but not edge-to-edge: a 2000px screen kept a card's facts crowded
+     while a 1248px cap left a third of it empty. 1440px holds four catalogue
+     columns and still keeps prose under 80 characters. */
+  --container-max: 1440px;
+  --container-narrow: 900px;
+  --page-gutter: 40px;
+  --target-min: 44px;
+  /* What actually stays pinned: the product bar, which is one control tall plus
+     its padding. Derived rather than written down, because the last hard-coded
+     value drifted from the bar by 20px and anchors landed under it. The state
+     band above is not counted; it scrolls away. */
+  --header-h: calc(var(--control-lg) + var(--space-3) * 2);
+  /* The state identity band above the product bar. The header sticks at a
+     negative offset of exactly this height, so the band scrolls away and
+     --header-h stays the height of what is actually pinned. */
+  --gov-strip-h: 38px;
+
+  /* Three control heights, each with one job, so a row of mixed controls sits
+     on a single line. Everything interactive is one of these. */
+  --control-sm: 32px;
+  --control-md: 40px;
+  --control-lg: var(--target-min);
+  --badge-h: 24px;
+  /* The dropdown chevron. It lives here because this is the one file allowed to
+     name a colour literally; every select references it as a token. */
+  --icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%2365707b' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'><path d='M4 6.5 L8 10.5 L12 6.5'/></svg>");
+  --icon-chevron-accent: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%232163ca' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'><path d='M4 6.5 L8 10.5 L12 6.5'/></svg>");
+
+  --focus-outline: 2px solid var(--color-accent-700);
+  --focus-offset: 2px;
+
+  /* --dn-color-* / --dn-radius-* — aliases of the tokens above, spelled
+     under a different prefix solely so src/app/tailwind.css's `@theme
+     inline` block can reference them. Tailwind's own theme namespace for
+     color and radius is spelled identically to this file's names
+     (--color-*, --radius-*), so `@theme inline { --color-x: var(--color-x) }`
+     is a self-reference that resolves to nothing — these aliases exist only
+     to break that collision. Every value here must stay a `var()` pointing
+     at the real token above; never a literal. */
+  --dn-color-bg: var(--color-bg);
+  --dn-color-paper: var(--color-paper);
+  --dn-color-surface: var(--color-surface);
+  --dn-color-text: var(--color-text);
+  --dn-color-state: var(--color-state);
+  --dn-color-state-deep: var(--color-state-deep);
+  --dn-color-accent: var(--color-accent);
+  --dn-color-accent-100: var(--color-accent-100);
+  --dn-color-accent-200: var(--color-accent-200);
+  --dn-color-accent-300: var(--color-accent-300);
+  --dn-color-accent-600: var(--color-accent-600);
+  --dn-color-accent-700: var(--color-accent-700);
+  --dn-color-accent-800: var(--color-accent-800);
+  --dn-color-accent-900: var(--color-accent-900);
+  --dn-color-action: var(--color-action);
+  --dn-color-action-fg: var(--color-action-fg);
+  --dn-color-action-hover: var(--color-action-hover);
+  --dn-color-neutral-100: var(--color-neutral-100);
+  --dn-color-neutral-200: var(--color-neutral-200);
+  --dn-color-neutral-300: var(--color-neutral-300);
+  --dn-color-neutral-400: var(--color-neutral-400);
+  --dn-color-neutral-500: var(--color-neutral-500);
+  --dn-color-neutral-600: var(--color-neutral-600);
+  --dn-color-neutral-700: var(--color-neutral-700);
+  --dn-color-neutral-800: var(--color-neutral-800);
+  --dn-color-divider: var(--color-divider);
+  --dn-color-divider-strong: var(--color-divider-strong);
+  --dn-color-fg: var(--color-fg);
+  --dn-color-bg-muted: var(--color-bg-muted);
+  --dn-color-bg-subtle: var(--color-bg-subtle);
+  --dn-color-text-secondary: var(--color-text-secondary);
+  --dn-color-border: var(--color-border);
+  --dn-color-rule: var(--color-rule);
+  --dn-color-error: var(--color-error);
+  --dn-color-error-subtle: var(--color-error-subtle);
+  --dn-color-attention: var(--color-attention);
+  --dn-color-attention-subtle: var(--color-attention-subtle);
+  --dn-color-success: var(--color-success);
+  --dn-color-success-subtle: var(--color-success-subtle);
+  --dn-color-accent-subtle-1: var(--color-accent-subtle-1);
+  --dn-color-accent-subtle-2: var(--color-accent-subtle-2);
+  --dn-color-footer: var(--color-footer);
+  --dn-color-footer-card: var(--color-footer-card);
+  --dn-color-footer-deep: var(--color-footer-deep);
+  --dn-color-footer-fg: var(--color-footer-fg);
+  --dn-color-footer-ink: var(--color-footer-ink);
+
+  --dn-radius-none: var(--radius-none);
+  --dn-radius-sm: var(--radius-sm);
+  --dn-radius-md: var(--radius-md);
+  --dn-radius-lg: var(--radius-lg);
+  --dn-radius-pill: var(--radius-pill);
+  --dn-radius-circle: var(--radius-circle);
+
+  --dn-font-body: var(--font-body);
+  --dn-font-heading: var(--font-heading);
+  --dn-font-latin: var(--font-latin);
+  --dn-font-nepali: var(--font-nepali);
+}
