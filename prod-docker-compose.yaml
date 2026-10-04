@@ -1,0 +1,65 @@
+# Production stack for Dokploy (https://docs.dokploy.com/docs/core/docker-compose).
+#
+# Database: a Dokploy-managed Postgres service in the same project, which gets
+# Dokploy's database backups. Set DATABASE_URL to that service's Internal
+# Connection URL; the app and migrate reach it over dokploy-network.
+#
+# Settings: Dokploy writes the Environment tab to `.env` next to this file but
+# does not inject it, so both services load it with `env_file`. Every setting is
+# listed in apps/api/.env.example; Compose refuses to start without
+# DATABASE_URL or AUTH_URL.
+#
+# Routing: add the domain in Dokploy's Domains tab for service `app`, port 3000.
+# Nothing is published on the host.
+#
+# Data: avatars live in a named volume, so Dokploy's volume backups can include
+# it. Do not bind mount paths from the repository; Dokploy clears it on every
+# deployment.
+
+x-database-url: &database-url ${DATABASE_URL:?Set DATABASE_URL to the Dokploy Postgres service's Internal Connection URL}
+
+services:
+  # Applies migrations, then exits; the app starts only after it succeeds.
+  migrate:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    image: devnepal:production
+    command: ["node", "scripts/migrate.js"]
+    restart: "no"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: *database-url
+    networks:
+      - dokploy-network
+
+  app:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    image: devnepal:production
+    restart: always
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: *database-url
+      STORAGE_DIR: /app/storage
+      # The GitHub callback URL is built from this; without it sign-in breaks.
+      AUTH_URL: ${AUTH_URL:?Set AUTH_URL to the public origin, e.g. https://devnepal.gov.np}
+    expose:
+      - "3000"
+    volumes:
+      - avatars:/app/storage
+    networks:
+      - dokploy-network
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+networks:
+  dokploy-network:
+    external: true
+
+volumes:
+  avatars:

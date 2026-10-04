@@ -12,6 +12,12 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // No page uses next/image, so the image optimiser (sharp and its native
+  // libvips, about 19 MB) is left out of the production output.
+  images: { unoptimized: true },
+  outputFileTracingExcludes: {
+    "*": ["../../node_modules/.bun/sharp@*/**", "../../node_modules/.bun/@img+*/**"],
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

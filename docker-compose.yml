@@ -1,50 +1,67 @@
+# All settings come from one file: `.env` next to this file (copy
+# apps/api/.env.example). Compose reads it for its own settings and passes it
+# to the app and migrate containers. apps/api/.env.local is only for
+# `bun run dev` and is not read here. The file is optional so that
+# `bun run setup` can start the database without it.
+x-app-env: &app-env
+  env_file:
+    - path: .env
+      required: false
+
 services:
   db:
     image: postgres:17-alpine
-    # Local-development credentials only. Production deployments must replace
-    # these values through their secret manager and should not publish Postgres.
+    # The defaults are for local development. Set POSTGRES_PASSWORD (URL-safe,
+    # e.g. `openssl rand -hex 24`) in `.env` before the first start of a
+    # deployment: Postgres only reads these when it creates the database.
     environment:
-      POSTGRES_USER: refined
-      POSTGRES_PASSWORD: refined
-      POSTGRES_DB: refined
+      POSTGRES_USER: ${POSTGRES_USER:-refined}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-refined}
+      POSTGRES_DB: ${POSTGRES_DB:-refined}
+    # Override the host ports with DB_PORT / API_PORT when they are taken.
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:${DB_PORT:-5432}:5432"
     volumes:
       - gov-portal-pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U refined -d refined"]
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
       interval: 5s
       timeout: 5s
       retries: 10
 
   api:
+    image: devnepal:local
     build:
       context: .
       dockerfile: apps/api/Dockerfile
     restart: unless-stopped
-    env_file:
-      - apps/api/.env.local
+    <<: *app-env
     environment:
-      DATABASE_URL: postgres://refined:refined@db:5432/refined
+      DATABASE_URL: postgres://${POSTGRES_USER:-refined}:${POSTGRES_PASSWORD:-refined}@db:5432/${POSTGRES_DB:-refined}
       STORAGE_DIR: /app/storage
     ports:
-      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:${API_PORT:-3000}:3000"
     volumes:
       - gov-portal-avatars:/app/storage
     depends_on:
       migrate:
         condition: service_completed_successfully
 
-  # Gate API startup on a successful schema migration. This is safe to rerun:
-  # Drizzle records applied migrations in the database.
+  # Gate API startup on a successful schema migration, using the same image.
+  # This is safe to rerun: Drizzle records applied migrations in the database.
+  # The image also carries the project-init and GitHub-sync scripts:
+  #   docker compose run --rm migrate node scripts/init-project.js
+  #   docker compose run --rm migrate node scripts/sync-github.js
   migrate:
+    image: devnepal:local
     build:
       context: .
       dockerfile: apps/api/Dockerfile
-      target: migrate
+    command: ["node", "scripts/migrate.js"]
     restart: "no"
+    <<: *app-env
     environment:
-      DATABASE_URL: postgres://refined:refined@db:5432/refined
+      DATABASE_URL: postgres://${POSTGRES_USER:-refined}:${POSTGRES_PASSWORD:-refined}@db:5432/${POSTGRES_DB:-refined}
     depends_on:
       db:
         condition: service_healthy

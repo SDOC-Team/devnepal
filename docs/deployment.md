@@ -13,13 +13,61 @@ The image is built by `bun run build` in the container, which has **no `.env`
 files** — verified to build without environment variables. All configuration is
 read at runtime from the process environment.
 
+With Docker Compose, every setting goes in one `.env` file next to
+`docker-compose.yml`; hosting platforms that deploy a Compose file usually write
+this file from their settings screen. Compose does not read
+`apps/api/.env.local`, which is only for `bun run dev`. Copy
+`apps/api/.env.example` to `.env`; its last section lists the settings only
+Compose uses (`POSTGRES_*`, `DB_PORT`, `API_PORT`). Set `POSTGRES_PASSWORD` (URL-safe,
+for example `openssl rand -hex 24`) before the first start: Postgres only reads
+it when it creates the database, and the app's `DATABASE_URL` is built from
+it.
+
+## Deploying on Dokploy
+
+`prod-docker-compose.yaml` is the production stack for
+[Dokploy](https://docs.dokploy.com/docs/core/docker-compose): a one-shot
+migration and the app, with nothing published on the host. The database is a
+separate Dokploy-managed Postgres service in the same project.
+
+1. **Create the database.** In the Dokploy project, add a **Postgres** service.
+   Leave its external port unset, so it is reachable only inside the server.
+2. **Create the app service.** Add a **Docker Compose** service from this
+   repository, branch `main`, with the compose path set to
+   `./prod-docker-compose.yaml`.
+3. **Set the environment** (Environment tab of the Compose service). Dokploy
+   writes it to `.env` next to the compose file, and the stack loads that file.
+   Required:
+   - `DATABASE_URL`: the Postgres service's **Internal Connection URL**
+   - `AUTH_URL`: the public origin, for example `https://devnepal.gov.np`
+   - `AUTH_SECRET`: `openssl rand -base64 48`
+   - `AUTH_GITHUB_ID`, `AUTH_GITHUB_SECRET`: the production GitHub OAuth App
+
+   Optional: `ADMIN_GITHUB_IDS`, `GITHUB_TOKEN`, `GITHUB_PROJECT_REPOSITORY`.
+   Compose refuses to deploy without `DATABASE_URL` or `AUTH_URL`, naming the
+   missing one.
+4. **Add the domain** (Domains tab): service `app`, container port `3000`,
+   HTTPS on. Point the domain's DNS at the server, and add
+   `https://<domain>/api/auth/callback/github` to the OAuth App's callback URLs.
+5. **Deploy.** The migration runs first and the app starts once it succeeds.
+6. **Load the project once.** In the `app` container's terminal, run
+   `node scripts/init-project.js`. To refresh issues on a schedule, add
+   `node scripts/sync-github.js` to the `app` service under Schedules.
+
+Back up the database from the Postgres service's Backups tab, and the `avatars`
+volume with Dokploy's volume backups. The server builds the image on each
+deploy, which needs a few GB of free memory. Building in CI and deploying from
+a registry image avoids that, as Dokploy recommends.
+
 ## Before you deploy — checklist
 
 1. **Postgres 17** reachable from the app. Set `DATABASE_URL`.
 2. **Migrations run before the app starts.** With Compose, the `api` service
-   waits for the one-shot `migrate` service to finish successfully. Outside
-   Compose, run `bun run db:migrate` against the target database first. The app
-   process itself never migrates, so a crash-looping app cannot half-migrate a
+   waits for the one-shot `migrate` service, which runs the same image, to
+   finish successfully. Outside Compose, run `node scripts/migrate.js` in the
+   image, or `bun run db:migrate` from a checkout, against the target database
+   first. The app process itself never migrates, so a crash-looping app cannot
+   half-migrate a
    database.
 3. **`AUTH_SECRET`** ≥ 32 characters, generated fresh per environment
    (`openssl rand -base64 48`). Changing it signs everyone out.
@@ -50,7 +98,7 @@ read at runtime from the process environment.
 | Problem | Why it happens | Fix (already in repo unless noted) |
 |---|---|---|
 | UI unstyled, no emblem/fonts in the image | Next standalone does not copy `public/` or `.next/static` | Dockerfile copies both explicitly |
-| Migrations unavailable in the runtime image | `drizzle-kit` is a dev dependency and drizzle-orm is bundled into the build | `migrate` build target + `docker compose run --rm migrate` |
+| Migrations unavailable in the runtime image | `drizzle-kit` is a dev dependency and drizzle-orm is bundled into the build | The migration, project-init and GitHub-sync scripts are bundled into `scripts/` in the image and run with `node`; the SQL is in `drizzle/` |
 | App listens only on localhost | Standalone defaults bind `HOSTNAME` | `HOSTNAME=0.0.0.0` in the image |
 | Browser PATCH rejected with 403 after deployment | Origin guard must trust the proxy-resolved own origin | Request-origin + `x-forwarded-*` support in `assertSameOrigin` |
 | Everyone shares one rate-limit bucket behind a tunnel | Proxy IPs hide the client | `cf-connecting-ip` → `x-forwarded-for` → `x-real-ip` order in `clientIp` |

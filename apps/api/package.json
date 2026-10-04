@@ -5,12 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:scripts": "bun build src/scripts/migrate.ts src/scripts/init-project.ts src/scripts/sync-github.ts --target=node --format=esm --external pg-native --outdir dist/scripts",
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
+    "db:migrate": "bun run src/scripts/migrate.ts",
     "db:init": "bun run src/scripts/init-project.ts",
     "sync:github": "bun run src/scripts/sync-github.ts",
     "dev:session": "bun run src/scripts/dev-session.ts"
