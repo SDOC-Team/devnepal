@@ -11,7 +11,11 @@ import {
 } from "./errors";
 
 function applyCors(headers: Headers): void {
-  headers.set("access-control-allow-origin", getEnv().WEB_ORIGIN);
+  const webOrigin = getEnv().WEB_ORIGIN;
+  if (webOrigin === undefined) {
+    return;
+  }
+  headers.set("access-control-allow-origin", webOrigin);
   headers.set("access-control-allow-credentials", "true");
   const vary = headers.get("vary");
   if (vary === null) {
@@ -141,12 +145,7 @@ export function assertSameOrigin(request: Request): void {
   if (origin === null) {
     return;
   }
-  const allowed = new Set<string>([getEnv().WEB_ORIGIN]);
-  const own = requestOrigin(request);
-  if (own !== null) {
-    allowed.add(own);
-  }
-  if (!allowed.has(origin)) {
+  if (origin !== getEnv().WEB_ORIGIN && origin !== requestOrigin(request)) {
     throw new ForbiddenError("Request origin is not allowed");
   }
 }

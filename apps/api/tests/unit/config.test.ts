@@ -22,4 +22,8 @@ describe("parseEnv", () => {
   it("does not require AUTH_URL in development", () => {
     expect(() => parseEnv({ ...base, NODE_ENV: "development" })).not.toThrow();
   });
+
+  it("leaves WEB_ORIGIN unset rather than defaulting to a dev origin", () => {
+    expect(parseEnv(base).WEB_ORIGIN).toBeUndefined();
+  });
 });

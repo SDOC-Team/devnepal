@@ -85,7 +85,8 @@ a registry image avoids that, as Dokploy recommends.
    and rate limiting prefers `cf-connecting-ip` then `x-forwarded-for`. Caddy
    sets these by default; Cloudflare sets `CF-Connecting-IP`. Do not strip them.
 8. `WEB_ORIGIN` is only needed for **external** clients (mobile). The bundled UI
-   is same-origin. Set it to the public origin anyway if nothing else uses it.
+   is same-origin, so leave it unset otherwise: unset means no CORS headers and
+   only the site's own origin passes the CSRF guard and post-login redirects.
 9. `GITHUB_WEBHOOK_SECRET` is optional and the endpoint is inert without it.
    If you enable webhooks, point the repo webhook at
    `https://<host>/webhooks/github` and use a stable hostname (not a quick

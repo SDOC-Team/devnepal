@@ -1,7 +1,7 @@
 export type RedirectTargetInput = {
   url: string;
   baseUrl: string;
-  webOrigin: string;
+  webOrigin?: string;
 };
 
 /**
@@ -22,7 +22,7 @@ export function resolveRedirectTarget({ url, baseUrl, webOrigin }: RedirectTarge
   }
 
   const allowedOrigins = new Set<string>();
-  for (const candidate of [baseUrl, webOrigin]) {
+  for (const candidate of webOrigin === undefined ? [baseUrl] : [baseUrl, webOrigin]) {
     try {
       allowedOrigins.add(new URL(candidate).origin);
     } catch {
