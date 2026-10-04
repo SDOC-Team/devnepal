@@ -1,34 +1,24 @@
 # Production stack for Dokploy (https://docs.dokploy.com/docs/core/docker-compose).
 #
+# Database: a Dokploy-managed Postgres service in the same project, which gets
+# Dokploy's database backups. Set DATABASE_URL to that service's Internal
+# Connection URL; the app and migrate reach it over dokploy-network.
+#
 # Settings: Dokploy writes the Environment tab to `.env` next to this file but
-# does not inject it, so the app and migrate services load it with `env_file`.
-# Every setting is listed in apps/api/.env.example; production also needs
-# POSTGRES_PASSWORD and AUTH_URL, and Compose refuses to start without them.
+# does not inject it, so both services load it with `env_file`. Every setting is
+# listed in apps/api/.env.example; Compose refuses to start without
+# DATABASE_URL or AUTH_URL.
 #
 # Routing: add the domain in Dokploy's Domains tab for service `app`, port 3000.
-# Nothing is published on the host; Postgres is reachable only inside the stack.
+# Nothing is published on the host.
 #
-# Data: named volumes, so Dokploy's volume backups can include them. Do not bind
-# mount paths from the repository; Dokploy clears it on every deployment.
+# Data: avatars live in a named volume, so Dokploy's volume backups can include
+# it. Do not bind mount paths from the repository; Dokploy clears it on every
+# deployment.
 
-x-database-url: &database-url postgres://${POSTGRES_USER:-devnepal}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD (URL-safe, e.g. openssl rand -hex 24)}@db:5432/${POSTGRES_DB:-devnepal}
+x-database-url: &database-url ${DATABASE_URL:?Set DATABASE_URL to the Dokploy Postgres service's Internal Connection URL}
 
 services:
-  db:
-    image: postgres:17-alpine@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
-    restart: always
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-devnepal}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD (URL-safe, e.g. openssl rand -hex 24)}
-      POSTGRES_DB: ${POSTGRES_DB:-devnepal}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
   # Applies migrations, then exits; the app starts only after it succeeds.
   migrate:
     build:
@@ -41,9 +31,8 @@ services:
       - .env
     environment:
       DATABASE_URL: *database-url
-    depends_on:
-      db:
-        condition: service_healthy
+    networks:
+      - dokploy-network
 
   app:
     build:
@@ -63,7 +52,6 @@ services:
     volumes:
       - avatars:/app/storage
     networks:
-      - default
       - dokploy-network
     depends_on:
       migrate:
@@ -74,5 +62,4 @@ networks:
     external: true
 
 volumes:
-  pgdata:
   avatars:

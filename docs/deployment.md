@@ -26,37 +26,38 @@ it.
 ## Deploying on Dokploy
 
 `prod-docker-compose.yaml` is the production stack for
-[Dokploy](https://docs.dokploy.com/docs/core/docker-compose): Postgres, a
-one-shot migration, and the app, with nothing published on the host.
+[Dokploy](https://docs.dokploy.com/docs/core/docker-compose): a one-shot
+migration and the app, with nothing published on the host. The database is a
+separate Dokploy-managed Postgres service in the same project.
 
-1. **Create the service.** In a Dokploy project, add a **Docker Compose**
-   service from this repository, branch `main`, with the compose path set to
+1. **Create the database.** In the Dokploy project, add a **Postgres** service.
+   Leave its external port unset, so it is reachable only inside the server.
+2. **Create the app service.** Add a **Docker Compose** service from this
+   repository, branch `main`, with the compose path set to
    `./prod-docker-compose.yaml`.
-2. **Set the environment** (Environment tab). Dokploy writes it to `.env` next
-   to the compose file, and the stack loads that file. Required:
+3. **Set the environment** (Environment tab of the Compose service). Dokploy
+   writes it to `.env` next to the compose file, and the stack loads that file.
+   Required:
+   - `DATABASE_URL`: the Postgres service's **Internal Connection URL**
    - `AUTH_URL`: the public origin, for example `https://devnepal.gov.np`
    - `AUTH_SECRET`: `openssl rand -base64 48`
    - `AUTH_GITHUB_ID`, `AUTH_GITHUB_SECRET`: the production GitHub OAuth App
-   - `POSTGRES_PASSWORD`: URL-safe, for example `openssl rand -hex 24`. Set it
-     before the first deploy; Postgres only reads it when it creates the
-     database.
 
-   Optional: `ADMIN_GITHUB_IDS`, `GITHUB_TOKEN`, `GITHUB_PROJECT_REPOSITORY`,
-   `POSTGRES_USER` and `POSTGRES_DB` (both default to `devnepal`). Compose
-   refuses to deploy without `AUTH_URL` or `POSTGRES_PASSWORD`, naming the
+   Optional: `ADMIN_GITHUB_IDS`, `GITHUB_TOKEN`, `GITHUB_PROJECT_REPOSITORY`.
+   Compose refuses to deploy without `DATABASE_URL` or `AUTH_URL`, naming the
    missing one.
-3. **Add the domain** (Domains tab): service `app`, container port `3000`,
-   HTTPS on. Point the domain's DNS at the server, and set the OAuth App's
-   callback URL to `https://<domain>/api/auth/callback/github`.
-4. **Deploy.** The migration runs first and the app starts once it succeeds.
-5. **Load the project once.** In the `app` container's terminal, run
+4. **Add the domain** (Domains tab): service `app`, container port `3000`,
+   HTTPS on. Point the domain's DNS at the server, and add
+   `https://<domain>/api/auth/callback/github` to the OAuth App's callback URLs.
+5. **Deploy.** The migration runs first and the app starts once it succeeds.
+6. **Load the project once.** In the `app` container's terminal, run
    `node scripts/init-project.js`. To refresh issues on a schedule, add
    `node scripts/sync-github.js` to the `app` service under Schedules.
 
-The database and avatars live in the named volumes `pgdata` and `avatars`; add
-them to Dokploy's volume backups. The server builds the image on each deploy,
-which needs a few GB of free memory. Building in CI and deploying from a
-registry image avoids that, as Dokploy recommends.
+Back up the database from the Postgres service's Backups tab, and the `avatars`
+volume with Dokploy's volume backups. The server builds the image on each
+deploy, which needs a few GB of free memory. Building in CI and deploying from
+a registry image avoids that, as Dokploy recommends.
 
 ## Before you deploy — checklist
 
