@@ -1,6 +1,10 @@
-# Settings come from two optional files: `.env` next to this file (what hosting
-# platforms write) and `apps/api/.env.local` (what `bun run setup` writes). If
-# both set a value, `.env.local` wins. See apps/api/.env.example for the list.
+# Two kinds of settings, read from different places:
+# - Compose's own settings (POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB,
+#   DB_PORT, API_PORT) come only from the shell or from `.env` next to this
+#   file. Compose never reads apps/api/.env.local for them. See .env.example.
+# - App settings reach the app and migrate containers from `.env` (what hosting
+#   platforms write) and from apps/api/.env.local (what `bun run setup`
+#   writes); .env.local wins where both set a value. See apps/api/.env.example.
 x-app-env: &app-env
   env_file:
     - path: .env

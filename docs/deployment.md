@@ -17,7 +17,9 @@ With Docker Compose, put the settings in a `.env` file next to
 `docker-compose.yml`; hosting platforms that deploy a Compose file usually write
 this file from their settings screen. Compose also reads `apps/api/.env.local`,
 the file local development uses, and that one wins where both set a value. See
-`apps/api/.env.example` for every setting. Set `POSTGRES_PASSWORD` (URL-safe,
+`apps/api/.env.example` for every setting. The Compose-level settings in the
+root `.env.example` (`POSTGRES_*`, `DB_PORT`, `API_PORT`) are read only from
+`.env` or the shell, never from `.env.local`. Set `POSTGRES_PASSWORD` (URL-safe,
 for example `openssl rand -hex 24`) before the first start: Postgres only reads
 it when it creates the database, and the app's `DATABASE_URL` is built from
 it.
