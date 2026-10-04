@@ -22,6 +22,11 @@ describe("resolveRedirectTarget", () => {
     expect(resolve("http://localhost:5173/profile")).toBe("http://localhost:5173/profile");
   });
 
+  it("allows only the API origin when no frontend origin is configured", () => {
+    const target = "http://localhost:5173/profile";
+    expect(resolveRedirectTarget({ url: target, baseUrl })).toBe(baseUrl);
+  });
+
   it("rejects third-party origins", () => {
     expect(resolve("http://evil.example/phish")).toBe(baseUrl);
     expect(resolve("https://evil.example")).toBe(baseUrl);

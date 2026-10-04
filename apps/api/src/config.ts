@@ -11,7 +11,9 @@ const envSchema = z
     // it the production server uses its own bind address (0.0.0.0:3000).
     AUTH_URL: z.url().optional(),
     ADMIN_GITHUB_IDS: z.string().default(""),
-    WEB_ORIGIN: z.url().default("http://localhost:5173"),
+    // Extra origin for external clients (CORS, CSRF, post-login redirects).
+    // Unset means same-origin only; no default, so production never trusts a dev origin.
+    WEB_ORIGIN: z.url().optional(),
     STORAGE_DIR: z.string().min(1).default("./storage"),
     GITHUB_WEBHOOK_SECRET: z.string().default(""),
   })
