@@ -29,14 +29,17 @@ Requires Docker with Compose v2.24 or later. Nothing else runs on the host.
    <https://github.com/settings/developers> → **New OAuth App**, use
    - Homepage URL: `http://localhost:3000`
    - Authorization callback URL: `http://localhost:3000/api/auth/callback/github`
-2. **Create the configuration file** and fill in `AUTH_SECRET`
-   (`openssl rand -base64 48`), `AUTH_GITHUB_ID` and `AUTH_GITHUB_SECRET`:
+2. **Create the configuration file**, `.env` next to `docker-compose.yml`, and
+   fill in `AUTH_SECRET` (`openssl rand -base64 48`), `AUTH_GITHUB_ID` and
+   `AUTH_GITHUB_SECRET`:
 
    ```sh
-   cp apps/api/.env.example apps/api/.env.local
+   cp apps/api/.env.example .env
    ```
 
-   Compose sets its own `DATABASE_URL`, so the one in this file is ignored.
+   Compose reads every setting from this one file. It builds its own
+   `DATABASE_URL` from the `POSTGRES_*` settings in the file's last section, so
+   the `DATABASE_URL` line is ignored.
 3. **Start the stack.** Postgres starts, the migrations run, then the app:
 
    ```sh
@@ -56,10 +59,9 @@ URLs too. To refresh issues later, run
 `docker compose run --rm migrate node scripts/sync-github.js`.
 `docker compose down -v` removes the stack and its data.
 
-Compose also reads a `.env` file next to `docker-compose.yml`, which is how
-hosting platforms provide settings. For production, use
-`prod-docker-compose.yaml`; [docs/deployment.md](docs/deployment.md) covers
-deploying it on Dokploy.
+Hosting platforms provide settings the same way, in that `.env`. For
+production, use `prod-docker-compose.yaml`;
+[docs/deployment.md](docs/deployment.md) covers deploying it on Dokploy.
 
 ## Develop locally
 
@@ -105,15 +107,18 @@ GitHub each time. See [docs/frontend.md](docs/frontend.md).
 
 - `docker compose` fails: Docker isn't running (`colima start`, or start Docker
   Desktop).
-- Port 5432 or 3000 is taken: set `DB_PORT` / `API_PORT`, and change
-  `DATABASE_URL` in `apps/api/.env.local` to the new database port.
+- Port 5432 or 3000 is taken: set `DB_PORT` / `API_PORT` in `.env` next to
+  `docker-compose.yml`, and change the port in `DATABASE_URL` in
+  `apps/api/.env.local` to match.
 - Start again from nothing: `docker compose down -v && bun run setup`.
 
 ## Configuration
 
-All settings are environment variables, read from `apps/api/.env.local`.
-[`apps/api/.env.example`](apps/api/.env.example) lists every one with a
-comment; `.env*` files other than the example are never committed.
+All settings are environment variables. `bun run dev` reads them from
+`apps/api/.env.local`; Docker Compose reads them from `.env` next to
+`docker-compose.yml`. [`apps/api/.env.example`](apps/api/.env.example) lists
+every one with a comment, including the few only Compose uses; `.env*` files
+other than the example are never committed.
 
 | Variable | Required | Purpose |
 |---|---|---|

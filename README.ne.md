@@ -30,15 +30,17 @@ Compose v2.24 वा त्योभन्दा नयाँ भएको Docke
    App** मा:
    - Homepage URL: `http://localhost:3000`
    - Authorization callback URL: `http://localhost:3000/api/auth/callback/github`
-2. **कन्फिगरेसन फाइल बनाउनुहोस्** र `AUTH_SECRET` (`openssl rand -base64 48`),
-   `AUTH_GITHUB_ID` र `AUTH_GITHUB_SECRET` भर्नुहोस्:
+2. **कन्फिगरेसन फाइल बनाउनुहोस्**, `docker-compose.yml` सँगै `.env`, र
+   `AUTH_SECRET` (`openssl rand -base64 48`), `AUTH_GITHUB_ID` र
+   `AUTH_GITHUB_SECRET` भर्नुहोस्:
 
    ```sh
-   cp apps/api/.env.example apps/api/.env.local
+   cp apps/api/.env.example .env
    ```
 
-   Compose ले आफ्नै `DATABASE_URL` राख्छ, त्यसैले यो फाइलमा भएको मान प्रयोग
-   हुँदैन।
+   Compose ले सबै सेटिङ यही एउटा फाइलबाट पढ्छ। फाइलको अन्तिम खण्डका `POSTGRES_*`
+   सेटिङबाट यसले आफ्नै `DATABASE_URL` बनाउँछ, त्यसैले `DATABASE_URL` को लाइन
+   प्रयोग हुँदैन।
 3. **स्ट्याक सुरु गर्नुहोस्।** पहिले Postgres सुरु हुन्छ, माइग्रेसन चल्छ, अनि
    एप:
 
@@ -58,10 +60,9 @@ compose up -d`; `API_PORT` फरक भए OAuth App का URL मा पन�
 पछि इस्युहरू ताजा गर्न `docker compose run --rm migrate node scripts/sync-github.js`
 चलाउनुहोस्। `docker compose down -v` ले स्ट्याक र त्यसको डाटा हटाउँछ।
 
-Compose ले `docker-compose.yml` सँगैको `.env` फाइल पनि पढ्छ; होस्टिङ प्लेटफर्महरूले
-सेटिङ यसैगरी दिन्छन्। उत्पादन (production) का लागि `prod-docker-compose.yaml`
-प्रयोग गर्नुहोस्; Dokploy मा डिप्लोय गर्ने तरिका
-[docs/deployment.md](docs/deployment.md) मा छ।
+होस्टिङ प्लेटफर्महरूले पनि सेटिङ यसैगरी त्यही `.env` मा दिन्छन्। उत्पादन
+(production) का लागि `prod-docker-compose.yaml` प्रयोग गर्नुहोस्; Dokploy मा
+डिप्लोय गर्ने तरिका [docs/deployment.md](docs/deployment.md) मा छ।
 
 ## आफ्नै कम्प्युटरमा विकास
 
@@ -107,16 +108,18 @@ Compose ले `docker-compose.yml` सँगैको `.env` फाइल प�
 
 - `docker compose` चल्दैन: Docker चलिरहेको छैन (`colima start`, वा Docker
   Desktop सुरु गर्नुहोस्)।
-- पोर्ट 5432 वा 3000 प्रयोगमा छ: `DB_PORT` / `API_PORT` राख्नुहोस्, र
-  `apps/api/.env.local` को `DATABASE_URL` मा नयाँ डाटाबेस पोर्ट राख्नुहोस्।
+- पोर्ट 5432 वा 3000 प्रयोगमा छ: `docker-compose.yml` सँगैको `.env` मा
+  `DB_PORT` / `API_PORT` राख्नुहोस्, र `apps/api/.env.local` को `DATABASE_URL`
+  मा पनि त्यही पोर्ट राख्नुहोस्।
 - सुरुदेखि फेरि गर्न: `docker compose down -v && bun run setup`।
 
 ## कन्फिगरेसन
 
-सबै सेटिङ एनभाइरनमेन्ट भेरिएबल (environment variable) हुन्, जुन
-`apps/api/.env.local` बाट पढिन्छन्। [`apps/api/.env.example`](apps/api/.env.example)
-मा हरेकको टिप्पणीसहित सूची छ; उदाहरण फाइलबाहेक कुनै `.env*` फाइल कहिल्यै
-कमिट गरिँदैन।
+सबै सेटिङ एनभाइरनमेन्ट भेरिएबल (environment variable) हुन्। `bun run dev` ले
+तिनलाई `apps/api/.env.local` बाट पढ्छ; Docker Compose ले `docker-compose.yml`
+सँगैको `.env` बाट पढ्छ। [`apps/api/.env.example`](apps/api/.env.example) मा
+हरेकको टिप्पणीसहित सूची छ, Compose ले मात्र प्रयोग गर्ने केही सेटिङसमेत;
+उदाहरण फाइलबाहेक कुनै `.env*` फाइल कहिल्यै कमिट गरिँदैन।
 
 | भेरिएबल | अनिवार्य | प्रयोजन |
 |---|---|---|
