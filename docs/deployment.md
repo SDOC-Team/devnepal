@@ -13,13 +13,12 @@ The image is built by `bun run build` in the container, which has **no `.env`
 files** — verified to build without environment variables. All configuration is
 read at runtime from the process environment.
 
-With Docker Compose, put the settings in a `.env` file next to
+With Docker Compose, every setting goes in one `.env` file next to
 `docker-compose.yml`; hosting platforms that deploy a Compose file usually write
-this file from their settings screen. Compose also reads `apps/api/.env.local`,
-the file local development uses, and that one wins where both set a value. See
-`apps/api/.env.example` for every setting. The Compose-level settings in the
-root `.env.example` (`POSTGRES_*`, `DB_PORT`, `API_PORT`) are read only from
-`.env` or the shell, never from `.env.local`. Set `POSTGRES_PASSWORD` (URL-safe,
+this file from their settings screen. Compose does not read
+`apps/api/.env.local`, which is only for `bun run dev`. Copy
+`apps/api/.env.example` to `.env`; its last section lists the settings only
+Compose uses (`POSTGRES_*`, `DB_PORT`, `API_PORT`). Set `POSTGRES_PASSWORD` (URL-safe,
 for example `openssl rand -hex 24`) before the first start: Postgres only reads
 it when it creates the database, and the app's `DATABASE_URL` is built from
 it.
