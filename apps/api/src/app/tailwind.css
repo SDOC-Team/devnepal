@@ -290,3 +290,96 @@
     font-size: 0.92em;
   }
 }
+
+/* Accessibility features */
+html.a11y-dyslexia,
+html.a11y-dyslexia * {
+  font-family: "Comic Sans MS", "Comic Sans", "OpenDyslexic", cursive, sans-serif;
+}
+
+html.a11y-spacing-medium *:not([data-slot="official-website-bar"] *) {
+  letter-spacing: 0.08em;
+  word-spacing: 0.16em;
+}
+
+html.a11y-spacing-heavy *:not([data-slot="official-website-bar"] *) {
+  letter-spacing: 0.16em;
+  word-spacing: 0.32em;
+}
+
+html.a11y-line-height-relaxed *:not([data-slot="official-website-bar"] *) {
+  line-height: 1.85;
+}
+
+html.a11y-line-height-loose *:not([data-slot="official-website-bar"] *) {
+  line-height: 2.2;
+}
+
+html.a11y-align-left *:not([data-slot="official-website-bar"] *) {
+  text-align: left;
+}
+
+html.a11y-align-center *:not([data-slot="official-website-bar"] *) {
+  text-align: center;
+}
+
+html.a11y-bigger-cursor,
+html.a11y-bigger-cursor * {
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M0 0l9 26 5-11 11-5z' fill='%23000' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E"),
+    auto;
+}
+
+html.a11y-pause-animations,
+html.a11y-pause-animations * {
+  animation: none;
+  animation-play-state: paused;
+  transition: none;
+}
+
+html.a11y-hide-images img:not([data-a11y-preserve]),
+html.a11y-hide-images [style*="background-image"]:not([data-a11y-preserve]) {
+  visibility: hidden;
+}
+
+html.high-contrast,
+html.a11y-high-contrast {
+  filter: contrast(1.4);
+}
+
+html.high-contrast:not(.dark) {
+  --color-foreground: #000000;
+  --color-border: #1a1a1a;
+  --color-input: #1a1a1a;
+}
+
+html.high-contrast.dark {
+  --color-background: #000000;
+  --color-foreground: #ffffff;
+  --color-border: #ffffff;
+  --color-input: #ffffff;
+}
+
+html.a11y-saturation-low {
+  filter: saturate(0.5);
+}
+
+html.a11y-saturation-high {
+  filter: saturate(2);
+}
+
+html.a11y-saturation-none {
+  filter: grayscale(1);
+}
+
+html.a11y-filter-protanopia {
+  filter: url(#protanopia-filter);
+}
+
+html.a11y-filter-deuteranopia {
+  filter: url(#deuteranopia-filter);
+}
+
+html.a11y-filter-tritanopia {
+  filter: url(#tritanopia-filter);
+}

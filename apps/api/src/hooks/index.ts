@@ -1,3 +1,4 @@
+export { type UseAccessibilityResult, useAccessibility } from "./use-accessibility";
 export { type Actor, useActor } from "./use-actor";
 export { ADMIN_TABS, type AdminTab, useAdminMembers } from "./use-admin-members";
 export { type IssuesQuery, useIssueLabels, useProjectIssue, useProjectIssues } from "./use-issues";
